@@ -10,6 +10,7 @@ type
     title: string[20];
     yearOfStart: integer;
     yearOfEnd: integer;
+    yearsOfWork: integer;
     genre: string[10];
     theme: string[10];
     place: string[15];
@@ -17,6 +18,8 @@ type
     shortDescr: string[100];
     userRate: integer;
     userComment: string[50];
+    isToBeChanged: boolean;
+    isFavourite: boolean;
     filename: string[15];
   end;
 
@@ -38,6 +41,7 @@ var
 
   searchChoice: integer;
   searchString: string;
+  searchedHead: PPicElem;
 
 
 
@@ -60,13 +64,14 @@ var
 begin
   list := head;
 
-  while list^.Next <> nil do
+  while list <> nil do
   begin
     writeln('--------------- Another picture -----------------');
 
     writeln(list^.data.title);
     writeln(list^.data.yearOfStart);
     writeln(list^.data.yearOfEnd);
+    writeln(list^.data.yearsOfWork);
     writeln(list^.data.genre);
     writeln(list^.data.theme);
     writeln(list^.data.place);
@@ -74,6 +79,8 @@ begin
     writeln(list^.data.shortDescr);
     writeln(list^.data.userRate);
     writeln(list^.data.userComment);
+    writeln(list^.data.isToBeChanged);
+    writeln(list^.data.isFavourite);
     writeln(list^.data.filename);
 
     list := list^.Next;
@@ -86,34 +93,36 @@ var
   readPicList: PPicElem;
   storageFile: file of Tdata;
   current: TData;
-  isHeadSaved: boolean;
 
 
 begin
-
 
   Reset(storageFile, 'dataset.pics');
 
   new(readPicList);
       head := readPicList;
-      isHeadSaved := true;
+
 
   repeat
 
       new(readPicList^.Next);
       readPicList := readPicList^.Next;
 
-       Read(storageFile, Current);
+      Read(storageFile, Current);
 
       readPicList^.data.title := current.title;
       readPicList^.data.yearOfStart := current.yearOfStart;
       readPicList^.data.yearOfEnd := current.yearOfEnd;
+      readPicList^.data.yearsOfWork := current.yearsOfWork;
       readPicList^.data.genre := current.genre;
       readPicList^.data.theme := current.theme;
       readPicList^.data.place := current.place;
       readPicList^.data.materials := current.materials;
       readPicList^.data.shortDescr := current.shortDescr;
       readPicList^.data.userRate := current.userRate;
+      readPicList^.data.userComment := current.userComment;
+      readPicList^.data.isToBeChanged := current.isToBeChanged;
+      readPicList^.data.isFavourite := current.isFavourite;
       readPicList^.data.userComment := current.userComment;
       readPicList^.data.filename := current.filename;
 
@@ -132,6 +141,9 @@ begin
 
 
 end;
+
+
+// COMPARATORS SECTION BEGIN
 
 function cmpYear(elem1, elem2: TData; direction: integer): integer;
 begin
@@ -169,6 +181,10 @@ begin
     result := 0;
 
 end;
+
+// COMPARATORS SECTION END
+
+// SORT SECTION BEGIN
 
 function FindMiddle(headFind: PPicElem): PPicElem;
 var
@@ -256,10 +272,181 @@ begin
   end;
 end;
 
-function searchData(head: PPicElem; infoToSearch: string; fieldWhereSearch: string ): PPicElem;
+// SORT SECTION END
+
+// SEARCH SECTION BEGIN
+
+function isRecordMatch(const data: Tdata; const searchStr: string; field: integer): boolean;
 begin
 
+  if field = 1 then   // title
+  begin
+       Result :=
+    (Pos(searchStr, data.title) > 0)
+  end
+  else
+  if field = 2 then   // years of start
+  begin
+
+    writeln('data ', data.yearOfStart);
+    writeln('str ', IntToStr(data.yearOfStart));
+    writeln('pos ',  Pos(searchStr, IntToStr(data.yearOfStart)));
+    Result := (Pos(searchStr, IntToStr(data.yearOfStart)) > 0)
+
+  end
+  else
+  if field = 3 then   // years of end
+  begin
+     Result := (Pos(searchStr, IntToStr(data.yearOfEnd)) > 0)
+  end
+  else
+  if field = 4 then // years of work
+  begin
+       Result := (Pos(searchStr, IntToStr(data.yearsOfWork)) > 0)
+  end
+  else
+  if field = 5 then // gengre
+  begin
+      Result :=  (Pos(searchStr, data.genre) > 0)
+  end
+  else
+  if field = 6 then //theme
+  begin
+      Result :=     (Pos(searchStr, data.theme) > 0)
+  end
+  else
+  if field = 7 then // place
+  begin
+    Result :=   (Pos(searchStr, data.place) > 0)
+  end
+  else
+  if field = 8 then // materials
+  begin
+    Result :=   (Pos(searchStr, data.materials) > 0)
+  end
+  else
+  if field = 9 then // short description
+  begin
+     Result :=   (Pos(searchStr, data.shortDescr) > 0)
+  end
+  else
+  if field = 10 then // user rate
+  begin
+     Result :=  (Pos(searchStr, IntToStr(data.userRate)) > 0)
+  end
+  else
+  if field = 11 then // user comment
+  begin
+       Result :=  (Pos(searchStr, data.userComment) > 0)
+  end
+  else
+  begin      // all
+
+     Result :=
+    (Pos(searchStr, data.title) > 0) or
+    (Pos(searchStr, IntToStr(data.yearOfStart)) > 0) or
+    (Pos(searchStr, IntToStr(data.yearOfEnd)) > 0) or
+    (Pos(searchStr, IntToStr(data.yearsOfWork)) > 0) or
+    (Pos(searchStr, data.genre) > 0) or
+    (Pos(searchStr, data.theme) > 0) or
+    (Pos(searchStr, data.place) > 0) or
+    (Pos(searchStr, data.materials) > 0) or
+    (Pos(searchStr, data.shortDescr) > 0) or
+    (Pos(searchStr, IntToStr(data.userRate)) > 0) or
+    (Pos(searchStr, data.userComment) > 0) or
+    (Pos(searchStr, data.filename) > 0);
+
+
+  end;
+
+
+
+
 end;
+
+function searchDataInit(head: PPicElem; infoToSearch: string; fieldWhereSearch: integer ): PPicElem;
+var
+  curElem: PPicElem;
+  newHead: PPicElem;
+  searchedList: PPicElem;
+begin
+  curElem := head;
+
+  new(searchedList);
+  newHead := searchedList;
+
+
+  while curElem^.Next <> nil do
+  begin
+    if isRecordMatch(curElem^.data, infoToSearch, fieldWhereSearch) then
+    begin
+
+      searchedList.data := curElem.data;
+      new(searchedList^.Next);
+      searchedList := searchedList^.Next;
+
+
+    end;
+    curElem := curElem^.Next;
+
+  end;
+
+  curElem^.Next := nil;
+
+  printList(newHead);
+end;
+//
+//
+
+
+
+
+// DEBUG
+
+
+
+function searchData(head: PPicElem; infoToSearch: string; fieldWhereSearch: integer ): PPicElem;
+var
+  curElem: PPicElem;
+  newList: PPicElem;
+  // curElem - current elem of init list being processed;
+  // newHead - list of records that fulfill the search condition;
+
+  // head of created list returns in 'return' var;
+begin
+  curElem := head;
+  newList := nil;
+
+  while curElem <> nil do
+  begin
+    if isRecordMatch(curElem^.data, infoToSearch, fieldWhereSearch) then
+    begin
+      if newList = nil then
+      begin
+        new(newList);
+        newList^.data := curElem^.data;
+        result := newList;
+      end
+      else
+      begin
+        new(newList^.Next);
+        newList := newList^.Next;
+        newList^.data := CurElem^.data;
+      end;
+    end;
+    curElem := curElem^.Next;
+  end;
+end;
+
+// DEBUG
+
+
+
+
+
+
+// SEARCH SECTION END
+
 
 
 begin
@@ -365,6 +552,7 @@ begin
               writeln('1. Название');
               writeln('2. Год начала');
               writeln('3. Год конца');
+              writeln('4. Время работы над картиной');
               writeln('4. Жанр');
               writeln('5. Тема');
               writeln('6. Место');
@@ -372,6 +560,7 @@ begin
               writeln('8. Краткое описание');
               writeln('9. Пользовательская оценка');
               writeln('10. Пользовательский комментарий');
+              writeln('11. Любая характеристика');
 
               readln(searchChoice);
 
@@ -379,44 +568,54 @@ begin
                 case searchChoice of
                   1:
                   begin
-                    searchData(head, searchString, searchChoice);
+                    searchedHead := searchData(head, searchString, searchChoice);
+                    printList(searchedHead);
 
                   end;
                   2:
                   begin
-
+                    searchedHead := searchData(head, searchString, searchChoice);
+                    printList(searchedHead);
                   end;
                   3:
                   begin
-
+                    searchedHead := searchData(head, searchString, searchChoice);
+                    printList(searchedHead);
                   end;
                   4:
                   begin
-
+                    searchedHead := searchData(head, searchString, searchChoice);
+                    printList(searchedHead);
                   end;
                   5:
                   begin
-
+                    searchedHead := searchData(head, searchString, searchChoice);
+                    printList(searchedHead);
                   end;
                   6:
                   begin
-
+                    searchedHead := searchData(head, searchString, searchChoice);
+                    printList(searchedHead);
                   end;
                   7:
                   begin
-
+                    searchedHead := searchData(head, searchString, searchChoice);
+                    printList(searchedHead);
                   end;
                   8:
                   begin
-
+                    searchedHead := searchData(head, searchString, searchChoice);
+                    printList(searchedHead);
                   end;
                   9:
                   begin
-
+                    searchedHead := searchData(head, searchString, searchChoice);
+                    printList(searchedHead);
                   end;
                   10:
                   begin
-
+                    searchedHead := searchData(head, searchString, searchChoice);
+                    printList(searchedHead);
                   end;
                   else
                   begin

@@ -86,6 +86,8 @@ begin
     list := list^.Next;
 
   end;
+  writeln('---------------------------------------------------');
+  writeln;
 end;
 
 procedure FetchAllPics(var head: PPicElem);
@@ -288,9 +290,7 @@ begin
   if field = 2 then   // years of start
   begin
 
-    writeln('data ', data.yearOfStart);
-    writeln('str ', IntToStr(data.yearOfStart));
-    writeln('pos ',  Pos(searchStr, IntToStr(data.yearOfStart)));
+
     Result := (Pos(searchStr, IntToStr(data.yearOfStart)) > 0)
 
   end
@@ -416,6 +416,7 @@ var
 begin
   curElem := head;
   newList := nil;
+  result := nil;
 
   while curElem <> nil do
   begin
@@ -432,10 +433,12 @@ begin
         new(newList^.Next);
         newList := newList^.Next;
         newList^.data := CurElem^.data;
+        newList^.Next := nil;
       end;
     end;
     curElem := curElem^.Next;
   end;
+
 end;
 
 // DEBUG
@@ -553,76 +556,124 @@ begin
               writeln('2. Год начала');
               writeln('3. Год конца');
               writeln('4. Время работы над картиной');
-              writeln('4. Жанр');
-              writeln('5. Тема');
-              writeln('6. Место');
-              writeln('7. Материал');
-              writeln('8. Краткое описание');
-              writeln('9. Пользовательская оценка');
-              writeln('10. Пользовательский комментарий');
-              writeln('11. Любая характеристика');
+              writeln('5. Жанр');
+              writeln('6. Тема');
+              writeln('7. Место');
+              writeln('8. Материал');
+              writeln('9. Краткое описание');
+              writeln('10. Пользовательская оценка');
+              writeln('11. Пользовательский комментарий');
+              writeln('12. Любая характеристика');
 
-              readln(searchChoice);
 
               repeat
+
+                readln(searchChoice);
+
                 case searchChoice of
                   1:
                   begin
                     searchedHead := searchData(head, searchString, searchChoice);
-                    printList(searchedHead);
+                    if searchedHead = nil then
+                      writeln('Картин по вашему запросу не найдено')
+                    else
+                      printList(searchedHead);
 
                   end;
                   2:
                   begin
                     searchedHead := searchData(head, searchString, searchChoice);
-                    printList(searchedHead);
+                    if searchedHead = nil then
+                      writeln('Картин по вашему запросу не найдено')
+                    else
+                      printList(searchedHead);
                   end;
                   3:
                   begin
                     searchedHead := searchData(head, searchString, searchChoice);
-                    printList(searchedHead);
+                    if searchedHead = nil then
+                      writeln('Картин по вашему запросу не найдено')
+                    else
+                      printList(searchedHead);
                   end;
                   4:
                   begin
                     searchedHead := searchData(head, searchString, searchChoice);
-                    printList(searchedHead);
+                    if searchedHead = nil then
+                      writeln('Картин по вашему запросу не найдено')
+                    else
+                      printList(searchedHead);
                   end;
                   5:
                   begin
                     searchedHead := searchData(head, searchString, searchChoice);
-                    printList(searchedHead);
+                    if searchedHead = nil then
+                      writeln('Картин по вашему запросу не найдено')
+                    else
+                      printList(searchedHead);
                   end;
                   6:
                   begin
                     searchedHead := searchData(head, searchString, searchChoice);
-                    printList(searchedHead);
+                    if searchedHead = nil then
+                      writeln('Картин по вашему запросу не найдено')
+                    else
+                      printList(searchedHead);
                   end;
                   7:
                   begin
                     searchedHead := searchData(head, searchString, searchChoice);
-                    printList(searchedHead);
+                    if searchedHead = nil then
+                      writeln('Картин по вашему запросу не найдено')
+                    else
+                      printList(searchedHead);
                   end;
                   8:
                   begin
                     searchedHead := searchData(head, searchString, searchChoice);
-                    printList(searchedHead);
+                    if searchedHead = nil then
+                      writeln('Картин по вашему запросу не найдено')
+                    else
+                      printList(searchedHead);
                   end;
                   9:
                   begin
                     searchedHead := searchData(head, searchString, searchChoice);
-                    printList(searchedHead);
+                    if searchedHead = nil then
+                      writeln('Картин по вашему запросу не найдено')
+                    else
+                      printList(searchedHead);
                   end;
                   10:
                   begin
                     searchedHead := searchData(head, searchString, searchChoice);
-                    printList(searchedHead);
+                    if searchedHead = nil then
+                      writeln('Картин по вашему запросу не найдено')
+                    else
+                      printList(searchedHead);
+                  end;
+                  11:
+                  begin
+                    searchedHead := searchData(head, searchString, searchChoice);
+                    if searchedHead = nil then
+                      writeln('Картин по вашему запросу не найдено')
+                    else
+                      printList(searchedHead);
+                  end;
+                  12:
+                  begin
+                    searchedHead := searchData(head, searchString, searchChoice);
+                    if searchedHead = nil then
+                      writeln('Картин по вашему запросу не найдено')
+                    else
+                      printList(searchedHead);
                   end;
                   else
                   begin
                     writeln('Вы ввели неверное значение, повторите ввод');
                   end;
                 end;
-              until (searchChoice >= 1) and (searchChoice <= 10);
+              until (searchChoice >= 1) and (searchChoice <= 12);
 
 
 
