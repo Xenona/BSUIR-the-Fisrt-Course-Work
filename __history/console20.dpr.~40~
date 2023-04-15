@@ -64,7 +64,7 @@ var
 begin
   list := head;
 
-  while list <> nil do
+  while list^.Next <> nil do
   begin
     writeln('--------------- Another picture -----------------');
 
@@ -364,7 +364,7 @@ begin
 
 end;
 
-function searchDataInit(head: PPicElem; infoToSearch: string; fieldWhereSearch: integer ): PPicElem;
+function searchData(head: PPicElem; infoToSearch: string; fieldWhereSearch: integer ): PPicElem;
 var
   curElem: PPicElem;
   newHead: PPicElem;
@@ -388,61 +388,12 @@ begin
 
     end;
     curElem := curElem^.Next;
-
   end;
-
-  curElem^.Next := nil;
 
   printList(newHead);
 end;
 //
 //
-
-
-
-
-// DEBUG
-
-
-
-function searchData(head: PPicElem; infoToSearch: string; fieldWhereSearch: integer ): PPicElem;
-var
-  curElem: PPicElem;
-  newList: PPicElem;
-  // curElem - current elem of init list being processed;
-  // newHead - list of records that fulfill the search condition;
-
-  // head of created list returns in 'return' var;
-begin
-  curElem := head;
-  newList := nil;
-
-  while curElem <> nil do
-  begin
-    if isRecordMatch(curElem^.data, infoToSearch, fieldWhereSearch) then
-    begin
-      if newList = nil then
-      begin
-        new(newList);
-        newList^.data := curElem^.data;
-        result := newList;
-      end
-      else
-      begin
-        new(newList^.Next);
-        newList := newList^.Next;
-        newList^.data := CurElem^.data;
-      end;
-    end;
-    curElem := curElem^.Next;
-  end;
-end;
-
-// DEBUG
-
-
-
-
 
 
 // SEARCH SECTION END
