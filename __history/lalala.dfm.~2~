@@ -1,0 +1,45 @@
+object Form1: TForm1
+  Left = 0
+  Top = 0
+  Caption = 'Form1'
+  ClientHeight = 726
+  ClientWidth = 1047
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  PixelsPerInch = 96
+  TextHeight = 13
+  object FlowPanel1: TFlowPanel
+    Left = 0
+    Top = 0
+    Width = 809
+    Height = 705
+    Caption = 'FlowPanel1'
+    TabOrder = 0
+  end
+  object Panel1: TPanel
+    Left = 862
+    Top = 0
+    Width = 185
+    Height = 726
+    Align = alRight
+    Caption = 'Panel1'
+    TabOrder = 1
+    ExplicitLeft = 816
+    ExplicitTop = 8
+    ExplicitHeight = 710
+    object Button1: TButton
+      Left = 96
+      Top = 320
+      Width = 75
+      Height = 25
+      Caption = 'Button1'
+      TabOrder = 0
+      OnClick = Button1Click
+    end
+  end
+end

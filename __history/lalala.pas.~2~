@@ -1,0 +1,112 @@
+unit lalala;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls;
+
+type
+  TForm1 = class(TForm)
+    FlowPanel1: TFlowPanel;
+    Panel1: TPanel;
+    Button1: TButton;
+    procedure Button1Click(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Form1: TForm1;
+
+implementation
+
+{$R *.dfm}
+
+
+procedure CreatePanelWithImageAndLabel2(AOwner: TComponent; const ACaption, AImagePath, ALabelText: string; AParentFlowPanel: TFlowPanel);
+var
+  Panel: TPanel;
+  Image: TImage;
+  ImgLabel: TLabel;
+begin
+  // Create the panel
+  Panel := TPanel.Create(AOwner);
+  Panel.Parent := AParentFlowPanel;
+  Panel.Align := alTop;
+  Panel.Caption := ACaption;
+
+  // Create the image
+  Image := TImage.Create(Panel);
+  Image.Parent := Panel;
+  Image.Width := 50;
+  Image.Height := 50;
+  Image.Picture.LoadFromFile(AImagePath);
+
+  // Create the label
+  ImgLabel := TLabel.Create(Panel);
+  ImgLabel.Parent := Panel;
+  ImgLabel.AutoSize := True;
+  ImgLabel.WordWrap := True;
+  ImgLabel.Caption := ALabelText;
+end;
+
+procedure CreatePanelWithImageAndLabel(AOwner: TComponent; const ACaption, AImagePath, ALabelText: string; AParentFlowPanel: TFlowPanel);
+var
+  Panel: TPanel;
+  Image: TImage;
+  ImgLabel: TLabel;
+  ImageWidth, ImageHeight: Integer;
+begin
+  // Create the panel
+  Panel := TPanel.Create(AOwner);
+  Panel.Parent := AParentFlowPanel;
+  Panel.Align := alTop;
+  Panel.Caption := ACaption;
+  Panel.BevelOuter := bvNone;
+  Panel.Height := 70;
+  Panel.Color := clWhite;
+  Panel.BorderStyle := bsNone;
+  Panel.ParentBackground := False;
+
+  // Create the image
+  Image := TImage.Create(Panel);
+  Image.Parent := Panel;
+  Image.Picture.LoadFromFile(AImagePath);
+  ImageWidth := Image.Picture.Width;
+  ImageHeight := Image.Picture.Height;
+  Image.Width := ImageWidth;
+  Image.Height := ImageHeight;
+  Image.Left := 10;
+  Image.Top := 10;
+
+  // Create the label
+  ImgLabel := TLabel.Create(Panel);
+  ImgLabel.Parent := Panel;
+  ImgLabel.AutoSize := True;
+  ImgLabel.WordWrap := True;
+  ImgLabel.Caption := ALabelText;
+  ImgLabel.Left := Image.Left;
+  ImgLabel.Top := Image.Top + ImageHeight + 10;
+  ImgLabel.Width := ImageWidth;
+  ImgLabel.Height := ImgLabel.Canvas.TextHeight(ALabelText);
+end;
+
+
+
+
+procedure TForm1.Button1Click(Sender: TObject);
+begin
+
+  CreatePanelWithImageAndLabel(Self, 'My Panel', 'C:\Users\HP\Desktop\uchebka\year1\OAIP\theCoursach\src\spring-1896.bmp', 'My label', FlowPanel1);
+
+
+
+end;
+
+
+
+
+end.
