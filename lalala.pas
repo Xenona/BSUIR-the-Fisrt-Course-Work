@@ -36,11 +36,8 @@ type
   TSortMethod = function(elem1, elem2: TData; direction: integer): integer;
 
 
-
-
   TFGallery = class(TForm)
     Panel1: TPanel;
-    Button1: TButton;
     ScrollBox1: TScrollBox;
     FlowPanel1: TFlowPanel;
     MainMenu: TMainMenu;
@@ -50,8 +47,8 @@ type
     HelpMenu: TMenuItem;
     DeveloperMenu: TMenuItem;
     OpenDialog1: TOpenDialog;
-    procedure Button1Click(Sender: TObject);
     procedure OpenFileClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
 
   private
     { Private declarations }
@@ -65,6 +62,7 @@ var
 implementation
 
 {$R *.dfm}
+{$D+}
 
 
 // to fetch all pics from dataset.pic file
@@ -105,7 +103,7 @@ begin
   until Eof(storageFile);
 
   // saving head of a list;
-  readPicList := nil;
+  readPicList^.Next := nil;
   closeFile(storageFile);
   readPicList := head;
   head := readPicList^.Next;
@@ -113,37 +111,42 @@ begin
 
 end;
 
-// load corresponding pics to imgBuffer field;
-//procedure LoadImages(PicList: PPicElem);
-//var
-//  SearchRec: TSearchRec;
-//  FileName: string;
-//  BasePath: string;
-//  breakFlag: Boolean;
-//begin
-//  BasePath := ExtractFilePath(ParamStr(0)) + 'src\';
-//  if FindFirst(BasePath + '*.bmp', faAnyFile, SearchRec) = 0 then
-//  begin
-//    while not breakFlag and (FindNext(SearchRec) = 0) do
-//    begin
-//      breakFlag := False;
-//      FileName := SearchRec.Name;
-//      // Find the corresponding element in the list
-//      while PicList <> nil do
-//      begin
-//        if SameText(PicList^.data.filename, FileName) then
-//        begin
-//          // Load the image into the buffer
-//          PicList^.data.imgBuffer.LoadFromFile(BasePath + FileName);
-//          breakFlag := True;
-//        end;
-//        PicList := PicList^.Next;
-//      end;
-//    end;
-//  end;
-//  FindClose(SearchRec);
-//end;
 
+// load imgs to buffer of aech record
+procedure LoadImages(PicList: PPicElem);
+var
+  SearchRec: TSearchRec;
+  FileName: string;
+  BasePath: string;
+  breakFlag: Boolean;
+  CurrentPic: PPicElem;
+begin
+  BasePath := ExtractFilePath(ParamStr(0)) + 'src\';
+  if FindFirst(BasePath + '*.bmp', faAnyFile, SearchRec) = 0 then
+  begin
+    try
+      repeat
+        breakFlag := False;
+        FileName := SearchRec.Name;
+        // Find the corresponding element in the list
+        CurrentPic := PicList;
+        while (not breakFlag) and (CurrentPic <> nil) do
+        begin
+          if CurrentPic^.data.filename = FileName then
+          begin
+            CurrentPic^.data.imgBuffer := TPicture.Create;
+            // Load the image into the buffer
+            CurrentPic^.data.imgBuffer.LoadFromFile(BasePath + FileName);
+            breakFlag := True;
+          end;
+          CurrentPic := CurrentPic^.Next;
+        end;
+      until FindNext(SearchRec) <> 0;
+    finally
+      FindClose(SearchRec);
+    end;
+  end;
+end;
 
 
 procedure CreatePicPanel(AOwner: TComponent; AFlowPanel: TFlowPanel; APic: TPicture; ATitle: string);
@@ -156,7 +159,7 @@ var
 begin
   Panel := TPanel.Create(AOwner);
   Panel.Parent := AFlowPanel;
-  Margin := 10;
+  Margin := 20;
   Panel.Margins.Left := Margin;
   Panel.Margins.Top := Margin;
   Panel.Margins.Right := Margin;
@@ -165,104 +168,50 @@ begin
   Panel.Height := 200;
   Panel.Width := 200;
 
+
+
   Image := TImage.Create(Panel);
   Image.Parent := Panel;
   Image.AutoSize := False;
-  Scale := Min(Panel.ClientWidth / APic.Width, Panel.ClientHeight / APic.Height);
-  Image.Width := Round(APic.Width * Scale);
-  Image.Height := Round(APic.Height * Scale);
-  Image.Left := (Panel.Width - Image.Width) div 2;
-  Image.Top := (Panel.Height - Image.Height) div 2;
+  Image.Stretch := True;
+
+  Scale := Min((Panel.ClientWidth - Margin) / APic.Width, (Panel.ClientHeight - Margin) / APic.Height);
+  Image.Width := Round((APic.Width) * Scale);
+  Image.Height := Round((APic.Height) * Scale);
+  Image.Left := (Panel.Width - Image.Width + Margin) div 2;
+  Image.Top := (Panel.Height - Image.Height + Margin) div 2;
   Image.Picture.Assign(APic);
+
+
 
   LabelTitle := TLabel.Create(Panel);
   LabelTitle.Parent := Panel;
   LabelTitle.Caption := ATitle;
   LabelTitle.AutoSize := True;
-  LabelTitle.Left := Margin;
-  LabelTitle.Top := Panel.Height - Margin - LabelTitle.Height;
+//  LabelTitle.Left := Margin;
+//  LabelTitle.Top := Panel.Height - Margin - LabelTitle.Height;
+  LabelTitle.Left := Image.Left;
+  LabelTitle.Top := Image.Top + Image.Height - LabelTitle.Height;
+end;
+
+procedure ShowAllPics(CurrentPic: PPicElem);
+begin
+  while (CurrentPic <> nil) do
+  begin
+
+    CreatePicPanel(FGallery, FGallery.FlowPanel1, CurrentPic^.data.imgBuffer, CurrentPic^.data.title);
+    CurrentPic := CurrentPic^.Next;
+
+  end;
 end;
 
 
-
-
-procedure CreatePanelWithImageAndLabel(AOwner: TComponent; const ACaption, AImagePath, ALabelText: string; AParentFlowPanel: TFlowPanel);
-var
-  Panel: TPanel;
-  Image: TImage;
-  ImgLabel: TLabel;
-  ImageWidth, ImageHeight: Integer;
+procedure TFGallery.FormCreate(Sender: TObject);
 begin
-  // Create the panel
-  Panel := TPanel.Create(AOwner);
-  Panel.Parent := AParentFlowPanel;
-  Panel.Align := alTop;
-  Panel.Caption := ACaption;
-  Panel.BevelOuter := bvNone;
-  Panel.Height := 150;
-  Panel.Color := clWhite;
-  Panel.BorderStyle := bsNone;
-  Panel.ParentBackground := False;
-  Panel.Alignment := taCenter;
-
-//
-  ImgLabel := TLabel.Create(Panel);
-  ImgLabel.Parent := Panel;
-
-  ImgLabel.Height := ImgLabel.Canvas.TextHeight(ALabelText);
-
-
-  // Create the image
-  Image := TImage.Create(Panel);
-  Image.Parent := Panel;
-  Image.Align := alClient;
-  Image.Picture.LoadFromFile(AImagePath);
-  ImageWidth := Image.Picture.Width;
-  ImageHeight := Image.Picture.Height;
-  Image.Width := Round(ImageWidth*0.1);
-  Image.Height := Round(ImageHeight*0.1);
-  Image.Proportional := True;
-  Image.Stretch := True;
-  Image.Left := 10;
-  Image.Top := 10;
-  Image.Left := (Panel.Width - Image.Width) div 2;
-  Image.Top := (Panel.Height - Image.Height - ImgLabel.Height) div 2;
-
-  // Create the label
-
-
-  ImgLabel.AutoSize := True;
-  ImgLabel.WordWrap := True;
-  ImgLabel.Caption := ALabelText;
-  ImgLabel.Left := Image.Left;
-  ImgLabel.Top := Panel.Height - 20; //Image.Top + ImageHeight + 100;
-  ImgLabel.Width := Image.Width;
-  ImgLabel.Left := (Panel.Width - ImgLabel.Width) div 2;
-  ImgLabel.Top := Image.Top + Image.Height + 10;
-end;
-
-
-
-
-procedure TFGallery.Button1Click(Sender: TObject);
-begin
-
-//  CreatePanelWithImageAndLabel(Self, 'My Panel', 'C:\Users\HP\Desktop\uchebka\year1\OAIP\theCoursach\src\spring-1896.bmp', 'My label', FlowPanel1);
-//
-//  ChangeFileExt(OpenDialog1.FileName, '.dat');
-
-
-
-//  FlowPanel1.Height := FlowPanel1.Height + 80;
-
-
-//Caption := Application.Title;
-
   FetchAllPics(head);
-//  LoadImages(head);
+  LoadImages(head);
+  ShowAllPics(head);
 end;
-
-
 
 procedure TFGallery.OpenFileClick(Sender: TObject);
 Var

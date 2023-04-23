@@ -13,6 +13,7 @@ object FGallery: TFGallery
   Menu = MainMenu
   OldCreateOrder = False
   Position = poDesigned
+  OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
@@ -22,16 +23,27 @@ object FGallery: TFGallery
     Height = 578
     Margins.Bottom = 300
     Align = alRight
+    BorderWidth = 20
+    BorderStyle = bsSingle
     Caption = 'Panel1'
+    ParentBackground = False
     TabOrder = 0
-    object Button1: TButton
-      Left = 6
-      Top = 272
-      Width = 171
-      Height = 57
-      Caption = 'Button1'
-      TabOrder = 0
-      OnClick = Button1Click
+    object Label1: TLabel
+      Left = 4
+      Top = 17
+      Width = 126
+      Height = 160
+      Caption = 'Label1 '#1083#1072#1083#1072#1083#1072
+      Color = clBlack
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -27
+      Font.Name = 'Montserrat'
+      Font.Style = []
+      ParentColor = False
+      ParentFont = False
+      Transparent = False
+      WordWrap = True
     end
   end
   object ScrollBox1: TScrollBox
@@ -51,6 +63,8 @@ object FGallery: TFGallery
       Align = alTop
       Caption = 'FlowPanel1'
       TabOrder = 0
+      ExplicitLeft = -3
+      ExplicitTop = -2
     end
   end
   object MainMenu: TMainMenu

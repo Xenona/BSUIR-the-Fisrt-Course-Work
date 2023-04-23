@@ -13,6 +13,7 @@ object FGallery: TFGallery
   Menu = MainMenu
   OldCreateOrder = False
   Position = poDesigned
+  OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
@@ -20,18 +21,12 @@ object FGallery: TFGallery
     Top = 0
     Width = 185
     Height = 578
+    Margins.Bottom = 300
     Align = alRight
     Caption = 'Panel1'
+    Color = clOlive
+    ParentBackground = False
     TabOrder = 0
-    object Button1: TButton
-      Left = 6
-      Top = 272
-      Width = 171
-      Height = 57
-      Caption = 'Button1'
-      TabOrder = 0
-      OnClick = Button1Click
-    end
   end
   object ScrollBox1: TScrollBox
     Left = 0
@@ -45,11 +40,13 @@ object FGallery: TFGallery
     object FlowPanel1: TFlowPanel
       Left = 0
       Top = 0
-      Width = 786
-      Height = 0
+      Width = 769
+      Height = 1000
       Align = alTop
       Caption = 'FlowPanel1'
       TabOrder = 0
+      ExplicitLeft = -3
+      ExplicitTop = -2
     end
   end
   object MainMenu: TMainMenu
