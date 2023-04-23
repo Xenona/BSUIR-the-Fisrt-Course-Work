@@ -1,9 +1,9 @@
 # theFisrtCourseWork
 A desktop gallery of Alphonse Mucha masterpiece. 
 
-[x] Written using Delphi 10.4
-[x] OOP when you barely know it, but still
-[x] tens of sleepless nights
+- [x] Written using Delphi 10.4
+- [x] OOP when you barely know it, but still
+- [x] tens of sleepless nights
 
 --- 
 
