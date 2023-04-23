@@ -7,7 +7,7 @@ type
   PPicElem=^TPicElems;
 
   Tdata = packed record
-    title: string[20];
+    title: string[50];
     yearOfStart: integer;
     yearOfEnd: integer;
     yearsOfWork: integer;

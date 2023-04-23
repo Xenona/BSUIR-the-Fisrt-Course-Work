@@ -10,7 +10,7 @@ type
   PPicElem=^TPicElems;
 
   Tdata = packed record
-    title: string[20];
+    title: string[50];
     yearOfStart: integer;
     yearOfEnd: integer;
     yearsOfWork: integer;
@@ -39,7 +39,7 @@ type
   TFGallery = class(TForm)
     Panel1: TPanel;
     ScrollBox1: TScrollBox;
-    FlowPanel1: TFlowPanel;
+    FlowPanelPics: TFlowPanel;
     MainMenu: TMainMenu;
     FileMenu: TMenuItem;
     OpenFile: TMenuItem;
@@ -47,8 +47,10 @@ type
     HelpMenu: TMenuItem;
     DeveloperMenu: TMenuItem;
     OpenDialog1: TOpenDialog;
+    Label1: TLabel;
     procedure OpenFileClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure FormResize(Sender: TObject);
 
   private
     { Private declarations }
@@ -159,14 +161,14 @@ var
 begin
   Panel := TPanel.Create(AOwner);
   Panel.Parent := AFlowPanel;
-  Margin := 20;
+  Margin := 10;
   Panel.Margins.Left := Margin;
   Panel.Margins.Top := Margin;
   Panel.Margins.Right := Margin;
   Panel.Margins.Bottom := Margin;
   Panel.BevelOuter := bvNone;
-  Panel.Height := 200;
-  Panel.Width := 200;
+  Panel.Height := 270;
+  Panel.Width := 210;
 
 
 
@@ -175,11 +177,11 @@ begin
   Image.AutoSize := False;
   Image.Stretch := True;
 
-  Scale := Min((Panel.ClientWidth - Margin) / APic.Width, (Panel.ClientHeight - Margin) / APic.Height);
+  Scale := Min((Panel.ClientWidth - 2*Margin) / APic.Width, (Panel.ClientWidth - 2*Margin) / APic.Height);
   Image.Width := Round((APic.Width) * Scale);
   Image.Height := Round((APic.Height) * Scale);
   Image.Left := (Panel.Width - Image.Width + Margin) div 2;
-  Image.Top := (Panel.Height - Image.Height + Margin) div 2;
+  Image.Top := (Panel.Height - Image.Height - 20) div 2;
   Image.Picture.Assign(APic);
 
 
@@ -187,11 +189,18 @@ begin
   LabelTitle := TLabel.Create(Panel);
   LabelTitle.Parent := Panel;
   LabelTitle.Caption := ATitle;
-  LabelTitle.AutoSize := True;
-//  LabelTitle.Left := Margin;
-//  LabelTitle.Top := Panel.Height - Margin - LabelTitle.Height;
+//  LabelTitle.AutoSize := True;
   LabelTitle.Left := Image.Left;
-  LabelTitle.Top := Image.Top + Image.Height - LabelTitle.Height;
+  LabelTitle.Font.Name := 'Montserrat';
+  LabelTitle.Font.Size := 10;
+  LabelTitle.Font.Style := [fsBold];
+  LabelTitle.Font.Color := clWhite;
+  LabelTitle.Top := Image.Top + Image.Height;
+  LabelTitle.WordWrap := True;
+  LabelTitle.Width := Image.Width + Margin;
+  LabelTitle.Height := 100;
+
+
 end;
 
 procedure ShowAllPics(CurrentPic: PPicElem);
@@ -199,7 +208,7 @@ begin
   while (CurrentPic <> nil) do
   begin
 
-    CreatePicPanel(FGallery, FGallery.FlowPanel1, CurrentPic^.data.imgBuffer, CurrentPic^.data.title);
+    CreatePicPanel(FGallery, FGallery.FlowPanelPics, CurrentPic^.data.imgBuffer, CurrentPic^.data.title);
     CurrentPic := CurrentPic^.Next;
 
   end;
@@ -211,6 +220,16 @@ begin
   FetchAllPics(head);
   LoadImages(head);
   ShowAllPics(head);
+
+  Label1.Width := 53;
+  Label1.Height := 100;
+end;
+
+procedure TFGallery.FormResize(Sender: TObject);
+begin
+//  with S
+
+//  FlowPanel.Height
 end;
 
 procedure TFGallery.OpenFileClick(Sender: TObject);

@@ -14,6 +14,7 @@ object FGallery: TFGallery
   OldCreateOrder = False
   Position = poDesigned
   OnCreate = FormCreate
+  OnResize = FormResize
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
@@ -23,10 +24,28 @@ object FGallery: TFGallery
     Height = 578
     Margins.Bottom = 300
     Align = alRight
+    BorderWidth = 20
+    BorderStyle = bsSingle
     Caption = 'Panel1'
-    Color = clOlive
     ParentBackground = False
     TabOrder = 0
+    object Label1: TLabel
+      Left = 4
+      Top = 0
+      Width = 101
+      Height = 41
+      Caption = 'Label1 '#1083#1072#1083#1072#1083#1072
+      Color = clWhite
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = 'Montserrat'
+      Font.Style = []
+      ParentColor = False
+      ParentFont = False
+      Transparent = False
+      WordWrap = True
+    end
   end
   object ScrollBox1: TScrollBox
     Left = 0
@@ -37,14 +56,20 @@ object FGallery: TFGallery
     VertScrollBar.Smooth = True
     Align = alClient
     TabOrder = 1
-    object FlowPanel1: TFlowPanel
+    object FlowPanelPics: TFlowPanel
       Left = 0
       Top = 0
       Width = 769
       Height = 1000
+      Margins.Left = 20
+      Margins.Top = 20
+      Margins.Right = 20
+      Margins.Bottom = 20
       Align = alTop
       Caption = 'FlowPanel1'
+      ShowCaption = False
       TabOrder = 0
+      VerticalAlignment = taAlignTop
       ExplicitLeft = -3
       ExplicitTop = -2
     end
