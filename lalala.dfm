@@ -1,10 +1,11 @@
 object FGallery: TFGallery
-  Left = 549
-  Top = 231
+  Left = 617
+  Top = 77
   Caption = #1043#1072#1083#1077#1088#1077#1103' '#1040#1083#1100#1092#1086#1085#1089#1072' '#1052#1091#1093#1080' '
-  ClientHeight = 578
-  ClientWidth = 978
+  ClientHeight = 850
+  ClientWidth = 980
   Color = clBtnFace
+  Constraints.MinHeight = 850
   DoubleBuffered = True
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -13,157 +14,72 @@ object FGallery: TFGallery
   Font.Style = []
   Menu = MainMenu
   OldCreateOrder = False
-  Position = poDesigned
+  Position = poDesktopCenter
   OnCreate = FormCreate
   OnResize = FormResize
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
-  object Panel1: TPanel
-    Left = 778
+  object ScrollBox1: TScrollBox
+    Left = 0
     Top = 0
-    Width = 200
-    Height = 578
-    Margins.Bottom = 300
+    Width = 706
+    Height = 850
+    HorzScrollBar.Visible = False
+    VertScrollBar.Smooth = True
+    Align = alClient
+    Color = clBtnFace
+    ParentColor = False
+    TabOrder = 0
+    ExplicitWidth = 790
+    ExplicitHeight = 578
+    object FlowPanelPics: TFlowPanel
+      Left = 0
+      Top = 0
+      Width = 702
+      Height = 729
+      Margins.Left = 20
+      Margins.Top = 20
+      Margins.Right = 20
+      Margins.Bottom = 20
+      Align = alTop
+      BorderWidth = 15
+      Caption = 'FlowPanel1'
+      ParentBackground = False
+      ShowCaption = False
+      TabOrder = 0
+      VerticalAlignment = taAlignTop
+      ExplicitLeft = -1
+      ExplicitTop = -2
+      ExplicitWidth = 683
+    end
+  end
+  object PanelSideBar: TPanel
+    Left = 706
+    Top = 0
+    Width = 274
+    Height = 850
+    Margins.Left = 0
+    Margins.Top = 0
+    Margins.Right = 0
+    Margins.Bottom = 0
     Align = alRight
     BorderWidth = 20
     BorderStyle = bsSingle
     Caption = 'Panel1'
     ParentBackground = False
     ShowCaption = False
-    TabOrder = 0
-    ExplicitLeft = 782
-    object LabelAlbum: TLabel
-      Left = 4
-      Top = 9
-      Width = 105
-      Height = 32
-      Caption = #1040#1083#1100#1073#1086#1084':'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -23
-      Font.Name = 'Montserrat'
-      Font.Style = [fsBold]
-      ParentFont = False
-    end
-    object LabelSearch: TLabel
-      Left = 4
-      Top = 112
-      Width = 106
-      Height = 41
-      Caption = #1048#1089#1082#1072#1090#1100'...'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -23
-      Font.Name = 'Montserrat'
-      Font.Style = [fsBold]
-      ParentFont = False
-    end
-    object LabelParam: TLabel
-      Left = 4
-      Top = 192
-      Width = 187
-      Height = 32
-      Caption = #1055#1086' '#1087#1072#1088#1072#1084#1077#1090#1088#1091':'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -23
-      Font.Name = 'Montserrat'
-      Font.Style = [fsBold]
-      ParentFont = False
-    end
-    object LabelFilter: TLabel
-      Left = 4
-      Top = 299
-      Width = 143
-      Height = 32
-      Caption = #1060#1080#1083#1100#1090#1088' '#1087#1086':'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -23
-      Font.Name = 'Montserrat'
-      Font.Style = [fsBold]
-      ParentFont = False
-    end
-    object Bevel1: TBevel
-      Left = -14
-      Top = 97
-      Width = 215
-      Height = 9
-    end
-    object Bevel2: TBevel
-      Left = -9
-      Top = 271
-      Width = 215
-      Height = 9
-    end
-    object Bevel3: TBevel
-      Left = -11
-      Top = 399
-      Width = 215
-      Height = 9
-    end
-    object ComboBoxAlbum: TComboBox
-      Left = 4
-      Top = 47
-      Width = 189
-      Height = 35
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -20
-      Font.Name = 'Montserrat'
-      Font.Style = []
-      ParentFont = False
-      TabOrder = 0
-      Text = ' '
-    end
-    object ComboBoxParam: TComboBox
-      Left = 4
-      Top = 230
-      Width = 189
-      Height = 35
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -20
-      Font.Name = 'Montserrat'
-      Font.Style = []
-      ParentFont = False
-      TabOrder = 1
-    end
-    object ComboBoxFilter: TComboBox
-      Left = 4
-      Top = 337
-      Width = 189
-      Height = 35
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -20
-      Font.Name = 'Montserrat'
-      Font.Style = []
-      ParentFont = False
-      TabOrder = 2
-    end
-    object EditSearch: TEdit
-      Left = 4
-      Top = 151
-      Width = 189
-      Height = 35
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -20
-      Font.Name = 'Montserrat'
-      Font.Style = []
-      ParentFont = False
-      TabOrder = 3
-      TextHint = #1074#1074#1077#1076#1080#1090#1077' '#1090#1077#1082#1089#1090
-    end
+    TabOrder = 1
+    ExplicitLeft = 704
+    ExplicitHeight = 635
     object ButtonSlideshow: TButton
-      Left = 4
-      Top = 432
-      Width = 189
-      Height = 73
+      Left = 21
+      Top = 736
+      Width = 228
+      Height = 89
       Cursor = crHandPoint
       Hint = #1047#1072#1087#1091#1089#1082' '#1089#1083#1072#1081#1076'-'#1096#1086#1091' '#1080#1079' '#1090#1077#1082#1091#1097#1077#1075#1086' '#1072#1083#1100#1073#1086#1084#1072
+      Align = alBottom
       Caption = #1053#1072#1095#1072#1090#1100' '#1089#1083#1072#1081#1076'-'#1096#1086#1091
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
@@ -173,44 +89,322 @@ object FGallery: TFGallery
       ParentFont = False
       ParentShowHint = False
       ShowHint = True
-      TabOrder = 4
+      TabOrder = 0
       WordWrap = True
+      ExplicitLeft = 2
+      ExplicitTop = 462
+      ExplicitWidth = 232
     end
-  end
-  object ScrollBox1: TScrollBox
-    Left = 0
-    Top = 0
-    Width = 778
-    Height = 578
-    HorzScrollBar.Visible = False
-    VertScrollBar.Smooth = True
-    Align = alClient
-    Color = clBtnFace
-    ParentColor = False
-    TabOrder = 1
-    ExplicitWidth = 790
-    object FlowPanelPics: TFlowPanel
-      Left = 0
-      Top = 0
-      Width = 757
-      Height = 1000
-      Margins.Left = 20
-      Margins.Top = 20
-      Margins.Right = 20
-      Margins.Bottom = 20
+    object PanelAlbum: TPanel
+      Left = 21
+      Top = 21
+      Width = 228
+      Height = 78
+      Margins.Bottom = 30
       Align = alTop
-      Caption = 'FlowPanel1'
+      BevelEdges = []
+      BevelOuter = bvNone
+      BevelWidth = 10
+      Caption = 'Panel1'
       ParentBackground = False
       ShowCaption = False
-      TabOrder = 0
-      VerticalAlignment = taAlignTop
-      ExplicitLeft = 2
-      ExplicitTop = -2
+      TabOrder = 1
+      ExplicitLeft = 11
+      ExplicitTop = 11
+      ExplicitWidth = 248
+      object LabelAlbum: TLabel
+        AlignWithMargins = True
+        Left = 0
+        Top = 0
+        Width = 228
+        Height = 35
+        Margins.Left = 0
+        Margins.Top = 0
+        Margins.Right = 0
+        Margins.Bottom = 0
+        Align = alTop
+        AutoSize = False
+        Caption = #1040#1083#1100#1073#1086#1084':'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -23
+        Font.Name = 'Montserrat'
+        Font.Style = [fsBold]
+        ParentFont = False
+        ExplicitLeft = 17
+        ExplicitTop = 17
+        ExplicitWidth = 183
+      end
+      object ComboBoxAlbum: TComboBox
+        Left = 0
+        Top = 35
+        Width = 228
+        Height = 35
+        Align = alTop
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -20
+        Font.Name = 'Montserrat'
+        Font.Style = []
+        ParentFont = False
+        TabOrder = 0
+        Text = ' '
+        ExplicitWidth = 248
+      end
+    end
+    object PanelFilter: TPanel
+      Left = 21
+      Top = 299
+      Width = 228
+      Height = 192
+      Margins.Top = 30
+      Align = alTop
+      BevelEdges = []
+      BevelOuter = bvNone
+      BevelWidth = 10
+      Caption = 'Panel1'
+      Padding.Top = 40
+      ParentBackground = False
+      ShowCaption = False
+      TabOrder = 2
+      ExplicitLeft = 11
+      ExplicitTop = 89
+      ExplicitWidth = 248
+      object LabelFilter: TLabel
+        Left = 0
+        Top = 40
+        Width = 228
+        Height = 35
+        Align = alTop
+        Caption = #1060#1080#1083#1100#1090#1088' '#1087#1086':'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -23
+        Font.Name = 'Montserrat'
+        Font.Style = [fsBold]
+        ParentFont = False
+        ExplicitLeft = 27
+        ExplicitTop = 7
+        ExplicitWidth = 197
+      end
+      object LabelFiltVal: TLabel
+        Left = 0
+        Top = 110
+        Width = 228
+        Height = 35
+        Align = alTop
+        Caption = #1057#1086' '#1079#1085#1072#1095#1077#1085#1080#1077#1084':'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -23
+        Font.Name = 'Montserrat'
+        Font.Style = [fsBold]
+        ParentFont = False
+        ExplicitTop = 104
+      end
+      object ComboBoxFilter: TComboBox
+        Left = 0
+        Top = 75
+        Width = 228
+        Height = 35
+        Align = alTop
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -20
+        Font.Name = 'Montserrat'
+        Font.Style = []
+        ParentFont = False
+        TabOrder = 0
+        ExplicitLeft = -55
+        ExplicitTop = 47
+        ExplicitWidth = 232
+      end
+      object ComboBoxFiltVal: TComboBox
+        Left = 0
+        Top = 145
+        Width = 228
+        Height = 35
+        Align = alTop
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -20
+        Font.Name = 'Montserrat'
+        Font.Style = []
+        ParentFont = False
+        TabOrder = 1
+        ExplicitLeft = -8
+        ExplicitTop = 118
+        ExplicitWidth = 232
+      end
+    end
+    object PanelSearch: TPanel
+      Left = 21
+      Top = 99
+      Width = 228
+      Height = 200
+      Align = alTop
+      BevelEdges = []
+      BevelOuter = bvNone
+      Caption = 'Panel1'
+      Padding.Top = 40
+      ParentBackground = False
+      ShowCaption = False
+      TabOrder = 3
+      ExplicitLeft = 19
+      ExplicitTop = 97
+      object LabelParam: TLabel
+        Left = 0
+        Top = 110
+        Width = 228
+        Height = 35
+        Align = alTop
+        Caption = #1055#1086' '#1087#1072#1088#1072#1084#1077#1090#1088#1091':'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -23
+        Font.Name = 'Montserrat'
+        Font.Style = [fsBold]
+        ParentFont = False
+        ExplicitLeft = -2
+        ExplicitTop = 190
+        ExplicitWidth = 187
+      end
+      object LabelSearch: TLabel
+        Left = 0
+        Top = 40
+        Width = 228
+        Height = 35
+        Align = alTop
+        Caption = #1048#1089#1082#1072#1090#1100'...'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -23
+        Font.Name = 'Montserrat'
+        Font.Style = [fsBold]
+        ParentFont = False
+        ExplicitLeft = -7
+        ExplicitTop = 44
+        ExplicitWidth = 248
+      end
+      object EditSearch: TEdit
+        Left = 0
+        Top = 75
+        Width = 228
+        Height = 35
+        Align = alTop
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -20
+        Font.Name = 'Montserrat'
+        Font.Style = []
+        ParentFont = False
+        TabOrder = 0
+        TextHint = #1074#1074#1077#1076#1080#1090#1077' '#1090#1077#1082#1089#1090
+        ExplicitTop = 85
+      end
+      object ComboBoxParam: TComboBox
+        Left = 0
+        Top = 145
+        Width = 228
+        Height = 35
+        Align = alTop
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -20
+        Font.Name = 'Montserrat'
+        Font.Style = []
+        ParentFont = False
+        TabOrder = 1
+        ExplicitTop = 155
+      end
+    end
+    object PanelSort: TPanel
+      Left = 19
+      Top = 512
+      Width = 222
+      Height = 185
+      BevelEdges = []
+      BevelOuter = bvNone
+      Caption = 'Panel1'
+      Padding.Top = 40
+      ParentBackground = False
+      ShowCaption = False
+      TabOrder = 4
+      object LabelSort: TLabel
+        Left = 0
+        Top = 40
+        Width = 222
+        Height = 32
+        Align = alTop
+        Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1087#1086':'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -23
+        Font.Name = 'Montserrat'
+        Font.Style = [fsBold]
+        ParentFont = False
+        ExplicitLeft = 1
+        ExplicitTop = 1
+        ExplicitWidth = 200
+      end
+      object LabelSortParam: TLabel
+        Left = 0
+        Top = 107
+        Width = 222
+        Height = 32
+        Align = alTop
+        Caption = #1057' '#1087#1086#1088#1103#1076#1082#1086#1084':'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -23
+        Font.Name = 'Montserrat'
+        Font.Style = [fsBold]
+        ParentFont = False
+        ExplicitLeft = 1
+        ExplicitTop = 68
+        ExplicitWidth = 160
+      end
+      object ComboBoxSortParam: TComboBox
+        Left = 0
+        Top = 72
+        Width = 222
+        Height = 35
+        Align = alTop
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -20
+        Font.Name = 'Montserrat'
+        Font.Style = []
+        ParentFont = False
+        TabOrder = 0
+        ExplicitLeft = -55
+        ExplicitTop = 47
+        ExplicitWidth = 232
+        ExplicitHeight = 21
+      end
+      object ComboBox2: TComboBox
+        Left = 0
+        Top = 139
+        Width = 222
+        Height = 35
+        Align = alTop
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -20
+        Font.Name = 'Montserrat'
+        Font.Style = []
+        ParentFont = False
+        TabOrder = 1
+        ExplicitLeft = -8
+        ExplicitTop = 118
+        ExplicitWidth = 232
+        ExplicitHeight = 21
+      end
     end
   end
   object MainMenu: TMainMenu
-    Left = 934
-    Top = 536
+    Left = 310
+    Top = 320
     object FileMenu: TMenuItem
       Caption = #1060#1072#1081#1083
       object OpenFile: TMenuItem
@@ -229,7 +423,7 @@ object FGallery: TFGallery
     end
   end
   object OpenDialog1: TOpenDialog
-    Left = 886
-    Top = 536
+    Left = 406
+    Top = 448
   end
 end

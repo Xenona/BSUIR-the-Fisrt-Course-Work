@@ -37,7 +37,7 @@ type
 
 
   TFGallery = class(TForm)
-    Panel1: TPanel;
+    PanelSideBar: TPanel;
     ScrollBox1: TScrollBox;
     FlowPanelPics: TFlowPanel;
     MainMenu: TMainMenu;
@@ -54,11 +54,18 @@ type
     LabelFilter: TLabel;
     ComboBoxParam: TComboBox;
     ComboBoxFilter: TComboBox;
-    Bevel1: TBevel;
     EditSearch: TEdit;
-    Bevel2: TBevel;
-    Bevel3: TBevel;
     ButtonSlideshow: TButton;
+    ComboBoxFiltVal: TComboBox;
+    LabelFiltVal: TLabel;
+    PanelAlbum: TPanel;
+    PanelSearch: TPanel;
+    PanelFilter: TPanel;
+    PanelSort: TPanel;
+    LabelSort: TLabel;
+    ComboBoxSortParam: TComboBox;
+    LabelSortParam: TLabel;
+    ComboBox2: TComboBox;
     procedure OpenFileClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormResize(Sender: TObject);
@@ -79,7 +86,158 @@ implementation
 {$R *.dfm}
 {$D+}
 
+// SORT section BEGIN
 
+function cmpYearStart(elem1, elem2: TData; direction: integer): integer;
+begin
+
+
+  if (elem1.yearOfStart > elem2.yearOfStart) then
+    result := 1*direction;
+  if (elem1.yearOfStart < elem2.yearOfStart) then
+    result := -1*direction;
+  if (elem1.yearOfStart = elem2.yearOfStart) then
+    result := 0;
+
+end;
+
+function cmpYearEnd(elem1, elem2: TData; direction: integer): integer;
+begin
+
+
+  if (elem1.yearOfEnd > elem2.yearOfEnd) then
+    result := 1*direction;
+  if (elem1.yearOfEnd < elem2.yearOfEnd) then
+    result := -1*direction;
+  if (elem1.yearOfEnd = elem2.yearOfEnd) then
+    result := 0;
+
+end;
+
+function cmpYearsWork(elem1, elem2: TData; direction: integer): integer;
+begin
+
+
+  if (elem1.yearsOfWork > elem2.yearsOfWork) then
+    result := 1*direction;
+  if (elem1.yearsOfWork < elem2.yearsOfWork) then
+    result := -1*direction;
+  if (elem1.yearsOfWork = elem2.yearsOfWork) then
+    result := 0;
+
+end;
+
+function cmpTitle(elem1, elem2: TData; direction: integer): integer;
+begin
+
+  if (elem1.title > elem2.title) then
+    result := 1*direction;
+  if (elem1.title < elem2.title) then
+    result := -1*direction;
+  if (elem1.title = elem2.title) then
+    result := 0;
+
+end;
+
+function cmpUserRate(elem1, elem2: TData; direction: integer): integer;
+begin
+
+  if (elem1.userRate > elem2.userRate) then
+    result := 1*direction;
+  if (elem1.userRate < elem2.userRate) then
+    result := -1*direction;
+  if (elem1.userRate = elem2.userRate) then
+    result := 0;
+
+end;
+
+function FindMiddle(headFind: PPicElem): PPicElem;
+var
+  slow, fast: PPicElem;
+begin
+  slow := headFind;
+  fast := headFind^.Next;
+  while (fast <> nil) do
+  begin
+    fast := fast^.Next;
+    if (fast <> nil) then
+    begin
+      slow := slow^.Next;
+      fast := fast^.Next;
+    end;
+  end;
+  result := slow;
+end;
+
+function MergeSort(head: PPicElem; sortDirection: integer; compare: TSortMethod): PPicElem;
+var
+  middle, right, left, newHead, tail: PPicElem;
+  isExit: boolean;
+begin
+  isExit := false;
+
+
+  if (head = nil) or (head^.Next = nil) then
+  begin
+    result := head;
+    isExit := true;
+  end;
+
+  if not isExit then
+  begin
+    middle := FindMiddle(head);
+    right := middle^.Next;
+    middle^.Next := nil;
+    left := head;
+
+    left := MergeSort(left, sortDirection, compare);
+    right := MergeSort(right, sortDirection, compare);
+
+    newHead := nil;
+    tail := nil;
+
+    while (left <> nil) and (right <> nil) do
+    begin
+      if compare(left^.data, right^.data, sortDirection) < 0 then
+      begin
+        if newHead = nil then
+          newHead := left;
+        if tail <> nil then
+          tail^.Next := left;
+        tail := left;
+        left := left^.Next;
+      end
+      else
+      begin
+        if newHead = nil then
+          newHead := right;
+        if tail <> nil then
+          tail^.Next := right;
+        tail := right;
+        right := right^.Next;
+      end;
+    end;
+
+    if left <> nil then
+    begin
+      if newHead = nil then
+        newHead := left;
+      if tail <> nil then
+        tail^.Next := left;
+    end
+    else
+    begin
+      if newHead = nil then
+        newHead := right;
+      if tail <> nil then
+        tail^.Next := right;
+    end;
+
+    result := newHead;
+  end;
+end;
+
+// SORT section END
 
 // to fetch all pics from dataset.pic file
 procedure FetchAllPics(var head: PPicElem);
@@ -127,7 +285,6 @@ begin
 
 end;
 
-
 // load imgs to buffer of aech record
 procedure LoadImages(PicList: PPicElem);
 var
@@ -164,7 +321,7 @@ begin
   end;
 end;
 
-
+// create a panel with a pic and a label
 procedure CreatePicPanel(AOwner: TComponent; AFlowPanel: TFlowPanel; APic: TPicture; ATitle: string);
 var
   Panel: TPanel;
@@ -219,6 +376,7 @@ begin
 
 end;
 
+// run trough a linked list and place all panels onto flow one
 procedure ShowAllPics(CurrentPic: PPicElem);
 begin
   while (CurrentPic <> nil) do
@@ -230,11 +388,13 @@ begin
   end;
 end;
 
+// remove focus from combobox
 procedure TFGallery.FormShow(Sender: TObject);
 begin
-  ActiveControl := Panel1 ; // Set focus to form
+  ActiveControl := PanelSideBar ; // Set focus to form
 end;
 
+//
 procedure TFGallery.FormCreate(Sender: TObject);
 begin
   FetchAllPics(head);
@@ -242,9 +402,10 @@ begin
   ShowAllPics(head);
 
 
-//  ComboBox1.Items.Add('Option 1');
-//  ComboBox1.Items.Add('Option 2');
-//  ComboBox1.Items.Add('Option 3');
+
+  ComboBoxFilter.Items.Add('Избранное');
+  ComboBoxFilter.Items.Add('Оценка');
+  ComboBoxFilter.Items.Add('');
 
 
 
@@ -260,14 +421,10 @@ begin
 
   // appear again in CreatePicPanel
   currNumOfPics := FlowPanelPics.ControlCount;
-  try
-    FlowPanelPics.Height := Max(270*(currNumOfPics div (FlowPanelPics.Width div 210) + 1), Panel1.Height);
-  finally
+  if FlowPanelPics.Width >= 210 then
+    FlowPanelPics.Height := Max(270*(currNumOfPics div (FlowPanelPics.Width div 210) + 1), PanelSideBar.Height);
 
-  end;
 end;
-
-
 
 procedure TFGallery.OpenFileClick(Sender: TObject);
 Var
