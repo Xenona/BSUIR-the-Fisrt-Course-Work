@@ -5,7 +5,8 @@ object FGallery: TFGallery
   ClientHeight = 850
   ClientWidth = 980
   Color = clBtnFace
-  Constraints.MinHeight = 850
+  Constraints.MinHeight = 870
+  Constraints.MinWidth = 560
   DoubleBuffered = True
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -31,27 +32,15 @@ object FGallery: TFGallery
     Color = clBtnFace
     ParentColor = False
     TabOrder = 0
-    ExplicitWidth = 790
-    ExplicitHeight = 578
     object FlowPanelPics: TFlowPanel
       Left = 0
       Top = 0
       Width = 702
-      Height = 729
-      Margins.Left = 20
-      Margins.Top = 20
-      Margins.Right = 20
-      Margins.Bottom = 20
+      Height = 390
       Align = alTop
-      BorderWidth = 15
       Caption = 'FlowPanel1'
-      ParentBackground = False
-      ShowCaption = False
       TabOrder = 0
-      VerticalAlignment = taAlignTop
-      ExplicitLeft = -1
-      ExplicitTop = -2
-      ExplicitWidth = 683
+      ExplicitTop = 456
     end
   end
   object PanelSideBar: TPanel
@@ -70,8 +59,6 @@ object FGallery: TFGallery
     ParentBackground = False
     ShowCaption = False
     TabOrder = 1
-    ExplicitLeft = 704
-    ExplicitHeight = 635
     object ButtonSlideshow: TButton
       Left = 21
       Top = 736
@@ -91,9 +78,6 @@ object FGallery: TFGallery
       ShowHint = True
       TabOrder = 0
       WordWrap = True
-      ExplicitLeft = 2
-      ExplicitTop = 462
-      ExplicitWidth = 232
     end
     object PanelAlbum: TPanel
       Left = 21
@@ -109,9 +93,6 @@ object FGallery: TFGallery
       ParentBackground = False
       ShowCaption = False
       TabOrder = 1
-      ExplicitLeft = 11
-      ExplicitTop = 11
-      ExplicitWidth = 248
       object LabelAlbum: TLabel
         AlignWithMargins = True
         Left = 0
@@ -135,7 +116,7 @@ object FGallery: TFGallery
         ExplicitTop = 17
         ExplicitWidth = 183
       end
-      object ComboBoxAlbum: TComboBox
+      object CmbBxAlbum: TComboBox
         Left = 0
         Top = 35
         Width = 228
@@ -149,7 +130,6 @@ object FGallery: TFGallery
         ParentFont = False
         TabOrder = 0
         Text = ' '
-        ExplicitWidth = 248
       end
     end
     object PanelFilter: TPanel
@@ -167,14 +147,11 @@ object FGallery: TFGallery
       ParentBackground = False
       ShowCaption = False
       TabOrder = 2
-      ExplicitLeft = 11
-      ExplicitTop = 89
-      ExplicitWidth = 248
       object LabelFilter: TLabel
         Left = 0
         Top = 40
         Width = 228
-        Height = 35
+        Height = 32
         Align = alTop
         Caption = #1060#1080#1083#1100#1090#1088' '#1087#1086':'
         Font.Charset = DEFAULT_CHARSET
@@ -183,15 +160,13 @@ object FGallery: TFGallery
         Font.Name = 'Montserrat'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitLeft = 27
-        ExplicitTop = 7
-        ExplicitWidth = 197
+        ExplicitWidth = 143
       end
       object LabelFiltVal: TLabel
         Left = 0
-        Top = 110
+        Top = 107
         Width = 228
-        Height = 35
+        Height = 32
         Align = alTop
         Caption = #1057#1086' '#1079#1085#1072#1095#1077#1085#1080#1077#1084':'
         Font.Charset = DEFAULT_CHARSET
@@ -200,11 +175,11 @@ object FGallery: TFGallery
         Font.Name = 'Montserrat'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitTop = 104
+        ExplicitWidth = 187
       end
-      object ComboBoxFilter: TComboBox
+      object CmbBxFilter: TComboBox
         Left = 0
-        Top = 75
+        Top = 72
         Width = 228
         Height = 35
         Align = alTop
@@ -215,13 +190,10 @@ object FGallery: TFGallery
         Font.Style = []
         ParentFont = False
         TabOrder = 0
-        ExplicitLeft = -55
-        ExplicitTop = 47
-        ExplicitWidth = 232
       end
-      object ComboBoxFiltVal: TComboBox
+      object CmbBxFiltVal: TComboBox
         Left = 0
-        Top = 145
+        Top = 139
         Width = 228
         Height = 35
         Align = alTop
@@ -232,9 +204,6 @@ object FGallery: TFGallery
         Font.Style = []
         ParentFont = False
         TabOrder = 1
-        ExplicitLeft = -8
-        ExplicitTop = 118
-        ExplicitWidth = 232
       end
     end
     object PanelSearch: TPanel
@@ -250,13 +219,11 @@ object FGallery: TFGallery
       ParentBackground = False
       ShowCaption = False
       TabOrder = 3
-      ExplicitLeft = 19
-      ExplicitTop = 97
       object LabelParam: TLabel
         Left = 0
-        Top = 110
+        Top = 107
         Width = 228
-        Height = 35
+        Height = 32
         Align = alTop
         Caption = #1055#1086' '#1087#1072#1088#1072#1084#1077#1090#1088#1091':'
         Font.Charset = DEFAULT_CHARSET
@@ -265,15 +232,13 @@ object FGallery: TFGallery
         Font.Name = 'Montserrat'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitLeft = -2
-        ExplicitTop = 190
         ExplicitWidth = 187
       end
       object LabelSearch: TLabel
         Left = 0
         Top = 40
         Width = 228
-        Height = 35
+        Height = 32
         Align = alTop
         Caption = #1048#1089#1082#1072#1090#1100'...'
         Font.Charset = DEFAULT_CHARSET
@@ -282,13 +247,11 @@ object FGallery: TFGallery
         Font.Name = 'Montserrat'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitLeft = -7
-        ExplicitTop = 44
-        ExplicitWidth = 248
+        ExplicitWidth = 106
       end
       object EditSearch: TEdit
         Left = 0
-        Top = 75
+        Top = 72
         Width = 228
         Height = 35
         Align = alTop
@@ -300,11 +263,11 @@ object FGallery: TFGallery
         ParentFont = False
         TabOrder = 0
         TextHint = #1074#1074#1077#1076#1080#1090#1077' '#1090#1077#1082#1089#1090
-        ExplicitTop = 85
+        OnKeyDown = EditSearchKeyDown
       end
-      object ComboBoxParam: TComboBox
+      object CmbBxSearchParam: TComboBox
         Left = 0
-        Top = 145
+        Top = 139
         Width = 228
         Height = 35
         Align = alTop
@@ -315,14 +278,16 @@ object FGallery: TFGallery
         Font.Style = []
         ParentFont = False
         TabOrder = 1
-        ExplicitTop = 155
+        ExplicitLeft = -2
+        ExplicitTop = 145
       end
     end
     object PanelSort: TPanel
-      Left = 19
-      Top = 512
-      Width = 222
+      Left = 21
+      Top = 491
+      Width = 228
       Height = 185
+      Align = alTop
       BevelEdges = []
       BevelOuter = bvNone
       Caption = 'Panel1'
@@ -330,10 +295,13 @@ object FGallery: TFGallery
       ParentBackground = False
       ShowCaption = False
       TabOrder = 4
+      ExplicitLeft = 19
+      ExplicitTop = 512
+      ExplicitWidth = 222
       object LabelSort: TLabel
         Left = 0
         Top = 40
-        Width = 222
+        Width = 228
         Height = 32
         Align = alTop
         Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1087#1086':'
@@ -343,14 +311,12 @@ object FGallery: TFGallery
         Font.Name = 'Montserrat'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitLeft = 1
-        ExplicitTop = 1
         ExplicitWidth = 200
       end
-      object LabelSortParam: TLabel
+      object LabelSortDir: TLabel
         Left = 0
         Top = 107
-        Width = 222
+        Width = 228
         Height = 32
         Align = alTop
         Caption = #1057' '#1087#1086#1088#1103#1076#1082#1086#1084':'
@@ -360,14 +326,12 @@ object FGallery: TFGallery
         Font.Name = 'Montserrat'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitLeft = 1
-        ExplicitTop = 68
         ExplicitWidth = 160
       end
-      object ComboBoxSortParam: TComboBox
+      object CmbBxSort: TComboBox
         Left = 0
         Top = 72
-        Width = 222
+        Width = 228
         Height = 35
         Align = alTop
         Font.Charset = DEFAULT_CHARSET
@@ -377,15 +341,14 @@ object FGallery: TFGallery
         Font.Style = []
         ParentFont = False
         TabOrder = 0
-        ExplicitLeft = -55
-        ExplicitTop = 47
-        ExplicitWidth = 232
-        ExplicitHeight = 21
+        OnChange = CmbBxSortChange
+        ExplicitLeft = -2
+        ExplicitTop = 78
       end
-      object ComboBox2: TComboBox
+      object CmbBxSortDir: TComboBox
         Left = 0
         Top = 139
-        Width = 222
+        Width = 228
         Height = 35
         Align = alTop
         Font.Charset = DEFAULT_CHARSET
@@ -395,10 +358,8 @@ object FGallery: TFGallery
         Font.Style = []
         ParentFont = False
         TabOrder = 1
-        ExplicitLeft = -8
-        ExplicitTop = 118
-        ExplicitWidth = 232
-        ExplicitHeight = 21
+        OnChange = CmbBxSortChange
+        ExplicitLeft = -2
       end
     end
   end

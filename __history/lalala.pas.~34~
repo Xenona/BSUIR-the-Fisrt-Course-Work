@@ -4,7 +4,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.Menus, Math;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.Menus, Math, DateUtils;
 
 type
   PPicElem=^TPicElems;
@@ -71,13 +71,16 @@ type
     procedure FormResize(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure CmbBxSortChange(Sender: TObject);
-
+    procedure EditSearchKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
 
   private
     { Private declarations }
   public
      head: PPicElem;
      sortedHead: PPicElem;
+     searchedHead: PPicElem;
+     LastSearchTime: TDateTime;
   end;
 
 var
@@ -88,200 +91,7 @@ implementation
 {$R *.dfm}
 {$D+}
 
-
-
-// SORT section BEGIN
-
-function cmpYearStart(elem1, elem2: TData; direction: integer): integer;
-begin
-
-
-  if (elem1.yearOfStart > elem2.yearOfStart) then
-    result := 1*direction;
-  if (elem1.yearOfStart < elem2.yearOfStart) then
-    result := -1*direction;
-  if (elem1.yearOfStart = elem2.yearOfStart) then
-    result := 0;
-
-end;
-
-function cmpYearEnd(elem1, elem2: TData; direction: integer): integer;
-begin
-
-
-  if (elem1.yearOfEnd > elem2.yearOfEnd) then
-    result := 1*direction;
-  if (elem1.yearOfEnd < elem2.yearOfEnd) then
-    result := -1*direction;
-  if (elem1.yearOfEnd = elem2.yearOfEnd) then
-    result := 0;
-
-end;
-
-function cmpYearsWork(elem1, elem2: TData; direction: integer): integer;
-begin
-
-
-  if (elem1.yearsOfWork > elem2.yearsOfWork) then
-    result := 1*direction;
-  if (elem1.yearsOfWork < elem2.yearsOfWork) then
-    result := -1*direction;
-  if (elem1.yearsOfWork = elem2.yearsOfWork) then
-    result := 0;
-
-end;
-
-function cmpTitle(elem1, elem2: TData; direction: integer): integer;
-begin
-
-  if (elem1.title > elem2.title) then
-    result := 1*direction;
-  if (elem1.title < elem2.title) then
-    result := -1*direction;
-  if (elem1.title = elem2.title) then
-    result := 0;
-
-end;
-
-function cmpUserRate(elem1, elem2: TData; direction: integer): integer;
-begin
-
-  if (elem1.userRate > elem2.userRate) then
-    result := 1*direction;
-  if (elem1.userRate < elem2.userRate) then
-    result := -1*direction;
-  if (elem1.userRate = elem2.userRate) then
-    result := 0;
-
-end;
-
-function cmpGenre(elem1, elem2: TData; direction: integer): integer;
-begin
-
-  if (elem1.genre > elem2.genre) then
-    result := 1*direction;
-  if (elem1.genre < elem2.genre) then
-    result := -1*direction;
-  if (elem1.genre = elem2.genre) then
-    result := 0;
-
-end;
-
-function cmpTheme(elem1, elem2: TData; direction: integer): integer;
-begin
-
-  if (elem1.theme > elem2.theme) then
-    result := 1*direction;
-  if (elem1.theme < elem2.theme) then
-    result := -1*direction;
-  if (elem1.theme = elem2.theme) then
-    result := 0;
-
-end;
-
-function cmpPlace(elem1, elem2: TData; direction: integer): integer;
-begin
-
-  if (elem1.place > elem2.place) then
-    result := 1*direction;
-  if (elem1.place < elem2.place) then
-    result := -1*direction;
-  if (elem1.place = elem2.place) then
-    result := 0;
-
-end;
-
-function FindMiddle(headFind: PPicElem): PPicElem;
-var
-  slow, fast: PPicElem;
-begin
-  slow := headFind;
-  fast := headFind^.Next;
-  while (fast <> nil) do
-  begin
-    fast := fast^.Next;
-    if (fast <> nil) then
-    begin
-      slow := slow^.Next;
-      fast := fast^.Next;
-    end;
-  end;
-  result := slow;
-end;
-
-function MergeSort(head: PPicElem; sortDirection: integer; compare: TSortMethod): PPicElem;
-var
-  middle, right, left, newHead, tail, tempHead: PPicElem;
-  isExit: boolean;
-begin
-  isExit := false;
-
-  tempHead := head;
-
-  if (tempHead = nil) or (tempHead^.Next = nil) then
-  begin
-    result := tempHead;
-    isExit := true;
-  end;
-
-  if not isExit then
-  begin
-    middle := FindMiddle(tempHead);
-    right := middle^.Next;
-    middle^.Next := nil;
-    left := tempHead;
-
-    left := MergeSort(left, sortDirection, compare);
-    right := MergeSort(right, sortDirection, compare);
-
-    newHead := nil;
-    tail := nil;
-
-    while (left <> nil) and (right <> nil) do
-    begin
-      if compare(left^.data, right^.data, sortDirection) < 0 then
-      begin
-        if newHead = nil then
-          newHead := left;
-        if tail <> nil then
-          tail^.Next := left;
-        tail := left;
-        left := left^.Next;
-      end
-      else
-      begin
-        if newHead = nil then
-          newHead := right;
-        if tail <> nil then
-          tail^.Next := right;
-        tail := right;
-        right := right^.Next;
-      end;
-    end;
-
-    if left <> nil then
-    begin
-      if newHead = nil then
-        newHead := left;
-      if tail <> nil then
-        tail^.Next := left;
-    end
-    else
-    begin
-      if newHead = nil then
-        newHead := right;
-      if tail <> nil then
-        tail^.Next := right;
-    end;
-
-    result := newHead;
-  end;
-end;
-
-// SORT section END
-
 // --------------------------------------------------------------------------------
-
 // VISUAL section BEGIN
 
 // to fetch all pics from dataset.pic file
@@ -418,41 +228,262 @@ begin
 
 end;
 
-// run trough a linked list and place all panels onto flow one
-procedure ShowAllPics(CurrentPic: PPicElem);
+procedure ReCreateAllPanels(headToUse: PPicElem);
 var
   i: integer;
+  PrevNumOfCtrls: integer;
 begin
-  while (CurrentPic <> nil) do
+
+  // saving how many panels're gonna be deleted
+  PrevNumOfCtrls := FGallery.FlowPanelPics.ControlCount - 1;
+
+  // creating new unvisible panels
+  while (headToUse <> nil) do
   begin
-    CreatePicPanel(FGallery, FGallery.FlowPanelPics, CurrentPic^.data.imgBuffer, CurrentPic^.data.title);
-    CurrentPic := CurrentPic^.Next;
+    CreatePicPanel(FGallery, FGallery.FlowPanelPics, headToUse^.data.imgBuffer, headToUse^.data.title);
+    headToUse := headToUse^.Next;
   end;
 
+  // deleting saved num of old panels
+  for i := PrevNumOfCtrls downto 0 do
+    FGallery.FlowPanelPics.Controls[i].Free;
+
+  // making visible new panels;
   for i := 0 to FGallery.FlowPanelPics.ControlCount - 1 do
     FGallery.FlowPanelPics.Controls[i].Visible := True;
-
 end;
 
-procedure ClearFlowPanel(FlowPanel: TFlowPanel);
-var
-  i: Integer;
-begin
-  for i := FlowPanel.ControlCount - 1 downto 0 do
-    FlowPanel.Controls[i].Free;
-end;
-
-
-procedure ReCreateAllPanels(headToUse: PPicElem);
-begin
-
-  ClearFlowPanel(FGallery.FlowPanelPics);
-  ShowAllPics(headToUse);
-
-end;
 
 // VISUAL section END
 //---------------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------------
+// SORT section BEGIN
+
+function cmpYearStart(elem1, elem2: TData; direction: integer): integer;
+begin
+
+
+  if (elem1.yearOfStart > elem2.yearOfStart) then
+    result := 1*direction;
+  if (elem1.yearOfStart < elem2.yearOfStart) then
+    result := -1*direction;
+  if (elem1.yearOfStart = elem2.yearOfStart) then
+    result := 0;
+
+end;
+
+function cmpYearEnd(elem1, elem2: TData; direction: integer): integer;
+begin
+
+
+  if (elem1.yearOfEnd > elem2.yearOfEnd) then
+    result := 1*direction;
+  if (elem1.yearOfEnd < elem2.yearOfEnd) then
+    result := -1*direction;
+  if (elem1.yearOfEnd = elem2.yearOfEnd) then
+    result := 0;
+
+end;
+
+function cmpYearsWork(elem1, elem2: TData; direction: integer): integer;
+begin
+
+
+  if (elem1.yearsOfWork > elem2.yearsOfWork) then
+    result := 1*direction;
+  if (elem1.yearsOfWork < elem2.yearsOfWork) then
+    result := -1*direction;
+  if (elem1.yearsOfWork = elem2.yearsOfWork) then
+    result := 0;
+
+end;
+
+function cmpTitle(elem1, elem2: TData; direction: integer): integer;
+begin
+
+  if (elem1.title > elem2.title) then
+    result := 1*direction;
+  if (elem1.title < elem2.title) then
+    result := -1*direction;
+  if (elem1.title = elem2.title) then
+    result := 0;
+
+end;
+
+function cmpUserRate(elem1, elem2: TData; direction: integer): integer;
+begin
+
+  if (elem1.userRate > elem2.userRate) then
+    result := 1*direction;
+  if (elem1.userRate < elem2.userRate) then
+    result := -1*direction;
+  if (elem1.userRate = elem2.userRate) then
+    result := 0;
+
+end;
+
+function cmpGenre(elem1, elem2: TData; direction: integer): integer;
+begin
+
+  if (elem1.genre > elem2.genre) then
+    result := 1*direction;
+  if (elem1.genre < elem2.genre) then
+    result := -1*direction;
+  if (elem1.genre = elem2.genre) then
+    result := 0;
+
+end;
+
+function cmpTheme(elem1, elem2: TData; direction: integer): integer;
+begin
+
+  if (elem1.theme > elem2.theme) then
+    result := 1*direction;
+  if (elem1.theme < elem2.theme) then
+    result := -1*direction;
+  if (elem1.theme = elem2.theme) then
+    result := 0;
+
+end;
+
+function cmpPlace(elem1, elem2: TData; direction: integer): integer;
+begin
+
+  if (elem1.place > elem2.place) then
+    result := 1*direction;
+  if (elem1.place < elem2.place) then
+    result := -1*direction;
+  if (elem1.place = elem2.place) then
+    result := 0;
+
+end;
+
+function FindMiddle(headFind: PPicElem): PPicElem;
+var
+  slow, fast: PPicElem;
+begin
+  slow := headFind;
+  fast := headFind^.Next;
+  while (fast <> nil) do
+  begin
+    fast := fast^.Next;
+    if (fast <> nil) then
+    begin
+      slow := slow^.Next;
+      fast := fast^.Next;
+    end;
+  end;
+  result := slow;
+end;
+
+function CopyList(head: PPicElem): PPicElem;
+var
+  current, newHead, newNode: PPicElem;
+begin
+  newHead := nil;
+  current := head;
+
+  while (current <> nil) do
+  begin
+    newNode := New(PPicElem);
+    newNode^.data := current^.data;
+    newNode^.Next := nil;
+
+    if (newHead = nil) then
+    begin
+      newHead := newNode;
+    end
+    else
+    begin
+      newNode^.Next := newHead;
+      newHead := newNode;
+    end;
+
+    current := current^.Next;
+  end;
+
+  result := newHead;
+end;
+
+function MergeSort(head: PPicElem; sortDirection: integer; compare: TSortMethod): PPicElem;
+var
+  middle, right, left, newHead, tail, tempHead: PPicElem;
+  isExit: boolean;
+begin
+  isExit := false;
+
+  tempHead := CopyList(head);
+
+  if (tempHead = nil) or (tempHead^.Next = nil) then
+  begin
+    result := tempHead;
+    isExit := true;
+  end;
+
+  if not isExit then
+  begin
+    middle := FindMiddle(tempHead);
+    right := middle^.Next;
+    middle^.Next := nil;
+    left := tempHead;
+
+    left := MergeSort(left, sortDirection, compare);
+    right := MergeSort(right, sortDirection, compare);
+
+    newHead := nil;
+    tail := nil;
+
+    while (left <> nil) and (right <> nil) do
+    begin
+      if compare(left^.data, right^.data, sortDirection) < 0 then
+      begin
+        if newHead = nil then
+          newHead := left;
+        if tail <> nil then
+          tail^.Next := left;
+        tail := left;
+        left := left^.Next;
+      end
+      else
+      begin
+        if newHead = nil then
+          newHead := right;
+        if tail <> nil then
+          tail^.Next := right;
+        tail := right;
+        right := right^.Next;
+      end;
+    end;
+    if tail <> nil then
+      tail^.Next := nil;
+
+    if left <> nil then
+    begin
+      if newHead = nil then
+        newHead := left;
+      if tail <> nil then
+        tail^.Next := left;
+    end
+    else
+    begin
+      if newHead = nil then
+        newHead := right;
+      if tail <> nil then
+        tail^.Next := right;
+    end;
+
+    result := newHead;
+
+    // Free the copied list
+    while (tempHead <> nil) do
+    begin
+      tail := tempHead;
+      tempHead := tempHead^.Next;
+      Dispose(tail);
+    end;
+  end;
+end;
 
 // remove focus from combobox
 procedure TFGallery.FormShow(Sender: TObject);
@@ -460,7 +491,7 @@ begin
   ActiveControl := PanelSideBar ; // Set focus to form
 end;
 
-//
+// for both of sort cmbBxes
 procedure TFGallery.CmbBxSortChange(Sender: TObject);
 var
   sortDirection: Integer;
@@ -522,6 +553,108 @@ begin
 
   end;
 end;
+
+
+
+//---------------------------------------------------------------------------------
+// SORT section END
+
+
+// SEARCH section BEGIN
+
+function isRecordMatch(const data: Tdata; const searchStr: string; field: integer): boolean;
+begin
+
+  case field of
+    1: Result := (Pos(searchStr, data.title) > 0);
+    2: Result := (Pos(searchStr, IntToStr(data.yearOfStart)) > 0);
+    3: Result := (Pos(searchStr, IntToStr(data.yearOfEnd)) > 0);
+    4: Result := (Pos(searchStr, IntToStr(data.yearsOfWork)) > 0);
+    5: Result := (Pos(searchStr, data.genre) > 0);
+    6: Result := (Pos(searchStr, data.theme) > 0);
+    7: Result := (Pos(searchStr, data.place) > 0)  ;
+    8: Result := (Pos(searchStr, data.materials) > 0);
+    9: Result := (Pos(searchStr, data.shortDescr) > 0);
+    10: Result := (Pos(searchStr, data.userComment) > 0);
+    11: Result :=
+      (Pos(searchStr, data.title) > 0) or
+      (Pos(searchStr, IntToStr(data.yearOfStart)) > 0) or
+      (Pos(searchStr, IntToStr(data.yearOfEnd)) > 0) or
+      (Pos(searchStr, IntToStr(data.yearsOfWork)) > 0) or
+      (Pos(searchStr, data.genre) > 0) or
+      (Pos(searchStr, data.theme) > 0) or
+      (Pos(searchStr, data.place) > 0) or
+      (Pos(searchStr, data.materials) > 0) or
+      (Pos(searchStr, data.shortDescr) > 0) or
+      (Pos(searchStr, data.userComment) > 0);
+  end;
+
+ end;
+
+function searchData(head: PPicElem; infoToSearch: string; fieldSearch: integer ): PPicElem;
+var
+  curElem: PPicElem;
+  newList: PPicElem;
+
+
+  // head of created list returns in 'return' var;
+begin
+  curElem := head;
+  newList := nil;
+  result := nil;
+
+  while curElem <> nil do
+  begin
+    if isRecordMatch(curElem^.data, infoToSearch, fieldSearch) then
+    begin
+      if newList = nil then
+      begin
+        new(newList);
+        newList^.data := curElem^.data;
+        result := newList;
+      end
+      else
+      begin
+        new(newList^.Next);
+        newList := newList^.Next;
+        newList^.data := CurElem^.data;
+        newList^.Next := nil;
+      end;
+    end;
+    curElem := curElem^.Next;
+  end;
+
+  Result^.Next := nil
+
+end;
+
+procedure TFGallery.EditSearchKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+begin
+
+
+
+  // check if the user pressed the Enter key
+  if Key = VK_RETURN then
+  begin
+    if (CmbBxSearchParam.Text <> '') and (Trim(EditSearch.Text) <> '')  then
+    begin
+      searchedHead := SearchData(head, EditSearch.Text, CmbBxSearchParam.ItemIndex);
+
+      ReCreateAllPanels(searchedHead);
+    end;
+  end;
+
+
+end;
+
+
+
+
+
+
+
+// SEARCH section END
+
 
 procedure TFGallery.FormCreate(Sender: TObject);
 begin
@@ -600,4 +733,5 @@ begin
 
 
 end;
+
 end.

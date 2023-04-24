@@ -36,17 +36,18 @@ object FGallery: TFGallery
       Left = 0
       Top = 0
       Width = 702
-      Height = 390
+      Height = 729
+      Margins.Left = 20
+      Margins.Top = 20
+      Margins.Right = 20
+      Margins.Bottom = 20
       Align = alTop
-      Caption = #1058#1072#1082#1080#1093' '#1082#1072#1088#1090#1080#1085' '#1085#1077' '#1085#1072#1081#1076#1077#1085#1086
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -24
-      Font.Name = 'Montserrat'
-      Font.Style = [fsBold]
-      ParentFont = False
+      BorderWidth = 15
+      Caption = 'FlowPanel1'
+      ParentBackground = False
+      ShowCaption = False
       TabOrder = 0
-      ExplicitTop = 456
+      VerticalAlignment = taAlignTop
     end
   end
   object PanelSideBar: TPanel

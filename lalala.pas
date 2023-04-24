@@ -39,7 +39,6 @@ type
   TFGallery = class(TForm)
     PanelSideBar: TPanel;
     ScrollBox1: TScrollBox;
-    FlowPanelPics: TFlowPanel;
     MainMenu: TMainMenu;
     FileMenu: TMenuItem;
     OpenFile: TMenuItem;
@@ -66,6 +65,7 @@ type
     CmbBxSort: TComboBox;
     LabelSortDir: TLabel;
     CmbBxSortDir: TComboBox;
+    FlowPanelPics: TFlowPanel;
     procedure OpenFileClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormResize(Sender: TObject);
@@ -612,6 +612,7 @@ begin
         new(newList);
         newList^.data := curElem^.data;
         result := newList;
+        Result^.Next := nil
       end
       else
       begin
@@ -624,7 +625,6 @@ begin
     curElem := curElem^.Next;
   end;
 
-  Result^.Next := nil
 
 end;
 
@@ -639,6 +639,15 @@ begin
     if (CmbBxSearchParam.Text <> '') and (Trim(EditSearch.Text) <> '')  then
     begin
       searchedHead := SearchData(head, EditSearch.Text, CmbBxSearchParam.ItemIndex);
+
+      if searchedHead = nil then
+      begin
+        FlowPanelPics.Margins.Top := 500;
+        FlowPanelPics.Height := PanelSideBar.Height;
+        FlowPanelPics.ShowCaption := True;
+      end
+      else
+        FlowPanelPics.ShowCaption := False;
 
       ReCreateAllPanels(searchedHead);
     end;
