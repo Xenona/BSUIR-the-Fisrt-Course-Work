@@ -5,7 +5,7 @@ object FGallery: TFGallery
   ClientHeight = 850
   ClientWidth = 980
   Color = clBtnFace
-  Constraints.MinHeight = 850
+  Constraints.MinHeight = 870
   Constraints.MinWidth = 560
   DoubleBuffered = True
   Font.Charset = DEFAULT_CHARSET
@@ -182,7 +182,6 @@ object FGallery: TFGallery
         Font.Name = 'Montserrat'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitTop = 110
         ExplicitWidth = 187
       end
       object CmbBxFilter: TComboBox
@@ -240,7 +239,6 @@ object FGallery: TFGallery
         Font.Name = 'Montserrat'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitTop = 110
         ExplicitWidth = 187
       end
       object LabelSearch: TLabel
@@ -272,8 +270,6 @@ object FGallery: TFGallery
         ParentFont = False
         TabOrder = 0
         TextHint = #1074#1074#1077#1076#1080#1090#1077' '#1090#1077#1082#1089#1090
-        ExplicitLeft = -2
-        ExplicitTop = 66
       end
       object CmbBxSearchParam: TComboBox
         Left = 0
@@ -291,10 +287,11 @@ object FGallery: TFGallery
       end
     end
     object PanelSort: TPanel
-      Left = 19
-      Top = 512
-      Width = 222
+      Left = 21
+      Top = 491
+      Width = 228
       Height = 185
+      Align = alTop
       BevelEdges = []
       BevelOuter = bvNone
       Caption = 'Panel1'
@@ -302,10 +299,13 @@ object FGallery: TFGallery
       ParentBackground = False
       ShowCaption = False
       TabOrder = 4
+      ExplicitLeft = 19
+      ExplicitTop = 512
+      ExplicitWidth = 222
       object LabelSort: TLabel
         Left = 0
         Top = 40
-        Width = 222
+        Width = 228
         Height = 32
         Align = alTop
         Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1087#1086':'
@@ -320,7 +320,7 @@ object FGallery: TFGallery
       object LabelSortDir: TLabel
         Left = 0
         Top = 107
-        Width = 222
+        Width = 228
         Height = 32
         Align = alTop
         Caption = #1057' '#1087#1086#1088#1103#1076#1082#1086#1084':'
@@ -335,7 +335,7 @@ object FGallery: TFGallery
       object CmbBxSort: TComboBox
         Left = 0
         Top = 72
-        Width = 222
+        Width = 228
         Height = 35
         Align = alTop
         Font.Charset = DEFAULT_CHARSET
@@ -345,11 +345,12 @@ object FGallery: TFGallery
         Font.Style = []
         ParentFont = False
         TabOrder = 0
+        ExplicitWidth = 222
       end
       object CmbBxSortDir: TComboBox
         Left = 0
         Top = 139
-        Width = 222
+        Width = 228
         Height = 35
         Align = alTop
         Font.Charset = DEFAULT_CHARSET
@@ -359,6 +360,7 @@ object FGallery: TFGallery
         Font.Style = []
         ParentFont = False
         TabOrder = 1
+        ExplicitWidth = 222
       end
     end
   end

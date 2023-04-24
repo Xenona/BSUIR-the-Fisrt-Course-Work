@@ -279,7 +279,6 @@ end;
 
 // SORT section END
 
-// --------------------------------------------------------------------------------
 // VISUAL section BEGIN
 
 // to fetch all pics from dataset.pic file
@@ -383,12 +382,9 @@ begin
   Panel.BevelOuter := bvNone;
   Panel.Height := 270;
   Panel.Width := 210;
-  // appear again in onResize
   Panel.ParentBackground := False;
   Panel.ParentColor := False;
-  Panel.Visible := False;
-
-
+  // appear again in onResize
 
 
 
@@ -424,41 +420,30 @@ end;
 
 // run trough a linked list and place all panels onto flow one
 procedure ShowAllPics(CurrentPic: PPicElem);
-var
-  i: integer;
 begin
   while (CurrentPic <> nil) do
   begin
+
     CreatePicPanel(FGallery, FGallery.FlowPanelPics, CurrentPic^.data.imgBuffer, CurrentPic^.data.title);
     CurrentPic := CurrentPic^.Next;
+
   end;
-
-  for i := 0 to FGallery.FlowPanelPics.ControlCount - 1 do
-    FGallery.FlowPanelPics.Controls[i].Visible := True;
-
 end;
-
-procedure ClearFlowPanel(FlowPanel: TFlowPanel);
-var
-  i: Integer;
-begin
-  for i := FlowPanel.ControlCount - 1 downto 0 do
-    FlowPanel.Controls[i].Free;
-end;
-
-
-
-procedure ReCreateAllPanels(headToUse: PPicElem);
-begin
-
-  ClearFlowPanel(FGallery.FlowPanelPics);
-  LoadImages(headToUse);
-  ShowAllPics(headToUse);
-
-end;
+//
+//procedure ReCreateAllPanels(headToUse: PPicElem);
+//begin
+//
+//
+//  ReCreateAllPanels(headToUse);
+//  FetchAllPics(headToUse);
+//  LoadImages(headToUse);
+//  ShowAllPics(headToUse);
+//
+//end;
 
 // VISUAL section END
-//---------------------------------------------------------------------------------
+
+
 
 // remove focus from combobox
 procedure TFGallery.FormShow(Sender: TObject);
@@ -523,44 +508,49 @@ end;
 procedure TFGallery.FormCreate(Sender: TObject);
 begin
 
+//  ReCreateAllPanels(head);
+
+
+//  ReCreateAllPanels(head);
   FetchAllPics(head);
-  ReCreateAllPanels(head);
+  LoadImages(head);
+  ShowAllPics(head);
 
   // search params
   CmbBxSearchParam.Items.Add('');
-  CmbBxSearchParam.Items.Add('РќР°Р·РІР°РЅРёРµ');
-  CmbBxSearchParam.Items.Add('Р“РѕРґ РЅР°С‡Р°Р»Р°');
-  CmbBxSearchParam.Items.Add('Р“РѕРґ РєРѕРЅС†Р°');
-  CmbBxSearchParam.Items.Add('Р§РёСЃР»Рѕ Р»РµС‚');
-  CmbBxSearchParam.Items.Add('Р–Р°РЅСЂ');
-  CmbBxSearchParam.Items.Add('РўРµРјР°С‚РёРєР°');
-  CmbBxSearchParam.Items.Add('РњРµСЃС‚Рѕ РЅР°РїРёСЃР°РЅРёСЏ');
-  CmbBxSearchParam.Items.Add('РњР°С‚РµСЂРёР°Р»С‹');
-  CmbBxSearchParam.Items.Add('РћРїРёСЃР°РЅРёРµ');
-  CmbBxSearchParam.Items.Add('РљРѕРјРјРµРЅС‚Р°СЂРёР№');
-  CmbBxSearchParam.Items.Add('Р’СЃРµ');
+  CmbBxSearchParam.Items.Add('Название');
+  CmbBxSearchParam.Items.Add('Год начала');
+  CmbBxSearchParam.Items.Add('Год конца');
+  CmbBxSearchParam.Items.Add('Число лет');
+  CmbBxSearchParam.Items.Add('Жанр');
+  CmbBxSearchParam.Items.Add('Тематика');
+  CmbBxSearchParam.Items.Add('Место написания');
+  CmbBxSearchParam.Items.Add('Материалы');
+  CmbBxSearchParam.Items.Add('Описание');
+  CmbBxSearchParam.Items.Add('Комментарий');
+  CmbBxSearchParam.Items.Add('Все');
 
   // filter params
   CmbBxFilter.Items.Add('');
-  CmbBxFilter.Items.Add('РР·Р±СЂР°РЅРЅРѕРµ');
-  CmbBxFilter.Items.Add('РћС†РµРЅРєР°');
+  CmbBxFilter.Items.Add('Избранное');
+  CmbBxFilter.Items.Add('Оценка');
 
   // sort params
   CmbBxSort.Items.Add('');
-  CmbBxSort.Items.Add('РќР°Р·РІР°РЅРёРµ');
-  CmbBxSort.Items.Add('Р“РѕРґ РЅР°С‡Р°Р»Р°');
-  CmbBxSort.Items.Add('Р“РѕРґ РєРѕРЅС†Р°');
-  CmbBxSort.Items.Add('Р§РёСЃР»Рѕ Р»РµС‚');
-  CmbBxSort.Items.Add('Р–Р°РЅСЂ');
-  CmbBxSort.Items.Add('РўРµРјР°С‚РёРєР°');
-  CmbBxSort.Items.Add('РњРµСЃС‚Рѕ РЅР°РїРёСЃР°РЅРёСЏ');
-  CmbBxSort.Items.Add('РћС†РµРЅРєР°');
+  CmbBxSort.Items.Add('Название');
+  CmbBxSort.Items.Add('Год начала');
+  CmbBxSort.Items.Add('Год конца');
+  CmbBxSort.Items.Add('Число лет');
+  CmbBxSort.Items.Add('Жанр');
+  CmbBxSort.Items.Add('Тематика');
+  CmbBxSort.Items.Add('Место написания');
+  CmbBxSort.Items.Add('Оценка');
 
 
   // sort dir
   CmbBxSortDir.Items.Add('');
-  CmbBxSortDir.Items.Add('РџРѕ РІРѕР·СЂР°СЃС‚Р°РЅРёСЋ');
-  CmbBxSortDir.Items.Add('РџРѕ СѓР±С‹РІР°РЅРёСЋ');
+  CmbBxSortDir.Items.Add('По возрастанию');
+  CmbBxSortDir.Items.Add('По убыванию');
 
 
 

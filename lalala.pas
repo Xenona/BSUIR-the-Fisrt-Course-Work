@@ -279,6 +279,7 @@ end;
 
 // SORT section END
 
+// --------------------------------------------------------------------------------
 // VISUAL section BEGIN
 
 // to fetch all pics from dataset.pic file
@@ -382,9 +383,12 @@ begin
   Panel.BevelOuter := bvNone;
   Panel.Height := 270;
   Panel.Width := 210;
+  // appear again in onResize
   Panel.ParentBackground := False;
   Panel.ParentColor := False;
-  // appear again in onResize
+  Panel.Visible := False;
+
+
 
 
 
@@ -420,30 +424,41 @@ end;
 
 // run trough a linked list and place all panels onto flow one
 procedure ShowAllPics(CurrentPic: PPicElem);
+var
+  i: integer;
 begin
   while (CurrentPic <> nil) do
   begin
-
     CreatePicPanel(FGallery, FGallery.FlowPanelPics, CurrentPic^.data.imgBuffer, CurrentPic^.data.title);
     CurrentPic := CurrentPic^.Next;
-
   end;
+
+  for i := 0 to FGallery.FlowPanelPics.ControlCount - 1 do
+    FGallery.FlowPanelPics.Controls[i].Visible := True;
+
 end;
-//
-//procedure ReCreateAllPanels(headToUse: PPicElem);
-//begin
-//
-//
-//  ReCreateAllPanels(headToUse);
-//  FetchAllPics(headToUse);
-//  LoadImages(headToUse);
-//  ShowAllPics(headToUse);
-//
-//end;
+
+procedure ClearFlowPanel(FlowPanel: TFlowPanel);
+var
+  i: Integer;
+begin
+  for i := FlowPanel.ControlCount - 1 downto 0 do
+    FlowPanel.Controls[i].Free;
+end;
+
+
+
+procedure ReCreateAllPanels(headToUse: PPicElem);
+begin
+
+  ClearFlowPanel(FGallery.FlowPanelPics);
+  LoadImages(headToUse);
+  ShowAllPics(headToUse);
+
+end;
 
 // VISUAL section END
-
-
+//---------------------------------------------------------------------------------
 
 // remove focus from combobox
 procedure TFGallery.FormShow(Sender: TObject);
@@ -508,13 +523,8 @@ end;
 procedure TFGallery.FormCreate(Sender: TObject);
 begin
 
-//  ReCreateAllPanels(head);
-
-
-//  ReCreateAllPanels(head);
   FetchAllPics(head);
-  LoadImages(head);
-  ShowAllPics(head);
+  ReCreateAllPanels(head);
 
   // search params
   CmbBxSearchParam.Items.Add('');
