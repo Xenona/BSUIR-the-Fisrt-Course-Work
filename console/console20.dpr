@@ -20,7 +20,8 @@ type
     userComment: string[50];
     isToBeChanged: boolean;
     isFavourite: boolean;
-    filename: string[15];
+    filename: string[25];
+    imgBuffer: Integer;
   end;
 
 
@@ -230,26 +231,56 @@ begin
   result := slow;
 end;
 
+function CopyList(head: PPicElem): PPicElem;
+var
+  current, newHead, newNode: PPicElem;
+begin
+  newHead := nil;
+  current := head;
+
+  while (current <> nil) do
+  begin
+    newNode := New(PPicElem);
+    newNode^.data := current^.data;
+    newNode^.Next := nil;
+
+    if (newHead = nil) then
+    begin
+      newHead := newNode;
+    end
+    else
+    begin
+      newNode^.Next := newHead;
+      newHead := newNode;
+    end;
+
+    current := current^.Next;
+  end;
+
+  result := newHead;
+end;
+
 function MergeSort(head: PPicElem; sortDirection: integer; compare: TSortMethod): PPicElem;
 var
-  middle, right, left, newHead, tail: PPicElem;
+  middle, right, left, newHead, tail, tempHead: PPicElem;
   isExit: boolean;
 begin
   isExit := false;
 
+  tempHead := CopyList(head);
 
-  if (head = nil) or (head^.Next = nil) then
+  if (tempHead = nil) or (tempHead^.Next = nil) then
   begin
-    result := head;
+    result := tempHead;
     isExit := true;
   end;
 
   if not isExit then
   begin
-    middle := FindMiddle(head);
+    middle := FindMiddle(tempHead);
     right := middle^.Next;
     middle^.Next := nil;
-    left := head;
+    left := tempHead;
 
     left := MergeSort(left, sortDirection, compare);
     right := MergeSort(right, sortDirection, compare);
@@ -278,6 +309,8 @@ begin
         right := right^.Next;
       end;
     end;
+    if tail <> nil then
+      tail^.Next := nil;
 
     if left <> nil then
     begin
@@ -295,8 +328,17 @@ begin
     end;
 
     result := newHead;
+
+    // Free the copied list
+    while (tempHead <> nil) do
+    begin
+      tail := tempHead;
+      tempHead := tempHead^.Next;
+      Dispose(tail);
+    end;
   end;
 end;
+
 
 // SORT SECTION END
 

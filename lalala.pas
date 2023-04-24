@@ -209,6 +209,35 @@ begin
   result := slow;
 end;
 
+function CopyList(head: PPicElem): PPicElem;
+var
+  current, newHead, newNode: PPicElem;
+begin
+  newHead := nil;
+  current := head;
+
+  while (current <> nil) do
+  begin
+    newNode := New(PPicElem);
+    newNode^.data := current^.data;
+    newNode^.Next := nil;
+
+    if (newHead = nil) then
+    begin
+      newHead := newNode;
+    end
+    else
+    begin
+      newNode^.Next := newHead;
+      newHead := newNode;
+    end;
+
+    current := current^.Next;
+  end;
+
+  result := newHead;
+end;
+
 function MergeSort(head: PPicElem; sortDirection: integer; compare: TSortMethod): PPicElem;
 var
   middle, right, left, newHead, tail, tempHead: PPicElem;
@@ -216,7 +245,7 @@ var
 begin
   isExit := false;
 
-  tempHead := head;
+  tempHead := CopyList(head);
 
   if (tempHead = nil) or (tempHead^.Next = nil) then
   begin
@@ -258,6 +287,8 @@ begin
         right := right^.Next;
       end;
     end;
+    if tail <> nil then
+      tail^.Next := nil;
 
     if left <> nil then
     begin
@@ -275,6 +306,14 @@ begin
     end;
 
     result := newHead;
+
+    // Free the copied list
+    while (tempHead <> nil) do
+    begin
+      tail := tempHead;
+      tempHead := tempHead^.Next;
+      Dispose(tail);
+    end;
   end;
 end;
 
