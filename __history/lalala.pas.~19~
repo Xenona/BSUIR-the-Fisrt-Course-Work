@@ -47,37 +47,35 @@ type
     HelpMenu: TMenuItem;
     DeveloperMenu: TMenuItem;
     OpenDialog1: TOpenDialog;
-    CmbBxAlbum: TComboBox;
+    ComboBoxAlbum: TComboBox;
     LabelAlbum: TLabel;
     LabelSearch: TLabel;
     LabelParam: TLabel;
     LabelFilter: TLabel;
-    CmbBxSearchParam: TComboBox;
-    CmbBxFilter: TComboBox;
+    ComboBoxParam: TComboBox;
+    ComboBoxFilter: TComboBox;
     EditSearch: TEdit;
     ButtonSlideshow: TButton;
-    CmbBxFiltVal: TComboBox;
+    ComboBoxFiltVal: TComboBox;
     LabelFiltVal: TLabel;
     PanelAlbum: TPanel;
     PanelSearch: TPanel;
     PanelFilter: TPanel;
     PanelSort: TPanel;
     LabelSort: TLabel;
-    CmbBxSort: TComboBox;
-    LabelSortDir: TLabel;
-    CmbBxSortDir: TComboBox;
+    ComboBoxSortParam: TComboBox;
+    LabelSortParam: TLabel;
+    ComboBox2: TComboBox;
     procedure OpenFileClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure FormShow(Sender: TObject);
-    procedure CmbBxSortChange(Sender: TObject);
 
 
   private
     { Private declarations }
   public
      head: PPicElem;
-     sortedHead: PPicElem;
   end;
 
 var
@@ -87,8 +85,6 @@ implementation
 
 {$R *.dfm}
 {$D+}
-
-
 
 // SORT section BEGIN
 
@@ -151,42 +147,6 @@ begin
   if (elem1.userRate < elem2.userRate) then
     result := -1*direction;
   if (elem1.userRate = elem2.userRate) then
-    result := 0;
-
-end;
-
-function cmpGenre(elem1, elem2: TData; direction: integer): integer;
-begin
-
-  if (elem1.genre > elem2.genre) then
-    result := 1*direction;
-  if (elem1.genre < elem2.genre) then
-    result := -1*direction;
-  if (elem1.genre = elem2.genre) then
-    result := 0;
-
-end;
-
-function cmpTheme(elem1, elem2: TData; direction: integer): integer;
-begin
-
-  if (elem1.theme > elem2.theme) then
-    result := 1*direction;
-  if (elem1.theme < elem2.theme) then
-    result := -1*direction;
-  if (elem1.theme = elem2.theme) then
-    result := 0;
-
-end;
-
-function cmpPlace(elem1, elem2: TData; direction: integer): integer;
-begin
-
-  if (elem1.place > elem2.place) then
-    result := 1*direction;
-  if (elem1.place < elem2.place) then
-    result := -1*direction;
-  if (elem1.place = elem2.place) then
     result := 0;
 
 end;
@@ -278,8 +238,6 @@ begin
 end;
 
 // SORT section END
-
-// VISUAL section BEGIN
 
 // to fetch all pics from dataset.pic file
 procedure FetchAllPics(var head: PPicElem);
@@ -429,21 +387,6 @@ begin
 
   end;
 end;
-//
-//procedure ReCreateAllPanels(headToUse: PPicElem);
-//begin
-//
-//
-//  ReCreateAllPanels(headToUse);
-//  FetchAllPics(headToUse);
-//  LoadImages(headToUse);
-//  ShowAllPics(headToUse);
-//
-//end;
-
-// VISUAL section END
-
-
 
 // remove focus from combobox
 procedure TFGallery.FormShow(Sender: TObject);
@@ -452,105 +395,18 @@ begin
 end;
 
 //
-procedure TFGallery.CmbBxSortChange(Sender: TObject);
-var
-  sortDirection: Integer;
-begin
-
-  if (CmbBxSortDir.Text <> '') and (CmbBxSort.Text <> '') then
-  begin
-    case CmbBxSortDir.ItemIndex of
-      1: sortDirection := 1;
-      2: sortDirection := -1;
-    end;
-
-    case CmbBxSort.ItemIndex of
-      1: // title
-      begin
-        sortedHead := MergeSort(head, sortDirection, cmpTitle);
-      end;
-      2: // year of start
-      begin
-        sortedHead := MergeSort(head, sortDirection, cmpYearStart);
-      end;
-      3: // year of end
-      begin
-        sortedHead := MergeSort(head, sortDirection, cmpYearEnd);
-      end;
-      4: // years of work
-      begin
-        sortedHead := MergeSort(head, sortDirection, cmpYearsWork);
-      end;
-      5: // genre
-      begin
-        sortedHead := MergeSort(head, sortDirection, cmpGenre);
-      end;
-      6: // theme
-      begin
-        sortedHead := MergeSort(head, sortDirection, cmpTheme);
-      end;
-      7: // place
-      begin
-        sortedHead := MergeSort(head, sortDirection, cmpPlace);
-      end;
-      8: // user rate
-      begin
-        sortedHead := MergeSort(head, sortDirection, cmpUserRate);
-      end;
-    end;
-
-
-
-
-  end;
-end;
-
 procedure TFGallery.FormCreate(Sender: TObject);
 begin
-
-//  ReCreateAllPanels(head);
-
-
-//  ReCreateAllPanels(head);
   FetchAllPics(head);
   LoadImages(head);
   ShowAllPics(head);
 
-  // search params
-  CmbBxSearchParam.Items.Add('');
-  CmbBxSearchParam.Items.Add('Название');
-  CmbBxSearchParam.Items.Add('Год начала');
-  CmbBxSearchParam.Items.Add('Год конца');
-  CmbBxSearchParam.Items.Add('Число лет');
-  CmbBxSearchParam.Items.Add('Жанр');
-  CmbBxSearchParam.Items.Add('Тематика');
-  CmbBxSearchParam.Items.Add('Место написания');
-  CmbBxSearchParam.Items.Add('Материалы');
-  CmbBxSearchParam.Items.Add('Описание');
-  CmbBxSearchParam.Items.Add('Комментарий');
-  CmbBxSearchParam.Items.Add('Все');
-
-  // filter params
-  CmbBxFilter.Items.Add('');
-  CmbBxFilter.Items.Add('Избранное');
-  CmbBxFilter.Items.Add('Оценка');
-
-  // sort params
-  CmbBxSort.Items.Add('');
-  CmbBxSort.Items.Add('Название');
-  CmbBxSort.Items.Add('Год начала');
-  CmbBxSort.Items.Add('Год конца');
-  CmbBxSort.Items.Add('Число лет');
-  CmbBxSort.Items.Add('Жанр');
-  CmbBxSort.Items.Add('Тематика');
-  CmbBxSort.Items.Add('Место написания');
-  CmbBxSort.Items.Add('Оценка');
 
 
-  // sort dir
-  CmbBxSortDir.Items.Add('');
-  CmbBxSortDir.Items.Add('По возрастанию');
-  CmbBxSortDir.Items.Add('По убыванию');
+  ComboBoxFilter.Items.Add('Избранное');
+  ComboBoxFilter.Items.Add('Оценка');
+  ComboBoxFilter.Items.Add('');
+
 
 
 
