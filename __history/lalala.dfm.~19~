@@ -6,7 +6,6 @@ object FGallery: TFGallery
   ClientWidth = 980
   Color = clBtnFace
   Constraints.MinHeight = 850
-  Constraints.MinWidth = 560
   DoubleBuffered = True
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
