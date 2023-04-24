@@ -47,10 +47,23 @@ type
     HelpMenu: TMenuItem;
     DeveloperMenu: TMenuItem;
     OpenDialog1: TOpenDialog;
-    Label1: TLabel;
+    ComboBoxAlbum: TComboBox;
+    LabelAlbum: TLabel;
+    LabelSearch: TLabel;
+    LabelParam: TLabel;
+    LabelFilter: TLabel;
+    ComboBoxParam: TComboBox;
+    ComboBoxFilter: TComboBox;
+    Bevel1: TBevel;
+    EditSearch: TEdit;
+    Bevel2: TBevel;
+    Bevel3: TBevel;
+    ButtonSlideshow: TButton;
     procedure OpenFileClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormResize(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+
 
   private
     { Private declarations }
@@ -65,6 +78,7 @@ implementation
 
 {$R *.dfm}
 {$D+}
+
 
 
 // to fetch all pics from dataset.pic file
@@ -169,6 +183,9 @@ begin
   Panel.BevelOuter := bvNone;
   Panel.Height := 270;
   Panel.Width := 210;
+  Panel.ParentBackground := False;
+  Panel.ParentColor := False;
+  // appear again in onResize
 
 
 
@@ -189,7 +206,6 @@ begin
   LabelTitle := TLabel.Create(Panel);
   LabelTitle.Parent := Panel;
   LabelTitle.Caption := ATitle;
-//  LabelTitle.AutoSize := True;
   LabelTitle.Left := Image.Left;
   LabelTitle.Font.Name := 'Montserrat';
   LabelTitle.Font.Size := 10;
@@ -214,6 +230,10 @@ begin
   end;
 end;
 
+procedure TFGallery.FormShow(Sender: TObject);
+begin
+  ActiveControl := Panel1 ; // Set focus to form
+end;
 
 procedure TFGallery.FormCreate(Sender: TObject);
 begin
@@ -221,16 +241,33 @@ begin
   LoadImages(head);
   ShowAllPics(head);
 
-  Label1.Width := 53;
-  Label1.Height := 100;
+
+//  ComboBox1.Items.Add('Option 1');
+//  ComboBox1.Items.Add('Option 2');
+//  ComboBox1.Items.Add('Option 3');
+
+
+
+
+
+
 end;
 
 procedure TFGallery.FormResize(Sender: TObject);
+var
+  currNumOfPics: Integer;
 begin
-//  with S
 
-//  FlowPanel.Height
+  // appear again in CreatePicPanel
+  currNumOfPics := FlowPanelPics.ControlCount;
+  try
+    FlowPanelPics.Height := Max(270*(currNumOfPics div (FlowPanelPics.Width div 210) + 1), Panel1.Height);
+  finally
+
+  end;
 end;
+
+
 
 procedure TFGallery.OpenFileClick(Sender: TObject);
 Var
