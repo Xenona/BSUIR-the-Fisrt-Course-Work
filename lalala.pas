@@ -211,24 +211,25 @@ end;
 
 function MergeSort(head: PPicElem; sortDirection: integer; compare: TSortMethod): PPicElem;
 var
-  middle, right, left, newHead, tail: PPicElem;
+  middle, right, left, newHead, tail, tempHead: PPicElem;
   isExit: boolean;
 begin
   isExit := false;
 
+  tempHead := head;
 
-  if (head = nil) or (head^.Next = nil) then
+  if (tempHead = nil) or (tempHead^.Next = nil) then
   begin
-    result := head;
+    result := tempHead;
     isExit := true;
   end;
 
   if not isExit then
   begin
-    middle := FindMiddle(head);
+    middle := FindMiddle(tempHead);
     right := middle^.Next;
     middle^.Next := nil;
-    left := head;
+    left := tempHead;
 
     left := MergeSort(left, sortDirection, compare);
     right := MergeSort(right, sortDirection, compare);
@@ -280,6 +281,7 @@ end;
 // SORT section END
 
 // --------------------------------------------------------------------------------
+
 // VISUAL section BEGIN
 
 // to fetch all pics from dataset.pic file
@@ -388,10 +390,6 @@ begin
   Panel.ParentColor := False;
   Panel.Visible := False;
 
-
-
-
-
   Image := TImage.Create(Panel);
   Image.Parent := Panel;
   Image.AutoSize := False;
@@ -403,8 +401,6 @@ begin
   Image.Left := (Panel.Width - Image.Width + Margin) div 2;
   Image.Top := (Panel.Height - Image.Height - 20) div 2;
   Image.Picture.Assign(APic);
-
-
 
   LabelTitle := TLabel.Create(Panel);
   LabelTitle.Parent := Panel;
@@ -447,12 +443,10 @@ begin
 end;
 
 
-
 procedure ReCreateAllPanels(headToUse: PPicElem);
 begin
 
   ClearFlowPanel(FGallery.FlowPanelPics);
-  LoadImages(headToUse);
   ShowAllPics(headToUse);
 
 end;
@@ -483,34 +477,43 @@ begin
       1: // title
       begin
         sortedHead := MergeSort(head, sortDirection, cmpTitle);
+        ReCreateAllPanels(sortedHead);
+        sortDirection := 1;
       end;
       2: // year of start
       begin
         sortedHead := MergeSort(head, sortDirection, cmpYearStart);
+        ReCreateAllPanels(sortedHead);
       end;
       3: // year of end
       begin
         sortedHead := MergeSort(head, sortDirection, cmpYearEnd);
+        ReCreateAllPanels(sortedHead);
       end;
       4: // years of work
       begin
         sortedHead := MergeSort(head, sortDirection, cmpYearsWork);
+        ReCreateAllPanels(sortedHead);
       end;
       5: // genre
       begin
         sortedHead := MergeSort(head, sortDirection, cmpGenre);
+        ReCreateAllPanels(sortedHead);
       end;
       6: // theme
       begin
         sortedHead := MergeSort(head, sortDirection, cmpTheme);
+        ReCreateAllPanels(sortedHead);
       end;
       7: // place
       begin
         sortedHead := MergeSort(head, sortDirection, cmpPlace);
+        ReCreateAllPanels(sortedHead);
       end;
       8: // user rate
       begin
         sortedHead := MergeSort(head, sortDirection, cmpUserRate);
+        ReCreateAllPanels(sortedHead);
       end;
     end;
 
@@ -524,6 +527,7 @@ procedure TFGallery.FormCreate(Sender: TObject);
 begin
 
   FetchAllPics(head);
+  LoadImages(head);
   ReCreateAllPanels(head);
 
   // search params
@@ -561,8 +565,6 @@ begin
   CmbBxSortDir.Items.Add('');
   CmbBxSortDir.Items.Add('По возрастанию');
   CmbBxSortDir.Items.Add('По убыванию');
-
-
 
 
 

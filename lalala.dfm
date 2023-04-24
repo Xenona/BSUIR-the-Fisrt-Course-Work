@@ -345,7 +345,9 @@ object FGallery: TFGallery
         Font.Style = []
         ParentFont = False
         TabOrder = 0
-        ExplicitWidth = 222
+        OnChange = CmbBxSortChange
+        ExplicitLeft = -2
+        ExplicitTop = 78
       end
       object CmbBxSortDir: TComboBox
         Left = 0
@@ -360,7 +362,8 @@ object FGallery: TFGallery
         Font.Style = []
         ParentFont = False
         TabOrder = 1
-        ExplicitWidth = 222
+        OnChange = CmbBxSortChange
+        ExplicitLeft = -2
       end
     end
   end
