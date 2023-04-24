@@ -284,6 +284,7 @@ object FGallery: TFGallery
         Font.Style = []
         ParentFont = False
         TabOrder = 1
+        OnChange = CmbBxSearchParamChange
       end
     end
     object PanelSort: TPanel

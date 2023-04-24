@@ -71,6 +71,7 @@ type
     procedure FormResize(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure CmbBxSortChange(Sender: TObject);
+    procedure CmbBxSearchParamChange(Sender: TObject);
 
 
   private
@@ -78,6 +79,7 @@ type
   public
      head: PPicElem;
      sortedHead: PPicElem;
+     searchedHead: PPicElem;
   end;
 
 var
@@ -88,8 +90,173 @@ implementation
 {$R *.dfm}
 {$D+}
 
+// --------------------------------------------------------------------------------
+// VISUAL section BEGIN
+
+// to fetch all pics from dataset.pic file
+procedure FetchAllPics(var head: PPicElem);
+var
+  readPicList: PPicElem;
+  storageFile: file of Tdata;
+  current: TData;
+
+begin
+
+  // open a source file
+  Reset(storageFile, 'dataset.pics');
+
+  // creation of list of pics
+  new(readPicList);
+  head := readPicList;
+  repeat
+    new(readPicList^.Next);
+    readPicList := readPicList^.Next;
+    Read(storageFile, Current);
+    readPicList^.data.title := current.title;
+    readPicList^.data.yearOfStart := current.yearOfStart;
+    readPicList^.data.yearOfEnd := current.yearOfEnd;
+    readPicList^.data.yearsOfWork := current.yearsOfWork;
+    readPicList^.data.genre := current.genre;
+    readPicList^.data.theme := current.theme;
+    readPicList^.data.place := current.place;
+    readPicList^.data.materials := current.materials;
+    readPicList^.data.shortDescr := current.shortDescr;
+    readPicList^.data.userRate := current.userRate;
+    readPicList^.data.userComment := current.userComment;
+    readPicList^.data.isToBeChanged := current.isToBeChanged;
+    readPicList^.data.isFavourite := current.isFavourite;
+    readPicList^.data.userComment := current.userComment;
+    readPicList^.data.filename := current.filename;
+    readPicList^.data.imgBuffer := current.imgBuffer;
+  until Eof(storageFile);
+
+  // saving head of a list;
+  readPicList^.Next := nil;
+  closeFile(storageFile);
+  readPicList := head;
+  head := readPicList^.Next;
+  dispose(readPicList);
+
+end;
+
+// load imgs to buffer of aech record
+procedure LoadImages(PicList: PPicElem);
+var
+  SearchRec: TSearchRec;
+  FileName: string;
+  BasePath: string;
+  breakFlag: Boolean;
+  CurrentPic: PPicElem;
+begin
+  BasePath := ExtractFilePath(ParamStr(0)) + 'src\';
+  if FindFirst(BasePath + '*.bmp', faAnyFile, SearchRec) = 0 then
+  begin
+    try
+      repeat
+        breakFlag := False;
+        FileName := SearchRec.Name;
+        // Find the corresponding element in the list
+        CurrentPic := PicList;
+        while (not breakFlag) and (CurrentPic <> nil) do
+        begin
+          if CurrentPic^.data.filename = FileName then
+          begin
+            CurrentPic^.data.imgBuffer := TPicture.Create;
+            // Load the image into the buffer
+            CurrentPic^.data.imgBuffer.LoadFromFile(BasePath + FileName);
+            breakFlag := True;
+          end;
+          CurrentPic := CurrentPic^.Next;
+        end;
+      until FindNext(SearchRec) <> 0;
+    finally
+      FindClose(SearchRec);
+    end;
+  end;
+end;
+
+// create a panel with a pic and a label
+procedure CreatePicPanel(AOwner: TComponent; AFlowPanel: TFlowPanel; APic: TPicture; ATitle: string);
+var
+  Panel: TPanel;
+  Image: TImage;
+  LabelTitle: TLabel;
+  Scale: Single;
+  Margin: Integer;
+begin
+  Panel := TPanel.Create(AOwner);
+  Panel.Parent := AFlowPanel;
+  Margin := 10;
+  Panel.Margins.Left := Margin;
+  Panel.Margins.Top := Margin;
+  Panel.Margins.Right := Margin;
+  Panel.Margins.Bottom := Margin;
+  Panel.BevelOuter := bvNone;
+  Panel.Height := 270;
+  Panel.Width := 210;
+  // appear again in onResize
+  Panel.ParentBackground := False;
+  Panel.ParentColor := False;
+  Panel.Visible := False;
+
+  Image := TImage.Create(Panel);
+  Image.Parent := Panel;
+  Image.AutoSize := False;
+  Image.Stretch := True;
+
+  Scale := Min((Panel.ClientWidth - 2*Margin) / APic.Width, (Panel.ClientWidth - 2*Margin) / APic.Height);
+  Image.Width := Round((APic.Width) * Scale);
+  Image.Height := Round((APic.Height) * Scale);
+  Image.Left := (Panel.Width - Image.Width + Margin) div 2;
+  Image.Top := (Panel.Height - Image.Height - 20) div 2;
+  Image.Picture.Assign(APic);
+
+  LabelTitle := TLabel.Create(Panel);
+  LabelTitle.Parent := Panel;
+  LabelTitle.Caption := ATitle;
+  LabelTitle.Left := Image.Left;
+  LabelTitle.Font.Name := 'Montserrat';
+  LabelTitle.Font.Size := 10;
+  LabelTitle.Font.Style := [fsBold];
+  LabelTitle.Font.Color := clWhite;
+  LabelTitle.Top := Image.Top + Image.Height;
+  LabelTitle.WordWrap := True;
+  LabelTitle.Width := Image.Width + Margin;
+  LabelTitle.Height := 100;
 
 
+end;
+
+procedure ReCreateAllPanels(headToUse: PPicElem);
+var
+  i: integer;
+  PrevNumOfCtrls: integer;
+begin
+
+  // saving how many panels're gonna be deleted
+  PrevNumOfCtrls := FGallery.FlowPanelPics.ControlCount - 1;
+
+  // creating new unvisible panels
+  while (headToUse <> nil) do
+  begin
+    CreatePicPanel(FGallery, FGallery.FlowPanelPics, headToUse^.data.imgBuffer, headToUse^.data.title);
+    headToUse := headToUse^.Next;
+  end;
+
+  // deleting saved num of old panels
+  for i := PrevNumOfCtrls downto 0 do
+    FGallery.FlowPanelPics.Controls[i].Free;
+
+  // making visible new panels;
+  for i := 0 to FGallery.FlowPanelPics.ControlCount - 1 do
+    FGallery.FlowPanelPics.Controls[i].Visible := True;
+end;
+
+
+// VISUAL section END
+//---------------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------------
 // SORT section BEGIN
 
 function cmpYearStart(elem1, elem2: TData; direction: integer): integer;
@@ -317,195 +484,13 @@ begin
   end;
 end;
 
-// SORT section END
-
-// --------------------------------------------------------------------------------
-
-// VISUAL section BEGIN
-
-// to fetch all pics from dataset.pic file
-procedure FetchAllPics(var head: PPicElem);
-var
-  readPicList: PPicElem;
-  storageFile: file of Tdata;
-  current: TData;
-
-begin
-
-  // open a source file
-  Reset(storageFile, 'dataset.pics');
-
-  // creation of list of pics
-  new(readPicList);
-  head := readPicList;
-  repeat
-    new(readPicList^.Next);
-    readPicList := readPicList^.Next;
-    Read(storageFile, Current);
-    readPicList^.data.title := current.title;
-    readPicList^.data.yearOfStart := current.yearOfStart;
-    readPicList^.data.yearOfEnd := current.yearOfEnd;
-    readPicList^.data.yearsOfWork := current.yearsOfWork;
-    readPicList^.data.genre := current.genre;
-    readPicList^.data.theme := current.theme;
-    readPicList^.data.place := current.place;
-    readPicList^.data.materials := current.materials;
-    readPicList^.data.shortDescr := current.shortDescr;
-    readPicList^.data.userRate := current.userRate;
-    readPicList^.data.userComment := current.userComment;
-    readPicList^.data.isToBeChanged := current.isToBeChanged;
-    readPicList^.data.isFavourite := current.isFavourite;
-    readPicList^.data.userComment := current.userComment;
-    readPicList^.data.filename := current.filename;
-    readPicList^.data.imgBuffer := current.imgBuffer;
-  until Eof(storageFile);
-
-  // saving head of a list;
-  readPicList^.Next := nil;
-  closeFile(storageFile);
-  readPicList := head;
-  head := readPicList^.Next;
-  dispose(readPicList);
-
-end;
-
-// load imgs to buffer of aech record
-procedure LoadImages(PicList: PPicElem);
-var
-  SearchRec: TSearchRec;
-  FileName: string;
-  BasePath: string;
-  breakFlag: Boolean;
-  CurrentPic: PPicElem;
-begin
-  BasePath := ExtractFilePath(ParamStr(0)) + 'src\';
-  if FindFirst(BasePath + '*.bmp', faAnyFile, SearchRec) = 0 then
-  begin
-    try
-      repeat
-        breakFlag := False;
-        FileName := SearchRec.Name;
-        // Find the corresponding element in the list
-        CurrentPic := PicList;
-        while (not breakFlag) and (CurrentPic <> nil) do
-        begin
-          if CurrentPic^.data.filename = FileName then
-          begin
-            CurrentPic^.data.imgBuffer := TPicture.Create;
-            // Load the image into the buffer
-            CurrentPic^.data.imgBuffer.LoadFromFile(BasePath + FileName);
-            breakFlag := True;
-          end;
-          CurrentPic := CurrentPic^.Next;
-        end;
-      until FindNext(SearchRec) <> 0;
-    finally
-      FindClose(SearchRec);
-    end;
-  end;
-end;
-
-// create a panel with a pic and a label
-procedure CreatePicPanel(AOwner: TComponent; AFlowPanel: TFlowPanel; APic: TPicture; ATitle: string);
-var
-  Panel: TPanel;
-  Image: TImage;
-  LabelTitle: TLabel;
-  Scale: Single;
-  Margin: Integer;
-begin
-  Panel := TPanel.Create(AOwner);
-  Panel.Parent := AFlowPanel;
-  Margin := 10;
-  Panel.Margins.Left := Margin;
-  Panel.Margins.Top := Margin;
-  Panel.Margins.Right := Margin;
-  Panel.Margins.Bottom := Margin;
-  Panel.BevelOuter := bvNone;
-  Panel.Height := 270;
-  Panel.Width := 210;
-  // appear again in onResize
-  Panel.ParentBackground := False;
-  Panel.ParentColor := False;
-  Panel.Visible := False;
-
-  Image := TImage.Create(Panel);
-  Image.Parent := Panel;
-  Image.AutoSize := False;
-  Image.Stretch := True;
-
-  Scale := Min((Panel.ClientWidth - 2*Margin) / APic.Width, (Panel.ClientWidth - 2*Margin) / APic.Height);
-  Image.Width := Round((APic.Width) * Scale);
-  Image.Height := Round((APic.Height) * Scale);
-  Image.Left := (Panel.Width - Image.Width + Margin) div 2;
-  Image.Top := (Panel.Height - Image.Height - 20) div 2;
-  Image.Picture.Assign(APic);
-
-  LabelTitle := TLabel.Create(Panel);
-  LabelTitle.Parent := Panel;
-  LabelTitle.Caption := ATitle;
-  LabelTitle.Left := Image.Left;
-  LabelTitle.Font.Name := 'Montserrat';
-  LabelTitle.Font.Size := 10;
-  LabelTitle.Font.Style := [fsBold];
-  LabelTitle.Font.Color := clWhite;
-  LabelTitle.Top := Image.Top + Image.Height;
-  LabelTitle.WordWrap := True;
-  LabelTitle.Width := Image.Width + Margin;
-  LabelTitle.Height := 100;
-
-
-end;
-
-// run trough a linked list and place all panels onto flow one
-procedure PlaceAllPics(CurrentPic: PPicElem);
-begin
-  while (CurrentPic <> nil) do
-  begin
-    CreatePicPanel(FGallery, FGallery.FlowPanelPics, CurrentPic^.data.imgBuffer, CurrentPic^.data.title);
-    CurrentPic := CurrentPic^.Next;
-  end;
-
-
-
-end;
-
-procedure ClearFlowPanel(FlowPanel: TFlowPanel; NumToClear: integer);
-var
-  i: Integer;
-begin
-  for i := NumToClear downto 0 do
-    FlowPanel.Controls[i].Free;
-end;
-
-
-procedure ReCreateAllPanels(headToUse: PPicElem);
-var
-  i: integer;
-  PrevNumOfCtrls: integer;
-begin
-
-  PrevNumOfCtrls := FGallery.FlowPanelPics.ControlCount - 1;
-  PlaceAllPics(headToUse);
-  ClearFlowPanel(FGallery.FlowPanelPics, PrevNumOfCtrls);
-  for i := 0 to FGallery.FlowPanelPics.ControlCount - 1 do
-    FGallery.FlowPanelPics.Controls[i].Visible := True;
-end;
-
-
-
-
-
-// VISUAL section END
-//---------------------------------------------------------------------------------
-
 // remove focus from combobox
 procedure TFGallery.FormShow(Sender: TObject);
 begin
   ActiveControl := PanelSideBar ; // Set focus to form
 end;
 
-//
+// for both of sort cmbBxes
 procedure TFGallery.CmbBxSortChange(Sender: TObject);
 var
   sortDirection: Integer;
@@ -567,6 +552,95 @@ begin
 
   end;
 end;
+
+//---------------------------------------------------------------------------------
+// SORT section END
+
+
+// SEARCH section BEGIN
+
+function isRecordMatch(const data: Tdata; const searchStr: string; field: integer): boolean;
+begin
+
+  case field of
+    1: Result := (Pos(searchStr, data.title) > 0);
+    2: Result := (Pos(searchStr, IntToStr(data.yearOfStart)) > 0);
+    3: Result := (Pos(searchStr, IntToStr(data.yearOfEnd)) > 0);
+    4: Result := (Pos(searchStr, IntToStr(data.yearsOfWork)) > 0);
+    5: Result := (Pos(searchStr, data.genre) > 0);
+    6: Result := (Pos(searchStr, data.theme) > 0);
+    7: Result := (Pos(searchStr, data.place) > 0)  ;
+    8: Result := (Pos(searchStr, data.materials) > 0);
+    9: Result := (Pos(searchStr, data.shortDescr) > 0);
+    10: Result := (Pos(searchStr, data.userComment) > 0);
+    11: Result :=
+      (Pos(searchStr, data.title) > 0) or
+      (Pos(searchStr, IntToStr(data.yearOfStart)) > 0) or
+      (Pos(searchStr, IntToStr(data.yearOfEnd)) > 0) or
+      (Pos(searchStr, IntToStr(data.yearsOfWork)) > 0) or
+      (Pos(searchStr, data.genre) > 0) or
+      (Pos(searchStr, data.theme) > 0) or
+      (Pos(searchStr, data.place) > 0) or
+      (Pos(searchStr, data.materials) > 0) or
+      (Pos(searchStr, data.shortDescr) > 0) or
+      (Pos(searchStr, data.userComment) > 0);
+  end;
+
+ end;
+
+function searchData(head: PPicElem; infoToSearch: string; fieldSearch: integer ): PPicElem;
+var
+  curElem: PPicElem;
+  newList: PPicElem;
+
+
+  // head of created list returns in 'return' var;
+begin
+  curElem := head;
+  newList := nil;
+  result := nil;
+
+  while curElem <> nil do
+  begin
+    if isRecordMatch(curElem^.data, infoToSearch, fieldSearch) then
+    begin
+      if newList = nil then
+      begin
+        new(newList);
+        newList^.data := curElem^.data;
+        result := newList;
+      end
+      else
+      begin
+        new(newList^.Next);
+        newList := newList^.Next;
+        newList^.data := CurElem^.data;
+        newList^.Next := nil;
+      end;
+    end;
+    curElem := curElem^.Next;
+  end;
+
+end;
+
+// SEARCH section END
+
+
+procedure TFGallery.CmbBxSearchParamChange(Sender: TObject);
+begin
+
+  if (CmbBxSearchParam.Text <> '') and (Trim(EditSearch.Text) <> '')  then
+  begin
+    searchedHead := SearchData(head, EditSearch.Text, CmbBxSearchParam.ItemIndex);
+
+    ReCreateAllPanels(searchedHead);
+  end;
+
+
+
+//
+end;
+
 
 procedure TFGallery.FormCreate(Sender: TObject);
 begin
