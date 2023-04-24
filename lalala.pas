@@ -262,101 +262,42 @@ end;
 
 function cmpYearStart(elem1, elem2: TData; direction: integer): integer;
 begin
-
-
-  if (elem1.yearOfStart > elem2.yearOfStart) then
-    result := 1*direction;
-  if (elem1.yearOfStart < elem2.yearOfStart) then
-    result := -1*direction;
-  if (elem1.yearOfStart = elem2.yearOfStart) then
-    result := 0;
-
+  Result := Sign(elem1.yearOfStart - elem2.yearOfStart)*direction;
 end;
 
 function cmpYearEnd(elem1, elem2: TData; direction: integer): integer;
 begin
-
-
-  if (elem1.yearOfEnd > elem2.yearOfEnd) then
-    result := 1*direction;
-  if (elem1.yearOfEnd < elem2.yearOfEnd) then
-    result := -1*direction;
-  if (elem1.yearOfEnd = elem2.yearOfEnd) then
-    result := 0;
-
+  Result := Sign(elem1.yearOfEnd - elem2.yearOfEnd)*direction;
 end;
 
 function cmpYearsWork(elem1, elem2: TData; direction: integer): integer;
 begin
-
-
-  if (elem1.yearsOfWork > elem2.yearsOfWork) then
-    result := 1*direction;
-  if (elem1.yearsOfWork < elem2.yearsOfWork) then
-    result := -1*direction;
-  if (elem1.yearsOfWork = elem2.yearsOfWork) then
-    result := 0;
-
+  Result := Sign(elem1.yearsOfWork - elem2.yearsOfWork)*direction;
 end;
 
 function cmpTitle(elem1, elem2: TData; direction: integer): integer;
 begin
-
-  if (elem1.title > elem2.title) then
-    result := 1*direction;
-  if (elem1.title < elem2.title) then
-    result := -1*direction;
-  if (elem1.title = elem2.title) then
-    result := 0;
-
+  Result := CompareText(elem1.title, elem2.title)*direction;
 end;
 
 function cmpUserRate(elem1, elem2: TData; direction: integer): integer;
 begin
-
-  if (elem1.userRate > elem2.userRate) then
-    result := 1*direction;
-  if (elem1.userRate < elem2.userRate) then
-    result := -1*direction;
-  if (elem1.userRate = elem2.userRate) then
-    result := 0;
-
+  Result := Sign(elem1.userRate - elem2.userRate)*direction;
 end;
 
 function cmpGenre(elem1, elem2: TData; direction: integer): integer;
 begin
-
-  if (elem1.genre > elem2.genre) then
-    result := 1*direction;
-  if (elem1.genre < elem2.genre) then
-    result := -1*direction;
-  if (elem1.genre = elem2.genre) then
-    result := 0;
-
+  Result := CompareText(elem1.genre, elem2.genre)*direction;
 end;
 
 function cmpTheme(elem1, elem2: TData; direction: integer): integer;
 begin
-
-  if (elem1.theme > elem2.theme) then
-    result := 1*direction;
-  if (elem1.theme < elem2.theme) then
-    result := -1*direction;
-  if (elem1.theme = elem2.theme) then
-    result := 0;
-
+  Result := CompareText(elem1.theme, elem2.theme)*direction;
 end;
 
 function cmpPlace(elem1, elem2: TData; direction: integer): integer;
 begin
-
-  if (elem1.place > elem2.place) then
-    result := 1*direction;
-  if (elem1.place < elem2.place) then
-    result := -1*direction;
-  if (elem1.place = elem2.place) then
-    result := 0;
-
+  Result := CompareText(elem1.place, elem2.place)*direction;
 end;
 
 function FindMiddle(headFind: PPicElem): PPicElem;
@@ -556,10 +497,11 @@ end;
 
 
 
-//---------------------------------------------------------------------------------
+
 // SORT section END
+//---------------------------------------------------------------------------------
 
-
+//---------------------------------------------------------------------------------
 // SEARCH section BEGIN
 
 function isRecordMatch(const data: Tdata; const searchStr: string; field: integer): boolean;
@@ -631,8 +573,6 @@ end;
 procedure TFGallery.EditSearchKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
 begin
 
-
-
   // check if the user pressed the Enter key
   if Key = VK_RETURN then
   begin
@@ -656,14 +596,11 @@ begin
 
 end;
 
-
-
-
-
-
-
 // SEARCH section END
+//---------------------------------------------------------------------------------
 
+// FILTER section BEGIN
+// FILTER section END
 
 procedure TFGallery.FormCreate(Sender: TObject);
 begin
