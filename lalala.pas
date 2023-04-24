@@ -458,9 +458,7 @@ begin
 end;
 
 // run trough a linked list and place all panels onto flow one
-procedure ShowAllPics(CurrentPic: PPicElem);
-var
-  i: integer;
+procedure PlaceAllPics(CurrentPic: PPicElem);
 begin
   while (CurrentPic <> nil) do
   begin
@@ -468,27 +466,35 @@ begin
     CurrentPic := CurrentPic^.Next;
   end;
 
-  for i := 0 to FGallery.FlowPanelPics.ControlCount - 1 do
-    FGallery.FlowPanelPics.Controls[i].Visible := True;
+
 
 end;
 
-procedure ClearFlowPanel(FlowPanel: TFlowPanel);
+procedure ClearFlowPanel(FlowPanel: TFlowPanel; NumToClear: integer);
 var
   i: Integer;
 begin
-  for i := FlowPanel.ControlCount - 1 downto 0 do
+  for i := NumToClear downto 0 do
     FlowPanel.Controls[i].Free;
 end;
 
 
 procedure ReCreateAllPanels(headToUse: PPicElem);
+var
+  i: integer;
+  PrevNumOfCtrls: integer;
 begin
 
-  ClearFlowPanel(FGallery.FlowPanelPics);
-  ShowAllPics(headToUse);
-
+  PrevNumOfCtrls := FGallery.FlowPanelPics.ControlCount - 1;
+  PlaceAllPics(headToUse);
+  ClearFlowPanel(FGallery.FlowPanelPics, PrevNumOfCtrls);
+  for i := 0 to FGallery.FlowPanelPics.ControlCount - 1 do
+    FGallery.FlowPanelPics.Controls[i].Visible := True;
 end;
+
+
+
+
 
 // VISUAL section END
 //---------------------------------------------------------------------------------
