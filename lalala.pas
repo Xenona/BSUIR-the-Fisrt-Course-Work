@@ -4,7 +4,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.Menus, Math;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.Menus, Math, DateUtils;
 
 type
   PPicElem=^TPicElems;
@@ -71,8 +71,8 @@ type
     procedure FormResize(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure CmbBxSortChange(Sender: TObject);
-    procedure CmbBxSearchParamChange(Sender: TObject);
-
+    procedure EditSearchKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
 
   private
     { Private declarations }
@@ -80,6 +80,7 @@ type
      head: PPicElem;
      sortedHead: PPicElem;
      searchedHead: PPicElem;
+     LastSearchTime: TDateTime;
   end;
 
 var
@@ -553,6 +554,8 @@ begin
   end;
 end;
 
+
+
 //---------------------------------------------------------------------------------
 // SORT section END
 
@@ -621,25 +624,36 @@ begin
     curElem := curElem^.Next;
   end;
 
+  Result^.Next := nil
+
 end;
 
-// SEARCH section END
-
-
-procedure TFGallery.CmbBxSearchParamChange(Sender: TObject);
+procedure TFGallery.EditSearchKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
 begin
 
-  if (CmbBxSearchParam.Text <> '') and (Trim(EditSearch.Text) <> '')  then
-  begin
-    searchedHead := SearchData(head, EditSearch.Text, CmbBxSearchParam.ItemIndex);
 
-    ReCreateAllPanels(searchedHead);
+
+  // check if the user pressed the Enter key
+  if Key = VK_RETURN then
+  begin
+    if (CmbBxSearchParam.Text <> '') and (Trim(EditSearch.Text) <> '')  then
+    begin
+      searchedHead := SearchData(head, EditSearch.Text, CmbBxSearchParam.ItemIndex);
+
+      ReCreateAllPanels(searchedHead);
+    end;
   end;
 
 
-
-//
 end;
+
+
+
+
+
+
+
+// SEARCH section END
 
 
 procedure TFGallery.FormCreate(Sender: TObject);
@@ -719,4 +733,5 @@ begin
 
 
 end;
+
 end.

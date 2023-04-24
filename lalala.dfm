@@ -270,6 +270,7 @@ object FGallery: TFGallery
         ParentFont = False
         TabOrder = 0
         TextHint = #1074#1074#1077#1076#1080#1090#1077' '#1090#1077#1082#1089#1090
+        OnKeyDown = EditSearchKeyDown
       end
       object CmbBxSearchParam: TComboBox
         Left = 0
@@ -284,7 +285,8 @@ object FGallery: TFGallery
         Font.Style = []
         ParentFont = False
         TabOrder = 1
-        OnChange = CmbBxSearchParamChange
+        ExplicitLeft = -2
+        ExplicitTop = 145
       end
     end
     object PanelSort: TPanel
