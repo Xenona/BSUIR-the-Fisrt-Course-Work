@@ -10,6 +10,8 @@ object FBigPic: TFBigPic
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
+  OnActivate = FormActivate
+  OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
   object LabelTitle: TLabel
@@ -130,7 +132,7 @@ object FBigPic: TFBigPic
   object LabelUserRate: TLabel
     AlignWithMargins = True
     Left = 503
-    Top = 560
+    Top = 584
     Width = 353
     Height = 25
     Margins.Left = 0
@@ -205,10 +207,10 @@ object FBigPic: TFBigPic
     Caption = 'Panel1'
     TabOrder = 0
     object ImageItself: TImage
-      Left = 96
-      Top = 123
-      Width = 257
-      Height = 350
+      Left = 32
+      Top = 35
+      Width = 449
+      Height = 598
     end
   end
   object EditTitle: TEdit
@@ -266,5 +268,101 @@ object FBigPic: TFBigPic
     ParentFont = False
     TabOrder = 4
     TextHint = #1074#1074#1077#1076#1080#1090#1077' '#1090#1077#1082#1089#1090
+  end
+  object EditGenre: TEdit
+    Left = 607
+    Top = 114
+    Width = 90
+    Height = 35
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -20
+    Font.Name = 'Montserrat'
+    Font.Style = []
+    ParentFont = False
+    TabOrder = 5
+    TextHint = #1074#1074#1077#1076#1080#1090#1077' '#1090#1077#1082#1089#1090
+  end
+  object EditTheme: TEdit
+    Left = 630
+    Top = 170
+    Width = 90
+    Height = 35
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -20
+    Font.Name = 'Montserrat'
+    Font.Style = []
+    ParentFont = False
+    TabOrder = 6
+    TextHint = #1074#1074#1077#1076#1080#1090#1077' '#1090#1077#1082#1089#1090
+  end
+  object EditMaterials: TEdit
+    Left = 654
+    Top = 234
+    Width = 90
+    Height = 35
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -20
+    Font.Name = 'Montserrat'
+    Font.Style = []
+    ParentFont = False
+    TabOrder = 7
+    TextHint = #1074#1074#1077#1076#1080#1090#1077' '#1090#1077#1082#1089#1090
+  end
+  object EditDescr: TEdit
+    Left = 699
+    Top = 298
+    Width = 243
+    Height = 35
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -20
+    Font.Name = 'Montserrat'
+    Font.Style = []
+    ParentFont = False
+    TabOrder = 8
+    TextHint = #1074#1074#1077#1076#1080#1090#1077' '#1090#1077#1082#1089#1090
+  end
+  object ChkBxFavourite: TCheckBox
+    Left = 871
+    Top = 434
+    Width = 18
+    Height = 58
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Montserrat'
+    Font.Style = []
+    ParentFont = False
+    TabOrder = 9
+  end
+  object EditUserComm: TEdit
+    Left = 607
+    Top = 532
+    Width = 243
+    Height = 35
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -20
+    Font.Name = 'Montserrat'
+    Font.Style = []
+    ParentFont = False
+    TabOrder = 10
+    TextHint = #1074#1074#1077#1076#1080#1090#1077' '#1090#1077#1082#1089#1090
+  end
+  object CmbBxUserRate: TComboBox
+    Left = 697
+    Top = 612
+    Width = 228
+    Height = 35
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -20
+    Font.Name = 'Montserrat'
+    Font.Style = []
+    ParentFont = False
+    TabOrder = 11
   end
 end

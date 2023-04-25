@@ -213,6 +213,7 @@ object FGallery: TFGallery
         ParentFont = False
         TabOrder = 1
         OnChange = CmbBxFilterChange
+        ExplicitTop = 145
       end
     end
     object PanelSearch: TPanel

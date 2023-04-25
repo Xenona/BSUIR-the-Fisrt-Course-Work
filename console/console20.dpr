@@ -469,10 +469,12 @@ end;
 // SEARCH SECTION END
 
 // IMPLEMENT SECTION BEGIN
-procedure printPic(picture: TData);
-begin
-  // вывести одну картину крупно
-end;
+// procedure printPic(picture: integer = 0; str: string = 'lalala'; tree: string = 'strrrrrrr');
+//begin
+//  writeln('pic ', picture);
+//  writeln('str ', str);
+//  writeln('tree ', tree);
+//end;
 
 
 
@@ -481,6 +483,10 @@ end;
 
 
 begin
+
+
+//    printPic(tree := 'fff');
+
 
    FetchAllPics(head);
 

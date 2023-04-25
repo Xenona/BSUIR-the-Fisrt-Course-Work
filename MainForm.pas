@@ -651,17 +651,23 @@ end;
 
 procedure TFGallery.ShowBigPic(Sender: TObject);
 var
-lala: string;
+   Window: TFBigPic;
 begin
 //  FBigPic.LabelTitle.Font.Style := FBigPic.LabelTitle.Font.Style + [fsLineGapOnly];
 //  FBigPic.LabelTitle.LineHeight := -15;
 
 //  ShowMessage(TLabel(TPanel(TImage(Sender).Parent).Controls[1]).Caption);
 
-//   FBigPic.PicInfo :=
-lala := TLabel(TPanel(TImage(Sender).Parent).Controls[1]).Caption;
-  SearchSingleTitle(head, lala);
-  FBigPic.ShowModal;
+
+  Window := TFBigPic.Create(nil);
+  try
+   FBigPic.PicInfo := SearchSingleTitle(head, TLabel(TPanel(TImage(Sender).Parent).Controls[1]).Caption);
+   FBigPic.ShowModal;
+  finally
+   Window.Free;
+  end;
+
+
 end;
 
 //---------------------------------------------------------------------------------
