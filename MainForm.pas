@@ -160,6 +160,10 @@ begin
   end;
 end;
 
+
+
+
+
 // create a panel with a pic and a label
 procedure CreatePicPanel(AOwner: TComponent; AFlowPanel: TFlowPanel; APic: TPicture; ATitle: string);
 var
@@ -188,12 +192,11 @@ begin
   Image.Parent := Panel;
   Image.AutoSize := False;
   Image.Stretch := True;
-
   Scale := Min((Panel.ClientWidth - 2*Margin) / APic.Width, (Panel.ClientWidth - 2*Margin) / APic.Height);
   Image.Width := Round((APic.Width) * Scale);
   Image.Height := Round((APic.Height) * Scale);
   Image.Left := (Panel.Width - Image.Width + Margin) div 2;
-  Image.Top := (Panel.Height - Image.Height - 20) div 2;
+  Image.Top := (Panel.Height - Image.Height - 2*Margin) div 2;
   Image.Picture.Assign(APic);
   Image.OnClick := FGallery.ShowBigPic;
 

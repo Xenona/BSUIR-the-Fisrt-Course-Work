@@ -1,8 +1,8 @@
 object FBigPic: TFBigPic
   Left = 0
   Top = 0
-  ClientHeight = 670
-  ClientWidth = 1019
+  ClientHeight = 870
+  ClientWidth = 1207
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -14,35 +14,12 @@ object FBigPic: TFBigPic
   OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
-  object LabelTitle: TLabel
-    AlignWithMargins = True
-    Left = 503
-    Top = 13
-    Width = 241
-    Height = 20
-    Margins.Left = 0
-    Margins.Top = 0
-    Margins.Right = 0
-    Margins.Bottom = 0
-    AutoSize = False
-    Caption = #1053#1072#1079#1074#1072#1085#1080#1077':'
-    Color = clBlack
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clBlack
-    Font.Height = -17
-    Font.Name = 'Montserrat SemiBold'
-    Font.Style = [fsBold]
-    ParentColor = False
-    ParentFont = False
-    Transparent = True
-    WordWrap = True
-  end
   object LabelGenre: TLabel
     AlignWithMargins = True
-    Left = 503
-    Top = 120
+    Left = 591
+    Top = 214
     Width = 88
-    Height = 25
+    Height = 35
     Margins.Left = 0
     Margins.Top = 0
     Margins.Right = 0
@@ -52,7 +29,7 @@ object FBigPic: TFBigPic
     Color = clBlack
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clBlack
-    Font.Height = -17
+    Font.Height = 35
     Font.Name = 'Montserrat SemiBold'
     Font.Style = [fsBold]
     ParentColor = False
@@ -62,10 +39,10 @@ object FBigPic: TFBigPic
   end
   object LabelTheme: TLabel
     AlignWithMargins = True
-    Left = 503
-    Top = 176
+    Left = 591
+    Top = 270
     Width = 169
-    Height = 25
+    Height = 35
     Margins.Left = 0
     Margins.Top = 0
     Margins.Right = 0
@@ -75,7 +52,7 @@ object FBigPic: TFBigPic
     Color = clBlack
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clBlack
-    Font.Height = -17
+    Font.Height = 35
     Font.Name = 'Montserrat SemiBold'
     Font.Style = [fsBold]
     ParentColor = False
@@ -85,10 +62,10 @@ object FBigPic: TFBigPic
   end
   object LabelMaterials: TLabel
     AlignWithMargins = True
-    Left = 503
-    Top = 240
-    Width = 145
-    Height = 25
+    Left = 591
+    Top = 334
+    Width = 186
+    Height = 35
     Margins.Left = 0
     Margins.Top = 0
     Margins.Right = 0
@@ -98,7 +75,7 @@ object FBigPic: TFBigPic
     Color = clBlack
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clBlack
-    Font.Height = -17
+    Font.Height = 35
     Font.Name = 'Montserrat SemiBold'
     Font.Style = [fsBold]
     ParentColor = False
@@ -108,10 +85,10 @@ object FBigPic: TFBigPic
   end
   object LabelDescr: TLabel
     AlignWithMargins = True
-    Left = 503
-    Top = 304
+    Left = 591
+    Top = 398
     Width = 217
-    Height = 25
+    Height = 88
     Margins.Left = 0
     Margins.Top = 0
     Margins.Right = 0
@@ -121,7 +98,7 @@ object FBigPic: TFBigPic
     Color = clBlack
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clBlack
-    Font.Height = -17
+    Font.Height = 35
     Font.Name = 'Montserrat SemiBold'
     Font.Style = [fsBold]
     ParentColor = False
@@ -131,10 +108,10 @@ object FBigPic: TFBigPic
   end
   object LabelUserRate: TLabel
     AlignWithMargins = True
-    Left = 503
-    Top = 584
-    Width = 353
-    Height = 25
+    Left = 591
+    Top = 652
+    Width = 266
+    Height = 72
     Margins.Left = 0
     Margins.Top = 0
     Margins.Right = 0
@@ -144,7 +121,7 @@ object FBigPic: TFBigPic
     Color = clBlack
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clBlack
-    Font.Height = -17
+    Font.Height = 35
     Font.Name = 'Montserrat SemiBold'
     Font.Style = [fsBold]
     ParentColor = False
@@ -154,10 +131,10 @@ object FBigPic: TFBigPic
   end
   object LabelUserComm: TLabel
     AlignWithMargins = True
-    Left = 503
-    Top = 504
-    Width = 422
-    Height = 25
+    Left = 591
+    Top = 737
+    Width = 290
+    Height = 91
     Margins.Left = 0
     Margins.Top = 0
     Margins.Right = 0
@@ -167,7 +144,7 @@ object FBigPic: TFBigPic
     Color = clBlack
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clBlack
-    Font.Height = -17
+    Font.Height = 35
     Font.Name = 'Montserrat SemiBold'
     Font.Style = [fsBold]
     ParentColor = False
@@ -175,23 +152,276 @@ object FBigPic: TFBigPic
     Transparent = True
     WordWrap = True
   end
-  object LabelIsFavourite: TLabel
+  object LabelFieldTitle: TLabel
     AlignWithMargins = True
-    Left = 503
-    Top = 448
-    Width = 337
-    Height = 25
+    Left = 591
+    Top = 21
+    Width = 410
+    Height = 107
     Margins.Left = 0
     Margins.Top = 0
     Margins.Right = 0
     Margins.Bottom = 0
     AutoSize = False
-    Caption = #1055#1086#1084#1077#1090#1080#1090#1100' '#1082#1072#1088#1090#1080#1085#1091' '#1082#1072#1082' '#1048#1079#1073#1088#1072#1085#1085#1091#1102':'
+    Caption = 'Master Jan Hus Preaching at the Bethlehem Chapel'
+    Color = 4227327
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clBlack
+    Font.Height = 35
+    Font.Name = 'Montserrat SemiBold'
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+    Transparent = True
+    WordWrap = True
+  end
+  object LabelFieldYoS: TLabel
+    AlignWithMargins = True
+    Left = 591
+    Top = 98
+    Width = 88
+    Height = 35
+    Margins.Left = 0
+    Margins.Top = 0
+    Margins.Right = 0
+    Margins.Bottom = 0
+    AutoSize = False
+    Caption = '1910'
     Color = clBlack
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clBlack
-    Font.Height = -17
-    Font.Name = 'Montserrat SemiBold'
+    Font.Height = 25
+    Font.Name = 'Montserrat'
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+    Transparent = True
+    WordWrap = True
+  end
+  object LabelFieldYoE: TLabel
+    AlignWithMargins = True
+    Left = 679
+    Top = 98
+    Width = 88
+    Height = 35
+    Margins.Left = 0
+    Margins.Top = 0
+    Margins.Right = 0
+    Margins.Bottom = 0
+    AutoSize = False
+    Caption = '1920'
+    Color = clBlack
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clBlack
+    Font.Height = 25
+    Font.Name = 'Montserrat'
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+    Transparent = True
+    WordWrap = True
+  end
+  object LabelFieldYoW: TLabel
+    AlignWithMargins = True
+    Left = 767
+    Top = 98
+    Width = 37
+    Height = 35
+    Margins.Left = 0
+    Margins.Top = 0
+    Margins.Right = 0
+    Margins.Bottom = 0
+    AutoSize = False
+    Caption = '10'
+    Color = clBlack
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clBlack
+    Font.Height = 25
+    Font.Name = 'Montserrat'
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+    Transparent = True
+    WordWrap = True
+  end
+  object LabelFieldGenre: TLabel
+    AlignWithMargins = True
+    Left = 907
+    Top = 214
+    Width = 120
+    Height = 35
+    Margins.Left = 0
+    Margins.Top = 0
+    Margins.Right = 0
+    Margins.Bottom = 0
+    AutoSize = False
+    Caption = #1052#1086#1076#1077#1088#1085
+    Color = clBlack
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clBlack
+    Font.Height = 30
+    Font.Name = 'Montserrat'
+    Font.Style = []
+    ParentColor = False
+    ParentFont = False
+    Transparent = True
+    WordWrap = True
+  end
+  object LabelFieldTheme: TLabel
+    AlignWithMargins = True
+    Left = 907
+    Top = 270
+    Width = 169
+    Height = 35
+    Margins.Left = 0
+    Margins.Top = 0
+    Margins.Right = 0
+    Margins.Bottom = 0
+    AutoSize = False
+    Caption = #1051#1102#1076#1080
+    Color = clBlack
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clBlack
+    Font.Height = 30
+    Font.Name = 'Montserrat'
+    Font.Style = []
+    ParentColor = False
+    ParentFont = False
+    Transparent = True
+    WordWrap = True
+  end
+  object LabelFieldMats: TLabel
+    AlignWithMargins = True
+    Left = 907
+    Top = 334
+    Width = 186
+    Height = 35
+    Margins.Left = 0
+    Margins.Top = 0
+    Margins.Right = 0
+    Margins.Bottom = 0
+    AutoSize = False
+    Caption = #1061#1086#1083#1089#1090', '#1084#1072#1089#1083#1086
+    Color = clBlack
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clBlack
+    Font.Height = 30
+    Font.Name = 'Montserrat'
+    Font.Style = []
+    ParentColor = False
+    ParentFont = False
+    Transparent = True
+    WordWrap = True
+  end
+  object LabelFieldDescr: TLabel
+    AlignWithMargins = True
+    Left = 907
+    Top = 390
+    Width = 295
+    Height = 88
+    Margins.Left = 0
+    Margins.Top = 0
+    Margins.Right = 0
+    Margins.Bottom = 0
+    AutoSize = False
+    Caption = #1044#1072', '#1086#1095#1077#1085#1100' '#1080#1085#1090#1077#1088#1077#1089#1085#1086', '#1083#1102#1073#1083#1102' '#1082#1091#1088#1089#1072#1095
+    Color = clBlack
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clBlack
+    Font.Height = 30
+    Font.Name = 'Montserrat'
+    Font.Style = []
+    ParentColor = False
+    ParentFont = False
+    Transparent = True
+    WordWrap = True
+  end
+  object LabelFieldUsrCmm: TLabel
+    AlignWithMargins = True
+    Left = 907
+    Top = 741
+    Width = 286
+    Height = 156
+    Margins.Left = 0
+    Margins.Top = 0
+    Margins.Right = 0
+    Margins.Bottom = 0
+    AutoSize = False
+    Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100#1089#1082#1080#1081' '#1082#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
+    Color = clBlack
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clBlack
+    Font.Height = 30
+    Font.Name = 'Montserrat'
+    Font.Style = []
+    ParentColor = False
+    ParentFont = False
+    Transparent = True
+    WordWrap = True
+  end
+  object LabelDash: TLabel
+    AlignWithMargins = True
+    Left = 647
+    Top = 98
+    Width = 41
+    Height = 35
+    Margins.Left = 0
+    Margins.Top = 0
+    Margins.Right = 0
+    Margins.Bottom = 0
+    AutoSize = False
+    Caption = #8212
+    Color = clBlack
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clBlack
+    Font.Height = 25
+    Font.Name = 'Montserrat'
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+    Transparent = True
+    WordWrap = True
+  end
+  object Label1: TLabel
+    AlignWithMargins = True
+    Left = 743
+    Top = 98
+    Width = 41
+    Height = 35
+    Margins.Left = 0
+    Margins.Top = 0
+    Margins.Right = 0
+    Margins.Bottom = 0
+    AutoSize = False
+    Caption = '('
+    Color = clBlack
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clBlack
+    Font.Height = 25
+    Font.Name = 'Montserrat'
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+    Transparent = True
+    WordWrap = True
+  end
+  object Label2: TLabel
+    AlignWithMargins = True
+    Left = 804
+    Top = 98
+    Width = 41
+    Height = 35
+    Margins.Left = 0
+    Margins.Top = 0
+    Margins.Right = 0
+    Margins.Bottom = 0
+    AutoSize = False
+    Caption = ')'
+    Color = clBlack
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clBlack
+    Font.Height = 25
+    Font.Name = 'Montserrat'
     Font.Style = [fsBold]
     ParentColor = False
     ParentFont = False
@@ -201,36 +431,37 @@ object FBigPic: TFBigPic
   object PanelPic: TPanel
     Left = 0
     Top = 0
-    Width = 500
-    Height = 670
+    Width = 570
+    Height = 870
     Align = alLeft
     Caption = 'Panel1'
     TabOrder = 0
+    ExplicitLeft = -8
+    ExplicitTop = 40
     object ImageItself: TImage
-      Left = 32
-      Top = 35
-      Width = 449
-      Height = 598
+      Left = 0
+      Top = 98
+      Width = 525
+      Height = 525
     end
   end
-  object EditTitle: TEdit
-    Left = 687
-    Top = 8
-    Width = 228
-    Height = 35
+  object ChkBxFavourite: TCheckBox
+    Left = 1153
+    Top = 29
+    Width = 18
+    Height = 33
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -20
+    Font.Height = -13
     Font.Name = 'Montserrat'
     Font.Style = []
     ParentFont = False
     TabOrder = 1
-    TextHint = #1074#1074#1077#1076#1080#1090#1077' '#1090#1077#1082#1089#1090
   end
-  object EditYoS: TEdit
-    Left = 631
-    Top = 49
-    Width = 90
+  object CmbBxUserRate: TComboBox
+    Left = 907
+    Top = 655
+    Width = 238
     Height = 35
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
@@ -239,130 +470,5 @@ object FBigPic: TFBigPic
     Font.Style = []
     ParentFont = False
     TabOrder = 2
-    TextHint = #1074#1074#1077#1076#1080#1090#1077' '#1090#1077#1082#1089#1090
-  end
-  object EditYoE: TEdit
-    Left = 740
-    Top = 49
-    Width = 90
-    Height = 35
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -20
-    Font.Name = 'Montserrat'
-    Font.Style = []
-    ParentFont = False
-    TabOrder = 3
-    TextHint = #1074#1074#1077#1076#1080#1090#1077' '#1090#1077#1082#1089#1090
-  end
-  object EditYoW: TEdit
-    Left = 852
-    Top = 49
-    Width = 90
-    Height = 35
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -20
-    Font.Name = 'Montserrat'
-    Font.Style = []
-    ParentFont = False
-    TabOrder = 4
-    TextHint = #1074#1074#1077#1076#1080#1090#1077' '#1090#1077#1082#1089#1090
-  end
-  object EditGenre: TEdit
-    Left = 607
-    Top = 114
-    Width = 90
-    Height = 35
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -20
-    Font.Name = 'Montserrat'
-    Font.Style = []
-    ParentFont = False
-    TabOrder = 5
-    TextHint = #1074#1074#1077#1076#1080#1090#1077' '#1090#1077#1082#1089#1090
-  end
-  object EditTheme: TEdit
-    Left = 630
-    Top = 170
-    Width = 90
-    Height = 35
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -20
-    Font.Name = 'Montserrat'
-    Font.Style = []
-    ParentFont = False
-    TabOrder = 6
-    TextHint = #1074#1074#1077#1076#1080#1090#1077' '#1090#1077#1082#1089#1090
-  end
-  object EditMaterials: TEdit
-    Left = 654
-    Top = 234
-    Width = 90
-    Height = 35
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -20
-    Font.Name = 'Montserrat'
-    Font.Style = []
-    ParentFont = False
-    TabOrder = 7
-    TextHint = #1074#1074#1077#1076#1080#1090#1077' '#1090#1077#1082#1089#1090
-  end
-  object EditDescr: TEdit
-    Left = 699
-    Top = 298
-    Width = 243
-    Height = 35
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -20
-    Font.Name = 'Montserrat'
-    Font.Style = []
-    ParentFont = False
-    TabOrder = 8
-    TextHint = #1074#1074#1077#1076#1080#1090#1077' '#1090#1077#1082#1089#1090
-  end
-  object ChkBxFavourite: TCheckBox
-    Left = 871
-    Top = 434
-    Width = 18
-    Height = 58
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -13
-    Font.Name = 'Montserrat'
-    Font.Style = []
-    ParentFont = False
-    TabOrder = 9
-  end
-  object EditUserComm: TEdit
-    Left = 607
-    Top = 532
-    Width = 243
-    Height = 35
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -20
-    Font.Name = 'Montserrat'
-    Font.Style = []
-    ParentFont = False
-    TabOrder = 10
-    TextHint = #1074#1074#1077#1076#1080#1090#1077' '#1090#1077#1082#1089#1090
-  end
-  object CmbBxUserRate: TComboBox
-    Left = 697
-    Top = 612
-    Width = 228
-    Height = 35
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -20
-    Font.Name = 'Montserrat'
-    Font.Style = []
-    ParentFont = False
-    TabOrder = 11
   end
 end
