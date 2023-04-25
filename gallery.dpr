@@ -5,7 +5,8 @@ uses
   MainForm in 'MainForm.pas' {Form1},
   Vcl.Themes,
   Vcl.Styles,
-  BigPic in 'BigPic.pas' {FBigPic};
+  BigPic in 'BigPic.pas' {FBigPic},
+  SharedTypes in 'SharedTypes.pas';
 
 {$R *.res}
 

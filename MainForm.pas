@@ -5,35 +5,10 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.Menus, Math, DateUtils,
-  Vcl.Grids, BigPic;
+  Vcl.Grids, BigPic, SharedTypes;
+
 
 type
-  PPicElem=^TPicElems;
-
-  Tdata = packed record
-    title: string[50];
-    yearOfStart: integer;
-    yearOfEnd: integer;
-    yearsOfWork: integer;
-    genre: string[10];
-    theme: string[10];
-    place: string[15];
-    materials: string[15];
-    shortDescr: string[100];
-    userRate: integer;
-    userComment: string[50];
-    isToBeChanged: boolean;
-    isFavourite: boolean;
-    filename: string[25];
-    imgBuffer: TPicture;
-  end;
-
-
-  TPicElems = record
-    data: Tdata;
-    Next: PPicElem;
-  end;
-
   TSortMethod = function(elem1, elem2: TData; direction: integer): integer;
 
 
@@ -84,7 +59,7 @@ type
      head: PPicElem;
      sortedHead: PPicElem;
      searchedHead: PPicElem;
-     LastSearchTime: TDateTime;
+     PicInfo: TData;
   end;
 
 var
@@ -98,12 +73,10 @@ implementation
 // --------------------------------------------------------------------------------
 // VISUAL section BEGIN
 
-procedure TFGallery.ShowBigPic(Sender: TObject);
-begin
 
 
-  FBigPic.ShowModal;
-end;
+
+
 
 // to fetch all pics from dataset.pic file
 procedure FetchAllPics(var head: PPicElem);
@@ -550,6 +523,13 @@ begin
 
  end;
 
+function searchSingleTitle(const head: PPicElem; titleToSearch: string): PPicElem;
+begin
+  result := head;
+  while (result.data.title <> titleToSearch) or (result <> nil) do
+    result := head^.Next;
+end;
+
 function searchData(head: PPicElem; infoToSearch: string; fieldSearch: integer): PPicElem;
 var
   curElem: PPicElem;
@@ -663,9 +643,26 @@ begin
 
 end;
 
-
 //---------------------------------------------------------------------------------
 // FILTER section END
+
+// BIG PIC section BEGIN
+//---------------------------------------------------------------------------------
+
+procedure TFGallery.ShowBigPic(Sender: TObject);
+begin
+//  FBigPic.LabelTitle.Font.Style := FBigPic.LabelTitle.Font.Style + [fsLineGapOnly];
+//  FBigPic.LabelTitle.LineHeight := -15;
+
+//  ShowMessage(TLabel(TPanel(TImage(Sender).Parent).Controls[1]).Caption);
+
+
+//  FBigPic.PicInfo := SearchSingleTitle(head, TLabel(TPanel(TImage(Sender).Parent).Controls[1]).Caption);
+  FBigPic.ShowModal;
+end;
+
+//---------------------------------------------------------------------------------
+// BIG PIC section END
 
 procedure TFGallery.FormCreate(Sender: TObject);
 begin

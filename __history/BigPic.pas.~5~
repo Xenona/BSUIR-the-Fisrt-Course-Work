@@ -1,0 +1,68 @@
+unit BigPic;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, MainForm;
+
+type
+  PPicElem = MainForm.PPicElem;
+//  PPicElem=^TPicElems;
+//
+//  Tdata = packed record
+//    title: string[50];
+//    yearOfStart: integer;
+//    yearOfEnd: integer;
+//    yearsOfWork: integer;
+//    genre: string[10];
+//    theme: string[10];
+//    place: string[15];
+//    materials: string[15];
+//    shortDescr: string[100];
+//    userRate: integer;
+//    userComment: string[50];
+//    isToBeChanged: boolean;
+//    isFavourite: boolean;
+//    filename: string[25];
+//    imgBuffer: TPicture;
+//  end;
+//
+//
+//  TPicElems = record
+//    data: Tdata;
+//    Next: PPicElem;
+//  end;
+
+
+
+  TFBigPic = class(TForm)
+    ImageItself: TImage;
+    PanelPic: TPanel;
+    LabelTitle: TLabel;
+    LabelGenre: TLabel;
+    LabelTheme: TLabel;
+    LabelMaterials: TLabel;
+    LabelDescr: TLabel;
+    LabelUserRate: TLabel;
+    LabelUserComm: TLabel;
+    LabelIsFavourite: TLabel;
+    EditTitle: TEdit;
+    EditYoS: TEdit;
+    EditYoE: TEdit;
+    EditYoW: TEdit;
+  private
+
+
+  public
+    PicInfo: PPicElem;
+  end;
+
+var
+  FBigPic: TFBigPic;
+
+implementation
+
+{$R *.dfm}
+
+end.

@@ -256,7 +256,7 @@ object FGallery: TFGallery
         Font.Name = 'Montserrat SemiBold'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitWidth = 104
+        ExplicitTop = 34
       end
       object EditSearch: TEdit
         Left = 0
