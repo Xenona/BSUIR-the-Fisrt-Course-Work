@@ -21,7 +21,7 @@ object FGallery: TFGallery
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
-  object ScrollBox1: TScrollBox
+  object ScrollBoxPics: TScrollBox
     Left = 0
     Top = 0
     Width = 706
@@ -32,6 +32,7 @@ object FGallery: TFGallery
     Color = clBtnFace
     ParentColor = False
     TabOrder = 0
+    OnMouseWheel = ScrollBoxPicsMouseWheel
     object FlowPanelPics: TFlowPanel
       Left = 0
       Top = 0

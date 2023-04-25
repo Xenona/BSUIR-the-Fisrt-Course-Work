@@ -4,8 +4,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.Menus, Math, DateUtils,
-  Vcl.Grids;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.Menus, Math, DateUtils;
 
 type
   PPicElem=^TPicElems;
@@ -39,7 +38,7 @@ type
 
   TFGallery = class(TForm)
     PanelSideBar: TPanel;
-    ScrollBoxPics: TScrollBox;
+    ScrollBox1: TScrollBox;
     MainMenu: TMainMenu;
     FileMenu: TMenuItem;
     OpenFile: TMenuItem;
@@ -74,8 +73,6 @@ type
     procedure CmbBxSortChange(Sender: TObject);
     procedure EditSearchKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
-    procedure ScrollBoxPicsMouseWheel(Sender: TObject; Shift: TShiftState;
-      WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
 
   private
     { Private declarations }
@@ -681,17 +678,6 @@ begin
 
 
 
-end;
-
-procedure TFGallery.ScrollBoxPicsMouseWheel(Sender: TObject; Shift: TShiftState;
-  WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
-begin
-
-  Handled := True;
-  if WheelDelta < 0 then
-    ScrollBoxPics.VertScrollBar.Position := ScrollBoxPics.VertScrollBar.Position + ScrollBoxPics.VertScrollBar.Increment
-  else
-    ScrollBoxPics.VertScrollBar.Position := ScrollBoxPics.VertScrollBar.Position - ScrollBoxPics.VertScrollBar.Increment;
 end;
 
 end.
