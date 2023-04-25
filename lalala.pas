@@ -41,7 +41,7 @@ type
     PanelSideBar: TPanel;
     ScrollBoxPics: TScrollBox;
     MainMenu: TMainMenu;
-    FileMenu: TMenuItem;
+    FileMenu: TMenuItem ;
     OpenFile: TMenuItem;
     SaveFile: TMenuItem;
     HelpMenu: TMenuItem;
@@ -76,6 +76,7 @@ type
       Shift: TShiftState);
     procedure ScrollBoxPicsMouseWheel(Sender: TObject; Shift: TShiftState;
       WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
+    procedure CmbBxFilterChange(Sender: TObject);
 
   private
     { Private declarations }
@@ -197,7 +198,7 @@ begin
   Panel.Margins.Bottom := Margin;
   Panel.BevelOuter := bvNone;
   Panel.Height := 270;
-  Panel.Width := 210;
+  Panel.Width := 230;
   // appear again in onResize
   Panel.ParentBackground := False;
   Panel.ParentColor := False;
@@ -236,6 +237,17 @@ var
   i: integer;
   PrevNumOfCtrls: integer;
 begin
+
+
+
+ if headToUse = nil then
+    begin
+      FGallery.FlowPanelPics.Margins.Top := 500;
+      FGallery.FlowPanelPics.Height := FGallery.PanelSideBar.Height;
+      FGallery.FlowPanelPics.ShowCaption := True;
+    end
+    else
+      FGallery.FlowPanelPics.ShowCaption := False;
 
   // saving how many panels're gonna be deleted
   PrevNumOfCtrls := FGallery.FlowPanelPics.ControlCount - 1;
@@ -453,7 +465,6 @@ begin
       begin
         sortedHead := MergeSort(head, sortDirection, cmpTitle);
         ReCreateAllPanels(sortedHead);
-        sortDirection := 1;
       end;
       2: // year of start
       begin
@@ -491,15 +502,8 @@ begin
         ReCreateAllPanels(sortedHead);
       end;
     end;
-
-
-
-
   end;
 end;
-
-
-
 
 // SORT section END
 //---------------------------------------------------------------------------------
@@ -532,6 +536,8 @@ begin
       (Pos(searchStr, data.materials) > 0) or
       (Pos(searchStr, data.shortDescr) > 0) or
       (Pos(searchStr, data.userComment) > 0);
+    12: Result := (Pos(searchStr, IntToStr(data.userRate)) > 0);
+    13: Result := (data.isFavourite = (StrToInt(searchStr) = 1));
   end;
 
  end;
@@ -603,6 +609,49 @@ end;
 //---------------------------------------------------------------------------------
 
 // FILTER section BEGIN
+//---------------------------------------------------------------------------------
+
+procedure TFGallery.CmbBxFilterChange(Sender: TObject);
+begin
+
+  case CmbBxFilter.ItemIndex of
+    0:
+    begin
+      CmbBxFiltVal.Items.Clear;
+      CmbBxFiltVal.Items.Add('');
+    end;
+    1:
+    begin
+      CmbBxFiltVal.Items.Clear;
+      CmbBxFiltVal.Items.Add('');
+      CmbBxFiltVal.Items.Add('Да');
+      CmbBxFiltVal.Items.Add('Нет');
+    end;
+    2:
+    begin
+      CmbBxFiltVal.Items.Clear;
+      CmbBxFiltVal.Items.Add('');
+      CmbBxFiltVal.Items.Add('Нет оценки');
+      CmbBxFiltVal.Items.Add('1');
+      CmbBxFiltVal.Items.Add('2');
+      CmbBxFiltVal.Items.Add('3');
+      CmbBxFiltVal.Items.Add('4');
+      CmbBxFiltVal.Items.Add('5');
+    end;
+  end;
+
+
+
+//  if (CmbBxFilter.Text <> '') and (CmbBxFiltVal.Text <> '') then
+//  begin
+//    searchedHead := SearchData(head, EditSearch.Text, CmbBxSearchParam.ItemIndex);
+//
+//  end;
+
+end;
+
+
+//---------------------------------------------------------------------------------
 // FILTER section END
 
 procedure TFGallery.FormCreate(Sender: TObject);
@@ -625,11 +674,15 @@ begin
   CmbBxSearchParam.Items.Add('Описание');
   CmbBxSearchParam.Items.Add('Комментарий');
   CmbBxSearchParam.Items.Add('Все');
+  // then goes user rate
+  // then goes isFavourite
 
   // filter params
   CmbBxFilter.Items.Add('');
   CmbBxFilter.Items.Add('Избранное');
   CmbBxFilter.Items.Add('Оценка');
+
+
 
   // sort params
   CmbBxSort.Items.Add('');
