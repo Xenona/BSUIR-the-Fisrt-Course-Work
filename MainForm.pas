@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.Menus, Math, DateUtils,
-  Vcl.Grids;
+  Vcl.Grids, BigPic;
 
 type
   PPicElem=^TPicElems;
@@ -77,7 +77,7 @@ type
     procedure ScrollBoxPicsMouseWheel(Sender: TObject; Shift: TShiftState;
       WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
     procedure CmbBxFilterChange(Sender: TObject);
-
+    procedure ShowBigPic(Sender: TObject);
   private
     { Private declarations }
   public
@@ -97,6 +97,13 @@ implementation
 
 // --------------------------------------------------------------------------------
 // VISUAL section BEGIN
+
+procedure TFGallery.ShowBigPic(Sender: TObject);
+begin
+
+
+  FBigPic.ShowModal;
+end;
 
 // to fetch all pics from dataset.pic file
 procedure FetchAllPics(var head: PPicElem);
@@ -215,6 +222,7 @@ begin
   Image.Left := (Panel.Width - Image.Width + Margin) div 2;
   Image.Top := (Panel.Height - Image.Height - 20) div 2;
   Image.Picture.Assign(APic);
+  Image.OnClick := FGallery.ShowBigPic;
 
   LabelTitle := TLabel.Create(Panel);
   LabelTitle.Parent := Panel;

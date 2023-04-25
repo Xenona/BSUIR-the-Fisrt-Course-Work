@@ -101,8 +101,12 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
-        <DCCReference Include="lalala.pas">
+        <DCCReference Include="MainForm.pas">
             <Form>Form1</Form>
+        </DCCReference>
+        <DCCReference Include="BigPic.pas">
+            <Form>FBigPic</Form>
+            <FormType>dfm</FormType>
         </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
