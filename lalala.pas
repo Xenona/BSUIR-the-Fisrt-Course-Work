@@ -536,13 +536,13 @@ begin
       (Pos(searchStr, data.materials) > 0) or
       (Pos(searchStr, data.shortDescr) > 0) or
       (Pos(searchStr, data.userComment) > 0);
-    12: Result := (Pos(searchStr, IntToStr(data.userRate)) > 0);
-    13: Result := (data.isFavourite = (StrToInt(searchStr) = 1));
+    12: Result := (data.isFavourite = (StrToInt(searchStr) = 1));
+    13: Result := (Pos(searchStr, IntToStr(data.userRate)) > 0);
   end;
 
  end;
 
-function searchData(head: PPicElem; infoToSearch: string; fieldSearch: integer ): PPicElem;
+function searchData(head: PPicElem; infoToSearch: string; fieldSearch: integer): PPicElem;
 var
   curElem: PPicElem;
   newList: PPicElem;
@@ -614,15 +614,18 @@ end;
 procedure TFGallery.CmbBxFilterChange(Sender: TObject);
 begin
 
+  if Sender = CmbBxFilter then
   case CmbBxFilter.ItemIndex of
     0:
     begin
       CmbBxFiltVal.Items.Clear;
+      CmbBxFiltVal.Text := '';
       CmbBxFiltVal.Items.Add('');
     end;
     1:
     begin
       CmbBxFiltVal.Items.Clear;
+      CmbBxFiltVal.Text := '';
       CmbBxFiltVal.Items.Add('');
       CmbBxFiltVal.Items.Add('Да');
       CmbBxFiltVal.Items.Add('Нет');
@@ -630,6 +633,7 @@ begin
     2:
     begin
       CmbBxFiltVal.Items.Clear;
+      CmbBxFiltVal.Text := '';
       CmbBxFiltVal.Items.Add('');
       CmbBxFiltVal.Items.Add('Нет оценки');
       CmbBxFiltVal.Items.Add('1');
@@ -642,11 +646,12 @@ begin
 
 
 
-//  if (CmbBxFilter.Text <> '') and (CmbBxFiltVal.Text <> '') then
-//  begin
-//    searchedHead := SearchData(head, EditSearch.Text, CmbBxSearchParam.ItemIndex);
-//
-//  end;
+  if (CmbBxFilter.Text <> '') and (CmbBxFiltVal.Text <> '') then
+  begin
+    searchedHead := SearchData(head, IntToStr(CmbBxFiltVal.ItemIndex), CmbBxFilter.ItemIndex+11);
+
+    ReCreateAllPanels(searchedHead);
+  end;
 
 end;
 

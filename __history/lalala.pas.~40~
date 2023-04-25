@@ -4,7 +4,8 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.Menus, Math;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.Menus, Math, DateUtils,
+  Vcl.Grids;
 
 type
   PPicElem=^TPicElems;
@@ -38,10 +39,9 @@ type
 
   TFGallery = class(TForm)
     PanelSideBar: TPanel;
-    ScrollBox1: TScrollBox;
-    FlowPanelPics: TFlowPanel;
+    ScrollBoxPics: TScrollBox;
     MainMenu: TMainMenu;
-    FileMenu: TMenuItem;
+    FileMenu: TMenuItem ;
     OpenFile: TMenuItem;
     SaveFile: TMenuItem;
     HelpMenu: TMenuItem;
@@ -66,18 +66,25 @@ type
     CmbBxSort: TComboBox;
     LabelSortDir: TLabel;
     CmbBxSortDir: TComboBox;
+    FlowPanelPics: TFlowPanel;
     procedure OpenFileClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure CmbBxSortChange(Sender: TObject);
-
+    procedure EditSearchKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure ScrollBoxPicsMouseWheel(Sender: TObject; Shift: TShiftState;
+      WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
+    procedure CmbBxFilterChange(Sender: TObject);
 
   private
     { Private declarations }
   public
      head: PPicElem;
      sortedHead: PPicElem;
+     searchedHead: PPicElem;
+     LastSearchTime: TDateTime;
   end;
 
 var
@@ -191,7 +198,7 @@ begin
   Panel.Margins.Bottom := Margin;
   Panel.BevelOuter := bvNone;
   Panel.Height := 270;
-  Panel.Width := 210;
+  Panel.Width := 230;
   // appear again in onResize
   Panel.ParentBackground := False;
   Panel.ParentColor := False;
@@ -231,6 +238,17 @@ var
   PrevNumOfCtrls: integer;
 begin
 
+
+
+ if headToUse = nil then
+    begin
+      FGallery.FlowPanelPics.Margins.Top := 500;
+      FGallery.FlowPanelPics.Height := FGallery.PanelSideBar.Height;
+      FGallery.FlowPanelPics.ShowCaption := True;
+    end
+    else
+      FGallery.FlowPanelPics.ShowCaption := False;
+
   // saving how many panels're gonna be deleted
   PrevNumOfCtrls := FGallery.FlowPanelPics.ControlCount - 1;
 
@@ -259,101 +277,42 @@ end;
 
 function cmpYearStart(elem1, elem2: TData; direction: integer): integer;
 begin
-
-
-  if (elem1.yearOfStart > elem2.yearOfStart) then
-    result := 1*direction;
-  if (elem1.yearOfStart < elem2.yearOfStart) then
-    result := -1*direction;
-  if (elem1.yearOfStart = elem2.yearOfStart) then
-    result := 0;
-
+  Result := Sign(elem1.yearOfStart - elem2.yearOfStart)*direction;
 end;
 
 function cmpYearEnd(elem1, elem2: TData; direction: integer): integer;
 begin
-
-
-  if (elem1.yearOfEnd > elem2.yearOfEnd) then
-    result := 1*direction;
-  if (elem1.yearOfEnd < elem2.yearOfEnd) then
-    result := -1*direction;
-  if (elem1.yearOfEnd = elem2.yearOfEnd) then
-    result := 0;
-
+  Result := Sign(elem1.yearOfEnd - elem2.yearOfEnd)*direction;
 end;
 
 function cmpYearsWork(elem1, elem2: TData; direction: integer): integer;
 begin
-
-
-  if (elem1.yearsOfWork > elem2.yearsOfWork) then
-    result := 1*direction;
-  if (elem1.yearsOfWork < elem2.yearsOfWork) then
-    result := -1*direction;
-  if (elem1.yearsOfWork = elem2.yearsOfWork) then
-    result := 0;
-
+  Result := Sign(elem1.yearsOfWork - elem2.yearsOfWork)*direction;
 end;
 
 function cmpTitle(elem1, elem2: TData; direction: integer): integer;
 begin
-
-  if (elem1.title > elem2.title) then
-    result := 1*direction;
-  if (elem1.title < elem2.title) then
-    result := -1*direction;
-  if (elem1.title = elem2.title) then
-    result := 0;
-
+  Result := CompareText(elem1.title, elem2.title)*direction;
 end;
 
 function cmpUserRate(elem1, elem2: TData; direction: integer): integer;
 begin
-
-  if (elem1.userRate > elem2.userRate) then
-    result := 1*direction;
-  if (elem1.userRate < elem2.userRate) then
-    result := -1*direction;
-  if (elem1.userRate = elem2.userRate) then
-    result := 0;
-
+  Result := Sign(elem1.userRate - elem2.userRate)*direction;
 end;
 
 function cmpGenre(elem1, elem2: TData; direction: integer): integer;
 begin
-
-  if (elem1.genre > elem2.genre) then
-    result := 1*direction;
-  if (elem1.genre < elem2.genre) then
-    result := -1*direction;
-  if (elem1.genre = elem2.genre) then
-    result := 0;
-
+  Result := CompareText(elem1.genre, elem2.genre)*direction;
 end;
 
 function cmpTheme(elem1, elem2: TData; direction: integer): integer;
 begin
-
-  if (elem1.theme > elem2.theme) then
-    result := 1*direction;
-  if (elem1.theme < elem2.theme) then
-    result := -1*direction;
-  if (elem1.theme = elem2.theme) then
-    result := 0;
-
+  Result := CompareText(elem1.theme, elem2.theme)*direction;
 end;
 
 function cmpPlace(elem1, elem2: TData; direction: integer): integer;
 begin
-
-  if (elem1.place > elem2.place) then
-    result := 1*direction;
-  if (elem1.place < elem2.place) then
-    result := -1*direction;
-  if (elem1.place = elem2.place) then
-    result := 0;
-
+  Result := CompareText(elem1.place, elem2.place)*direction;
 end;
 
 function FindMiddle(headFind: PPicElem): PPicElem;
@@ -506,7 +465,6 @@ begin
       begin
         sortedHead := MergeSort(head, sortDirection, cmpTitle);
         ReCreateAllPanels(sortedHead);
-        sortDirection := 1;
       end;
       2: // year of start
       begin
@@ -544,17 +502,157 @@ begin
         ReCreateAllPanels(sortedHead);
       end;
     end;
-
-
-
-
   end;
 end;
 
-//---------------------------------------------------------------------------------
 // SORT section END
+//---------------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------------
+// SEARCH section BEGIN
+
+function isRecordMatch(const data: Tdata; const searchStr: string; field: integer): boolean;
+begin
+
+  case field of
+    1: Result := (Pos(searchStr, data.title) > 0);
+    2: Result := (Pos(searchStr, IntToStr(data.yearOfStart)) > 0);
+    3: Result := (Pos(searchStr, IntToStr(data.yearOfEnd)) > 0);
+    4: Result := (Pos(searchStr, IntToStr(data.yearsOfWork)) > 0);
+    5: Result := (Pos(searchStr, data.genre) > 0);
+    6: Result := (Pos(searchStr, data.theme) > 0);
+    7: Result := (Pos(searchStr, data.place) > 0)  ;
+    8: Result := (Pos(searchStr, data.materials) > 0);
+    9: Result := (Pos(searchStr, data.shortDescr) > 0);
+    10: Result := (Pos(searchStr, data.userComment) > 0);
+    11: Result :=
+      (Pos(searchStr, data.title) > 0) or
+      (Pos(searchStr, IntToStr(data.yearOfStart)) > 0) or
+      (Pos(searchStr, IntToStr(data.yearOfEnd)) > 0) or
+      (Pos(searchStr, IntToStr(data.yearsOfWork)) > 0) or
+      (Pos(searchStr, data.genre) > 0) or
+      (Pos(searchStr, data.theme) > 0) or
+      (Pos(searchStr, data.place) > 0) or
+      (Pos(searchStr, data.materials) > 0) or
+      (Pos(searchStr, data.shortDescr) > 0) or
+      (Pos(searchStr, data.userComment) > 0);
+    12: Result := (Pos(searchStr, IntToStr(data.userRate)) > 0);
+    13: Result := (data.isFavourite = (StrToInt(searchStr) = 1));
+  end;
+
+ end;
+
+function searchData(head: PPicElem; infoToSearch: string; fieldSearch: integer ): PPicElem;
+var
+  curElem: PPicElem;
+  newList: PPicElem;
 
 
+  // head of created list returns in 'return' var;
+begin
+  curElem := head;
+  newList := nil;
+  result := nil;
+
+  while curElem <> nil do
+  begin
+    if isRecordMatch(curElem^.data, infoToSearch, fieldSearch) then
+    begin
+      if newList = nil then
+      begin
+        new(newList);
+        newList^.data := curElem^.data;
+        result := newList;
+        Result^.Next := nil
+      end
+      else
+      begin
+        new(newList^.Next);
+        newList := newList^.Next;
+        newList^.data := CurElem^.data;
+        newList^.Next := nil;
+      end;
+    end;
+    curElem := curElem^.Next;
+  end;
+
+
+end;
+
+procedure TFGallery.EditSearchKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+begin
+
+  // check if the user pressed the Enter key
+  if Key = VK_RETURN then
+  begin
+    if (CmbBxSearchParam.Text <> '') and (Trim(EditSearch.Text) <> '')  then
+    begin
+      searchedHead := SearchData(head, EditSearch.Text, CmbBxSearchParam.ItemIndex);
+
+      if searchedHead = nil then
+      begin
+        FlowPanelPics.Margins.Top := 500;
+        FlowPanelPics.Height := PanelSideBar.Height;
+        FlowPanelPics.ShowCaption := True;
+      end
+      else
+        FlowPanelPics.ShowCaption := False;
+
+      ReCreateAllPanels(searchedHead);
+    end;
+  end;
+
+
+end;
+
+// SEARCH section END
+//---------------------------------------------------------------------------------
+
+// FILTER section BEGIN
+//---------------------------------------------------------------------------------
+
+procedure TFGallery.CmbBxFilterChange(Sender: TObject);
+begin
+
+  case CmbBxFilter.ItemIndex of
+    0:
+    begin
+      CmbBxFiltVal.Items.Clear;
+      CmbBxFiltVal.Items.Add('');
+    end;
+    1:
+    begin
+      CmbBxFiltVal.Items.Clear;
+      CmbBxFiltVal.Items.Add('');
+      CmbBxFiltVal.Items.Add('Да');
+      CmbBxFiltVal.Items.Add('Нет');
+    end;
+    2:
+    begin
+      CmbBxFiltVal.Items.Clear;
+      CmbBxFiltVal.Items.Add('');
+      CmbBxFiltVal.Items.Add('Нет оценки');
+      CmbBxFiltVal.Items.Add('1');
+      CmbBxFiltVal.Items.Add('2');
+      CmbBxFiltVal.Items.Add('3');
+      CmbBxFiltVal.Items.Add('4');
+      CmbBxFiltVal.Items.Add('5');
+    end;
+  end;
+
+
+
+//  if (CmbBxFilter.Text <> '') and (CmbBxFiltVal.Text <> '') then
+//  begin
+//    searchedHead := SearchData(head, EditSearch.Text, CmbBxSearchParam.ItemIndex);
+//
+//  end;
+
+end;
+
+
+//---------------------------------------------------------------------------------
+// FILTER section END
 
 procedure TFGallery.FormCreate(Sender: TObject);
 begin
@@ -576,11 +674,15 @@ begin
   CmbBxSearchParam.Items.Add('Описание');
   CmbBxSearchParam.Items.Add('Комментарий');
   CmbBxSearchParam.Items.Add('Все');
+  // then goes user rate
+  // then goes isFavourite
 
   // filter params
   CmbBxFilter.Items.Add('');
   CmbBxFilter.Items.Add('Избранное');
   CmbBxFilter.Items.Add('Оценка');
+
+
 
   // sort params
   CmbBxSort.Items.Add('');
@@ -633,4 +735,16 @@ begin
 
 
 end;
+
+procedure TFGallery.ScrollBoxPicsMouseWheel(Sender: TObject; Shift: TShiftState;
+  WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
+begin
+
+  Handled := True;
+  if WheelDelta < 0 then
+    ScrollBoxPics.VertScrollBar.Position := ScrollBoxPics.VertScrollBar.Position + ScrollBoxPics.VertScrollBar.Increment
+  else
+    ScrollBoxPics.VertScrollBar.Position := ScrollBoxPics.VertScrollBar.Position - ScrollBoxPics.VertScrollBar.Increment;
+end;
+
 end.

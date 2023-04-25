@@ -216,6 +216,7 @@ object FGallery: TFGallery
         Font.Style = []
         ParentFont = False
         TabOrder = 1
+        OnChange = CmbBxFilterChange
       end
     end
     object PanelSearch: TPanel
