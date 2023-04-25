@@ -526,8 +526,8 @@ begin
 function searchSingleTitle(const head: PPicElem; titleToSearch: string): PPicElem;
 begin
   result := head;
-  while (result.data.title <> titleToSearch) or (result <> nil) do
-    result := head^.Next;
+  while (result.data.title <> titleToSearch) and (result^.Next <> nil) do
+    result := result^.Next;
 end;
 
 function searchData(head: PPicElem; infoToSearch: string; fieldSearch: integer): PPicElem;
@@ -650,14 +650,17 @@ end;
 //---------------------------------------------------------------------------------
 
 procedure TFGallery.ShowBigPic(Sender: TObject);
+var
+lala: string;
 begin
 //  FBigPic.LabelTitle.Font.Style := FBigPic.LabelTitle.Font.Style + [fsLineGapOnly];
 //  FBigPic.LabelTitle.LineHeight := -15;
 
 //  ShowMessage(TLabel(TPanel(TImage(Sender).Parent).Controls[1]).Caption);
 
-
-//  FBigPic.PicInfo := SearchSingleTitle(head, TLabel(TPanel(TImage(Sender).Parent).Controls[1]).Caption);
+//   FBigPic.PicInfo :=
+lala := TLabel(TPanel(TImage(Sender).Parent).Controls[1]).Caption;
+  SearchSingleTitle(head, lala);
   FBigPic.ShowModal;
 end;
 
