@@ -4,7 +4,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.Menus, Math, DateUtils,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.Menus, Math,
   Vcl.Grids, BigPic, SharedTypes;
 
 
@@ -53,6 +53,7 @@ type
       WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
     procedure CmbBxFilterChange(Sender: TObject);
     procedure ShowBigPic(Sender: TObject);
+//    procedure CreatePicture(var ImgToCreate: TImage; const PanelParent: TPanel; const APicLink: TPicture; const AMargin: Integer);
   private
     { Private declarations }
   public
@@ -60,6 +61,9 @@ type
      sortedHead: PPicElem;
      searchedHead: PPicElem;
      PicInfo: TData;
+
+
+     procedure CreatePicture(var ImgToCreate: TImage; const PanelParent: TPanel; const APicLink: TPicture; const AMargin: Integer);
   end;
 
 var
@@ -161,7 +165,24 @@ begin
 end;
 
 
+procedure TFGallery.CreatePicture( var ImgToCreate: TImage; const PanelParent: TPanel; const APicLink: TPicture; const AMargin: Integer);
+var
+  Scale: Single;
+begin
 
+  ImgToCreate := TImage.Create(PanelParent);
+  ImgToCreate.Parent := PanelParent;
+  ImgToCreate.AutoSize := False;
+  ImgToCreate.Stretch := True;
+  Scale := Min((PanelParent.ClientWidth - 2*AMargin) / APicLink.Width, (PanelParent.ClientWidth - 2*AMargin) / APicLink.Height);
+  ImgToCreate.Width := Round((APicLink.Width) * Scale);
+  ImgToCreate.Height := Round((APicLink.Height) * Scale);
+  ImgToCreate.Left := (PanelParent.Width - ImgToCreate.Width + AMargin) div 2;
+  ImgToCreate.Top := (PanelParent.Height - ImgToCreate.Height - 2*AMargin) div 2;
+  ImgToCreate.Picture.Assign(APicLink);
+
+
+end;
 
 
 // create a panel with a pic and a label
@@ -173,9 +194,11 @@ var
   Scale: Single;
   Margin: Integer;
 begin
+  Margin := 10;
+
   Panel := TPanel.Create(AOwner);
   Panel.Parent := AFlowPanel;
-  Margin := 10;
+
   Panel.Margins.Left := Margin;
   Panel.Margins.Top := Margin;
   Panel.Margins.Right := Margin;
@@ -188,16 +211,7 @@ begin
   Panel.ParentColor := False;
   Panel.Visible := False;
 
-  Image := TImage.Create(Panel);
-  Image.Parent := Panel;
-  Image.AutoSize := False;
-  Image.Stretch := True;
-  Scale := Min((Panel.ClientWidth - 2*Margin) / APic.Width, (Panel.ClientWidth - 2*Margin) / APic.Height);
-  Image.Width := Round((APic.Width) * Scale);
-  Image.Height := Round((APic.Height) * Scale);
-  Image.Left := (Panel.Width - Image.Width + Margin) div 2;
-  Image.Top := (Panel.Height - Image.Height - 2*Margin) div 2;
-  Image.Picture.Assign(APic);
+  FGallery.CreatePicture(Image, Panel, APic, Margin);
   Image.OnClick := FGallery.ShowBigPic;
 
   LabelTitle := TLabel.Create(Panel);

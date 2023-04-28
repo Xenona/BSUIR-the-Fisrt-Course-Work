@@ -14,8 +14,8 @@ type
     genre: string[10];
     theme: string[10];
     place: string[15];
-    materials: string[15];
-    shortDescr: string[100];
+    materials: string[20];
+    shortDescr: string[200];
     userRate: integer;
     userComment: string[50];
     isToBeChanged: boolean;

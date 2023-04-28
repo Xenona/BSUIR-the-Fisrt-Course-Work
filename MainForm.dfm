@@ -213,7 +213,6 @@ object FGallery: TFGallery
         ParentFont = False
         TabOrder = 1
         OnChange = CmbBxFilterChange
-        ExplicitTop = 145
       end
     end
     object PanelSearch: TPanel
@@ -257,7 +256,7 @@ object FGallery: TFGallery
         Font.Name = 'Montserrat SemiBold'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitTop = 34
+        ExplicitWidth = 104
       end
       object EditSearch: TEdit
         Left = 0

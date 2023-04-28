@@ -4,7 +4,8 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, SharedTypes, Math;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, SharedTypes, Math,
+  Vcl.Menus;
 
 type
 
@@ -22,17 +23,14 @@ type
     ChkBxFavourite: TCheckBox;
     CmbBxUserRate: TComboBox;
     LabelFieldTitle: TLabel;
-    LabelFieldYoS: TLabel;
-    LabelFieldYoE: TLabel;
-    LabelFieldYoW: TLabel;
     LabelFieldGenre: TLabel;
     LabelFieldTheme: TLabel;
     LabelFieldMats: TLabel;
     LabelFieldDescr: TLabel;
     LabelFieldUsrCmm: TLabel;
-    LabelDash: TLabel;
-    Label1: TLabel;
-    Label2: TLabel;
+    LabelFieldYears: TLabel;
+    MainMenu1: TMainMenu;
+    Panel1: TPanel;
     procedure FormActivate(Sender: TObject);
     procedure FormCreate(Sender: TObject);
   private
@@ -40,6 +38,8 @@ type
 
   public
     PicInfo: PPicElem;
+
+//    inherit CreatePicture;
   end;
 
 var
@@ -56,14 +56,13 @@ procedure TFBigPic.FormActivate(Sender: TObject);
 var
   Scale: Single;
   Margin: integer;
+  Image: TImage;
 begin
 
-  Margin := 30;
+  Margin := 50;
 
   LabelFieldTitle.Caption := PicInfo.data.title;
-  LabelFieldYoS.Caption := IntToStr(PicInfo.data.yearOfStart);
-  LabelFieldYoE.Caption := IntToStr(PicInfo.data.yearOfEnd);
-  LabelFieldYoW.Caption := IntToStr(PicInfo.data.yearsOfWork);
+  LabelFieldYears.Caption := intToStr(PicInfo.data.yearOfStart) + ' – ' + IntToStr(PicInfo.data.yearOfEnd) + ' (' + IntToStr(PicInfo.data.yearsOfWork) + ')';
   LabelFieldGenre.Caption := PicInfo.data.genre;
   LabelFieldTheme.Caption := PicInfo.data.theme;
   LabelFieldMats.Caption := PicInfo.data.materials;
@@ -72,10 +71,13 @@ begin
   LabelFieldUsrCmm.Caption := PicInfo.data.userComment;
   CmbBxUserRate.Text := IntToStr(PicInfo.data.userRate);
 
+
+//  CreatePicture(Image, PanelPic, PicInfo.data.imgBuffer, Margin);
+
   ImageItSelf.Picture.Assign(PicInfo.data.imgBuffer);
   ImageItself.AutoSize := False;
   ImageItself.Stretch := True;
-  Scale := Min((PanelPic.ClientWidth - 2*Margin) / PicInfo.data.imgBuffer.Width, (PanelPic.ClientWidth - 2*Margin) / PicInfo.data.imgBuffer.Width);
+  Scale := Min((PanelPic.ClientWidth - 2*Margin) / PicInfo.data.imgBuffer.Width, (PanelPic.ClientHeight - 2*Margin) / PicInfo.data.imgBuffer.Width);
   ImageItself.Width := Round((PicInfo.data.imgBuffer.Width) * Scale);
   ImageItself.Height := Round((PicInfo.data.imgBuffer.Height) * Scale);
   ImageItself.Left := (PanelPic.Width - ImageItself.Width) div 2;
