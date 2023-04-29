@@ -56,12 +56,16 @@ type
     procedure FormResize(Sender: TObject);
     procedure CmbBxUserRateChange(Sender: TObject);
     procedure ChkBxFavouriteClick(Sender: TObject);
+    procedure MenuDeletePicClick(Sender: TObject);
 
   private
 
 
   public
     PicInfo: PPicElem;
+    PrevPicInfo: PPicElem;
+    header: PPicElem;
+
   end;
 
 var
@@ -76,26 +80,24 @@ procedure LoadImageToFitPanel(PanelPic: TPanel; Image: TImage; Picture: TPicture
 var
   Ratio, PanelRatio: Double;
 begin
-  // Calculate the ratio of the Image
+
   Ratio := Picture.Width / Picture.Height;
 
-  // Calculate the ratio of the Panel
   PanelRatio := PanelPic.ClientWidth / PanelPic.ClientHeight;
 
   if Ratio > PanelRatio then
   begin
-    // The Image is wider than the Panel
+
     Image.Width := PanelPic.ClientWidth - 2 * Margin;
     Image.Height := Round((PanelPic.ClientWidth - 2 * Margin) / Ratio);
   end
   else
   begin
-    // The Image is taller than the Panel
+
     Image.Height := PanelPic.ClientHeight - 2 * Margin;
     Image.Width := Round((PanelPic.ClientHeight - 2 * Margin) * Ratio);
   end;
 
-  // Set the position of the Image to be centered within the Panel
   Image.Left := (PanelPic.ClientWidth - Image.Width) div 2;
   Image.Top := (PanelPic.ClientHeight - Image.Height) div 2;
 end;
@@ -253,11 +255,17 @@ end;
 
 procedure TFBigPic.MenuCancelClick(Sender: TObject);
 begin
-
   showHideMemo(self, false);
-
-
   showHideMenu(Self, True, False);
+end;
+
+procedure TFBigPic.MenuDeletePicClick(Sender: TObject);
+var
+  Temp: PPicElem;
+begin
+
+  PrevPicInfo.Next := PrevPicInfo^.Next^.Next;
+  Dispose(PicInfo);
 
 
 end;

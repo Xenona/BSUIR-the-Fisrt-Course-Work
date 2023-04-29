@@ -569,6 +569,7 @@ object FBigPic: TFBigPic
     end
     object MenuDeletePic: TMenuItem
       Caption = #1059#1076#1072#1083#1080#1090#1100' '#1082#1072#1088#1090#1080#1085#1091
+      OnClick = MenuDeletePicClick
     end
     object MenuAccept: TMenuItem
       Caption = #1055#1086#1076#1090#1074#1077#1088#1076#1080#1090#1100' '#1080#1079#1084#1077#1085#1077#1085#1080#1103

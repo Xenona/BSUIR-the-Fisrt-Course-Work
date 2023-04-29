@@ -540,12 +540,15 @@ begin
 
  end;
 
-function searchSingleTitle(const head: PPicElem; titleToSearch: string): PPicElem;
+function searchPrevTitle(const head: PPicElem; titleToSearch: string): PPicElem;
 begin
   result := head;
-  while (result.data.title <> titleToSearch) and (result^.Next <> nil) do
+  if not ((Result <> nil) and (Result^.Data.title = titleToSearch)) then
+    while (result^.Next.data.title <> titleToSearch) and (result^.Next <> nil) do
     result := result^.Next;
 end;
+
+
 
 function searchData(head: PPicElem; infoToSearch: string; fieldSearch: integer): PPicElem;
 var
@@ -669,15 +672,23 @@ end;
 procedure TFGallery.ShowBigPic(Sender: TObject);
 var
    Window: TFBigPic;
+   LabelToSearch: String;
 begin
 
   Window := TFBigPic.Create(nil);
-//  Window.OnResize :=
   try
-    FBigPic.PicInfo := SearchSingleTitle(head, TLabel(TPanel(TImage(Sender).Parent).Controls[1]).Caption);
+    FBigPic.header := head;
+
+    LabelToSearch := TLabel(TPanel(TImage(Sender).Parent).Controls[1]).Caption;
+    FBigPic.PrevPicInfo := SearchPrevTitle(head, LabelToSearch);
+
+    if (FBigPic.PrevPicInfo <> head) or (LabelToSearch <> head.data.title) then
+      FBigPic.PicInfo := FBigPic.PrevPicInfo^.Next
+    else
+      FBigPic.PicInfo := FBigPic.PrevPicInfo;
+
     FBigPic.ShowModal;
   finally
-//    Window.OnResize := nil;
     Window.Free;
   end;
 
