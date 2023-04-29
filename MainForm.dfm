@@ -273,6 +273,7 @@ object FGallery: TFGallery
         TabOrder = 0
         TextHint = #1074#1074#1077#1076#1080#1090#1077' '#1090#1077#1082#1089#1090
         OnKeyDown = EditSearchKeyDown
+        ExplicitTop = 66
       end
       object CmbBxSearchParam: TComboBox
         Left = 0

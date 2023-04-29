@@ -17,7 +17,7 @@ type
     materials: string[20];
     shortDescr: string[200];
     userRate: integer;
-    userComment: string[50];
+    userComment: string[100];
     isToBeChanged: boolean;
     isFavourite: boolean;
     filename: string[25];

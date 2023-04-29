@@ -670,11 +670,6 @@ procedure TFGallery.ShowBigPic(Sender: TObject);
 var
    Window: TFBigPic;
 begin
-//  FBigPic.LabelTitle.Font.Style := FBigPic.LabelTitle.Font.Style + [fsLineGapOnly];
-//  FBigPic.LabelTitle.LineHeight := -15;
-
-//  ShowMessage(TLabel(TPanel(TImage(Sender).Parent).Controls[1]).Caption);
-
 
   Window := TFBigPic.Create(nil);
   try
