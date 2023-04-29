@@ -54,6 +54,8 @@ type
     procedure showHideMemo(Sender: TObject; status: Boolean);
     procedure showHideMenu(Sender: TObject; EditDeleteStatus, acceptCancelStatus: Boolean);
     procedure FormResize(Sender: TObject);
+    procedure CmbBxUserRateChange(Sender: TObject);
+    procedure ChkBxFavouriteClick(Sender: TObject);
 
   private
 
@@ -74,11 +76,8 @@ procedure LoadImageToFitPanel(PanelPic: TPanel; Image: TImage; Picture: TPicture
 var
   Ratio, PanelRatio: Double;
 begin
-
-   Image.Picture.Assign(Picture);
-
   // Calculate the ratio of the Image
-  Ratio := Image.Picture.Width / Image.Picture.Height;
+  Ratio := Picture.Width / Picture.Height;
 
   // Calculate the ratio of the Panel
   PanelRatio := PanelPic.ClientWidth / PanelPic.ClientHeight;
@@ -103,7 +102,6 @@ end;
 
 
 
-
 procedure TFBigPic.showHideMemo(Sender: TObject; status: Boolean);
 begin
 
@@ -121,10 +119,31 @@ end;
 procedure TFBigPic.showHideMenu(Sender: TObject; EditDeleteStatus: Boolean; acceptCancelStatus: Boolean);
 begin
 
-  MenuEditPic.Visible := EditDeleteStatus;
-  MenuDeletePic.Visible := EditDeleteStatus;
-  MenuAccept.Visible := acceptCancelStatus;
-  MenuCancel.Visible := acceptCancelStatus;
+  if EditDeleteStatus = False then
+  begin
+    MenuEditPic.Visible := EditDeleteStatus;
+    MenuDeletePic.Visible := EditDeleteStatus;
+    MenuAccept.Visible := acceptCancelStatus;
+    MenuCancel.Visible := acceptCancelStatus;
+  end
+  else
+  begin
+    MenuAccept.Visible := acceptCancelStatus;
+    MenuCancel.Visible := acceptCancelStatus;
+    MenuEditPic.Visible := EditDeleteStatus;
+    MenuDeletePic.Visible := EditDeleteStatus;
+  end;
+
+end;
+
+procedure TFBigPic.ChkBxFavouriteClick(Sender: TObject);
+begin
+  PicInfo.data.isFavourite := ChkBxFavourite.Checked;
+end;
+
+procedure TFBigPic.CmbBxUserRateChange(Sender: TObject);
+begin
+  PicInfo.data.userRate := StrToInt(CmbBxUserRate.Text);
 end;
 
 procedure TFBigPic.FormActivate(Sender: TObject);
@@ -132,6 +151,7 @@ var
   Scale: Single;
   Margin: integer;
   Image: TImage;
+  pic: TPicture;
 begin
 
   Margin := 50;
@@ -149,7 +169,8 @@ begin
 
 
 
-//  ImageItSelf.Picture.Assign(PicInfo.data.imgBuffer);
+
+  ImageItSelf.Picture.Assign(PicInfo.data.imgBuffer);
   ImageItself.AutoSize := False;
   ImageItself.Stretch := True;
   LoadImageToFitPanel(PanelPic, ImageItself, PicInfo.data.imgBuffer, Margin);
@@ -162,16 +183,8 @@ end;
 
 procedure TFBigPic.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
-   // hide memos
-  MemoTitle.Visible := False;
-  MemoYears.Visible := False;
-  MemoGenre.Visible := False;
-  MemoTheme.Visible := False;
-  MemoMats.Visible := False;
-  MemoPlace.Visible := False;
-  MemoDescr.Visible := False;
-  MemoUsrCmm.Visible := False;
 
+  showHideMemo(Self, False);
   showHideMenu(Self, True, False);
 
 
@@ -195,9 +208,11 @@ end;
 procedure TFBigPic.FormResize(Sender: TObject);
 var
   Margin: Integer;
+   pic: TPicture;
 begin
   Margin := 50;
-  LoadImageToFitPanel(PanelPic, ImageItself, PicInfo.data.imgBuffer, Margin);
+  if PicInfo <> nil then
+    LoadImageToFitPanel(PanelPic, ImageItself, PicInfo.data.imgBuffer, Margin);
 end;
 
 procedure TFBigPic.MenuAcceptClick(Sender: TObject);

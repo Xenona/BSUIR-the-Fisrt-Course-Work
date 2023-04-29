@@ -415,6 +415,7 @@ object FBigPic: TFBigPic
       Font.Style = []
       ParentFont = False
       TabOrder = 0
+      OnClick = ChkBxFavouriteClick
     end
     object CmbBxUserRate: TComboBox
       Left = 264
@@ -428,6 +429,7 @@ object FBigPic: TFBigPic
       Font.Style = []
       ParentFont = False
       TabOrder = 1
+      OnChange = CmbBxUserRateChange
     end
     object MemoTitle: TMemo
       Left = 23

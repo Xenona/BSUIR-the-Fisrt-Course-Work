@@ -672,11 +672,13 @@ var
 begin
 
   Window := TFBigPic.Create(nil);
+//  Window.OnResize :=
   try
-   FBigPic.PicInfo := SearchSingleTitle(head, TLabel(TPanel(TImage(Sender).Parent).Controls[1]).Caption);
-   FBigPic.ShowModal;
+    FBigPic.PicInfo := SearchSingleTitle(head, TLabel(TPanel(TImage(Sender).Parent).Controls[1]).Caption);
+    FBigPic.ShowModal;
   finally
-//   Window.Free;
+//    Window.OnResize := nil;
+    Window.Free;
   end;
 
 
