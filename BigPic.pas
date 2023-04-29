@@ -51,6 +51,10 @@ type
     procedure MenuAcceptClick(Sender: TObject);
     procedure MenuCancelClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+    procedure showHideMemo(Sender: TObject; status: Boolean);
+    procedure showHideMenu(Sender: TObject; EditDeleteStatus, acceptCancelStatus: Boolean);
+    procedure FormResize(Sender: TObject);
+
   private
 
 
@@ -64,6 +68,64 @@ var
 implementation
 
 {$R *.dfm}
+
+
+procedure LoadImageToFitPanel(PanelPic: TPanel; Image: TImage; Picture: TPicture; Margin: Integer);
+var
+  Ratio, PanelRatio: Double;
+begin
+
+   Image.Picture.Assign(Picture);
+
+  // Calculate the ratio of the Image
+  Ratio := Image.Picture.Width / Image.Picture.Height;
+
+  // Calculate the ratio of the Panel
+  PanelRatio := PanelPic.ClientWidth / PanelPic.ClientHeight;
+
+  if Ratio > PanelRatio then
+  begin
+    // The Image is wider than the Panel
+    Image.Width := PanelPic.ClientWidth - 2 * Margin;
+    Image.Height := Round((PanelPic.ClientWidth - 2 * Margin) / Ratio);
+  end
+  else
+  begin
+    // The Image is taller than the Panel
+    Image.Height := PanelPic.ClientHeight - 2 * Margin;
+    Image.Width := Round((PanelPic.ClientHeight - 2 * Margin) * Ratio);
+  end;
+
+  // Set the position of the Image to be centered within the Panel
+  Image.Left := (PanelPic.ClientWidth - Image.Width) div 2;
+  Image.Top := (PanelPic.ClientHeight - Image.Height) div 2;
+end;
+
+
+
+
+procedure TFBigPic.showHideMemo(Sender: TObject; status: Boolean);
+begin
+
+  MemoTitle.Visible := status;
+  MemoYears.Visible := status;
+  MemoGenre.Visible := status;
+  MemoTheme.Visible := status;
+  MemoMats.Visible := status;
+  MemoPlace.Visible := status;
+  MemoDescr.Visible := status;
+  MemoUsrCmm.Visible := status;
+
+end;
+
+procedure TFBigPic.showHideMenu(Sender: TObject; EditDeleteStatus: Boolean; acceptCancelStatus: Boolean);
+begin
+
+  MenuEditPic.Visible := EditDeleteStatus;
+  MenuDeletePic.Visible := EditDeleteStatus;
+  MenuAccept.Visible := acceptCancelStatus;
+  MenuCancel.Visible := acceptCancelStatus;
+end;
 
 procedure TFBigPic.FormActivate(Sender: TObject);
 var
@@ -86,16 +148,12 @@ begin
   CmbBxUserRate.Text := IntToStr(PicInfo.data.userRate);
 
 
-//  CreatePicture(Image, PanelPic, PicInfo.data.imgBuffer, Margin);
 
-  ImageItSelf.Picture.Assign(PicInfo.data.imgBuffer);
+//  ImageItSelf.Picture.Assign(PicInfo.data.imgBuffer);
   ImageItself.AutoSize := False;
   ImageItself.Stretch := True;
-  Scale := Min((PanelPic.ClientWidth - 2*Margin) / PicInfo.data.imgBuffer.Width, (PanelPic.ClientHeight - 2*Margin) / PicInfo.data.imgBuffer.Width);
-  ImageItself.Width := Round((PicInfo.data.imgBuffer.Width) * Scale);
-  ImageItself.Height := Round((PicInfo.data.imgBuffer.Height) * Scale);
-  ImageItself.Left := (PanelPic.Width - ImageItself.Width) div 2;
-  ImageItself.Top := (PanelPic.Height - ImageItself.Height) div 2;
+  LoadImageToFitPanel(PanelPic, ImageItself, PicInfo.data.imgBuffer, Margin);
+
 
 
 
@@ -114,11 +172,9 @@ begin
   MemoDescr.Visible := False;
   MemoUsrCmm.Visible := False;
 
-  // hide unnecessary and show necessary menus
-  MenuEditPic.Visible := True;
-  MenuDeletePic.Visible := True;
-  MenuAccept.Visible := False;
-  MenuCancel.Visible := False;
+  showHideMenu(Self, True, False);
+
+
 end;
 
 procedure TFBigPic.FormCreate(Sender: TObject);
@@ -136,6 +192,14 @@ begin
   CmbBxUserRate.Items.Add('5');
 end;
 
+procedure TFBigPic.FormResize(Sender: TObject);
+var
+  Margin: Integer;
+begin
+  Margin := 50;
+  LoadImageToFitPanel(PanelPic, ImageItself, PicInfo.data.imgBuffer, Margin);
+end;
+
 procedure TFBigPic.MenuAcceptClick(Sender: TObject);
 begin
 
@@ -143,7 +207,7 @@ begin
   PicInfo.data.title := MemoTitle.Text;
   PicInfo.data.YearOfStart := StrToInt(Copy(MemoYears.Text, 1, 4));
   PicInfo.data.YearOfEnd := StrToInt(Copy(MemoYears.Text, 8, 11));
-  PicInfo.data.yearsOfWork := PicInfo.data.yearOfStart - PicInfo.data.yearOfEnd;
+  PicInfo.data.yearsOfWork := PicInfo.data.yearOfEnd - PicInfo.data.yearOfStart;
   PicInfo.data.genre := MemoGenre.Text;
   PicInfo.data.theme := MemoTheme.Text;
   PicInfo.data.materials := MemoMats.Text;
@@ -165,57 +229,32 @@ begin
   CmbBxUserRate.Text := IntToStr(PicInfo.data.userRate);
 
 
-  // hide memos
-  MemoTitle.Visible := False;
-  MemoYears.Visible := False;
-  MemoGenre.Visible := False;
-  MemoTheme.Visible := False;
-  MemoMats.Visible := False;
-  MemoPlace.Visible := False;
-  MemoDescr.Visible := False;
-  MemoUsrCmm.Visible := False;
+  showHideMemo(self, false);
 
-  // hide unnecessary and show necessary menus
-  MenuEditPic.Visible := True;
-  MenuDeletePic.Visible := True;
-  MenuAccept.Visible := False;
-  MenuCancel.Visible := False;
+  showHideMenu(Self, True, False);
+
 
 end;
 
 procedure TFBigPic.MenuCancelClick(Sender: TObject);
 begin
 
-  // hide memos
-  MemoTitle.Visible := False;
-  MemoYears.Visible := False;
-  MemoGenre.Visible := False;
-  MemoTheme.Visible := False;
-  MemoMats.Visible := False;
-  MemoPlace.Visible := False;
-  MemoDescr.Visible := False;
-  MemoUsrCmm.Visible := False;
+  showHideMemo(self, false);
 
-  // hide unnecessary and show necessary menus
-  MenuEditPic.Visible := True;
-  MenuDeletePic.Visible := True;
-  MenuAccept.Visible := False;
-  MenuCancel.Visible := False;
+
+  showHideMenu(Self, True, False);
+
 
 end;
 
 procedure TFBigPic.MenuEditPicClick(Sender: TObject);
 begin
 
-  // hide unnecessary and show necessary menus
-  MenuEditPic.Visible := False;
-  MenuDeletePic.Visible := False;
-  MenuAccept.Visible := True;
-  MenuCancel.Visible := True;
+  showHideMenu(Self, False, True);
 
   // to memos,  add text to edit
   MemoTitle.Text := LabelFieldTitle.Caption;
-  MemoYears.Text := LabelFieldYears.Caption;
+  MemoYears.Text := Copy(LabelFieldYears.Caption, 1, 11);
   MemoGenre.Text := LabelFieldGenre.Caption;
   MemoTheme.Text := LabelFieldTheme.Caption;
   MemoMats.Text := LabelFieldMats.Caption;
@@ -223,15 +262,9 @@ begin
   MemoDescr.Text := LabelFieldDescr.Caption;
   MemoUsrCmm.Text := LabelFieldUsrCmm.Caption;
 
-  // show memos
-  MemoTitle.Visible := True;
-  MemoYears.Visible := True;
-  MemoGenre.Visible := True;
-  MemoTheme.Visible := True;
-  MemoMats.Visible := True;
-  MemoPlace.Visible := True;
-  MemoDescr.Visible := True;
-  MemoUsrCmm.Visible := True;
+
+  showHideMemo(self, true);
+
 
 
 

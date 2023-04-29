@@ -2,8 +2,10 @@ object FBigPic: TFBigPic
   Left = 0
   Top = 0
   ClientHeight = 870
-  ClientWidth = 1207
+  ClientWidth = 1210
   Color = clBtnFace
+  Constraints.MinHeight = 870
+  Constraints.MinWidth = 1210
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
@@ -15,12 +17,13 @@ object FBigPic: TFBigPic
   OnActivate = FormActivate
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
+  OnResize = FormResize
   PixelsPerInch = 96
   TextHeight = 13
   object PanelPic: TPanel
     Left = 0
     Top = 0
-    Width = 648
+    Width = 651
     Height = 870
     Align = alClient
     Caption = 'Panel1'
@@ -30,6 +33,7 @@ object FBigPic: TFBigPic
     TabOrder = 0
     ExplicitLeft = -6
     ExplicitTop = 696
+    ExplicitWidth = 648
     object ImageItself: TImage
       Left = 72
       Top = 42
@@ -38,7 +42,7 @@ object FBigPic: TFBigPic
     end
   end
   object PanelInfo: TPanel
-    Left = 648
+    Left = 651
     Top = 0
     Width = 559
     Height = 870
@@ -53,6 +57,7 @@ object FBigPic: TFBigPic
     ParentFont = False
     ShowCaption = False
     TabOrder = 1
+    ExplicitLeft = 648
     ExplicitTop = -8
     object LabelFieldYears: TLabel
       AlignWithMargins = True
@@ -522,9 +527,9 @@ object FBigPic: TFBigPic
     end
     object MemoDescr: TMemo
       Left = 263
-      Top = 386
+      Top = 382
       Width = 260
-      Height = 225
+      Height = 299
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -19

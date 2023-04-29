@@ -676,7 +676,7 @@ begin
    FBigPic.PicInfo := SearchSingleTitle(head, TLabel(TPanel(TImage(Sender).Parent).Controls[1]).Caption);
    FBigPic.ShowModal;
   finally
-   Window.Free;
+//   Window.Free;
   end;
 
 
