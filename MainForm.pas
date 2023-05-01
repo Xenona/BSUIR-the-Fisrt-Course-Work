@@ -60,6 +60,9 @@ type
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormShortCut(var Msg: TWMKey; var Handled: Boolean);
     procedure MenuUploadClick(Sender: TObject);
+    procedure ReCreateAllPanels(headToUse: PPicElem);
+    procedure CreatePicture(var ImgToCreate: TImage; const PanelParent: TPanel; const APicLink: TPicture; const AMargin: Integer);
+    procedure AddNewNode(elem: PPicElem; var head: PPicElem);
 
 //    procedure CreatePicture(var ImgToCreate: TImage; const PanelParent: TPanel; const APicLink: TPicture; const AMargin: Integer);
   private
@@ -72,7 +75,6 @@ type
      PicInfo: TData;
 
 
-     procedure CreatePicture(var ImgToCreate: TImage; const PanelParent: TPanel; const APicLink: TPicture; const AMargin: Integer);
   end;
 
 var
@@ -88,6 +90,19 @@ implementation
 // --------------------------------------------------------------------------------
 // VISUAL section BEGIN
 
+procedure TFGallery.AddNewNode(elem: PPicElem; var head: PPicElem);
+begin
+  if (head = nil) then
+  begin
+    elem^.Next := nil;
+    head := elem;
+  end
+  else
+  begin
+    elem^.Next := head;
+    head := elem;
+  end;
+end;
 
 
 
@@ -275,7 +290,7 @@ begin
 
 end;
 
-procedure ReCreateAllPanels(headToUse: PPicElem);
+procedure TFGAllery.ReCreateAllPanels(headToUse: PPicElem);
 var
   i: integer;
   PrevNumOfCtrls: integer;
@@ -496,9 +511,27 @@ begin
 end;
 
 procedure TFGallery.MenuUploadClick(Sender: TObject);
+var
+  newNode: PPicElem;
+  pic: TPicture;
 begin
-  if OpenPic.Execute then
-    Image1.Picture.LoadFromFile(OpenPic.FileName);
+
+  new(newNode);
+  FillChar(newNode.data, SizeOf(newNode.data), 0);
+  if OpenPic.Execute() then
+  begin
+
+
+    newNode.data.imgBuffer := TPicture.Create;
+    NewNode.data.imgBuffer.LoadFromFile(OpenPic.FileName);
+  end;
+
+  FBigPic.showHideMenu(False, False, True);
+  FBigPic.showHideMemo(True);
+
+  FBigPic.PicInfo := newNode;
+
+  FBigPic.Show;
 end;
 
 // for both of sort cmbBxes

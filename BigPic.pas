@@ -43,20 +43,24 @@ type
     MemoUsrCmm: TMemo;
     MenuAccept: TMenuItem;
     MenuCancel: TMenuItem;
+    MenuCreatePic: TMenuItem;
+    MenuRejectPic: TMenuItem;
     procedure FormActivate(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure MenuEditPicClick(Sender: TObject);
     procedure MenuAcceptClick(Sender: TObject);
     procedure MenuCancelClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
-    procedure showHideMemo(Sender: TObject; status: Boolean);
-    procedure showHideMenu(Sender: TObject; EditDeleteStatus, acceptCancelStatus: Boolean);
+    procedure showHideMemo(status: Boolean);
+    procedure showHideMenu(EditDeleteStatus, acceptCancelStatus: Boolean; CreateRejectStatus: Boolean);
     procedure FormResize(Sender: TObject);
     procedure CmbBxUserRateChange(Sender: TObject);
     procedure ChkBxFavouriteClick(Sender: TObject);
     procedure MenuDeletePicClick(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormShortCut(var Msg: TWMKey; var Handled: Boolean);
+    procedure MenuRejectPicClick(Sender: TObject);
+    procedure MenuCreatePicClick(Sender: TObject);
 
   private
 
@@ -105,7 +109,7 @@ end;
 
 
 
-procedure TFBigPic.showHideMemo(Sender: TObject; status: Boolean);
+procedure TFBigPic.showHideMemo(status: Boolean);
 begin
 
   MemoTitle.Visible := status;
@@ -119,7 +123,7 @@ begin
 
 end;
 
-procedure TFBigPic.showHideMenu(Sender: TObject; EditDeleteStatus: Boolean; acceptCancelStatus: Boolean);
+procedure TFBigPic.showHideMenu(EditDeleteStatus: Boolean; acceptCancelStatus: Boolean; CreateRejectStatus: Boolean);
 begin
 
   if EditDeleteStatus = False then
@@ -136,6 +140,8 @@ begin
     MenuEditPic.Visible := EditDeleteStatus;
     MenuDeletePic.Visible := EditDeleteStatus;
   end;
+  MenuCreatePic.Visible :=  CreateRejectStatus;
+  MenuRejectPic.Visible := CreateRejectStatus;
 
 end;
 
@@ -187,8 +193,8 @@ end;
 procedure TFBigPic.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
 
-  showHideMemo(Self, False);
-  showHideMenu(Self, True, False);
+  showHideMemo(False);
+  showHideMenu(True, False, False);
 
 
 end;
@@ -255,17 +261,31 @@ begin
   CmbBxUserRate.Text := IntToStr(PicInfo.data.userRate);
 
 
-  showHideMemo(self, false);
+  showHideMemo(False);
 
-  showHideMenu(Self, True, False);
+  showHideMenu(True, False, False);
 
 
 end;
 
 procedure TFBigPic.MenuCancelClick(Sender: TObject);
 begin
-  showHideMemo(self, false);
-  showHideMenu(Self, True, False);
+  showHideMemo(False);
+  showHideMenu(True, False, False);
+end;
+
+procedure TFBigPic.MenuCreatePicClick(Sender: TObject);
+begin
+  FGallery.AddNewNode(PicInfo, FGallery.changedHead);
+  FGallery.AddNewNode(PicInfo, FGallery.head);
+end;
+
+procedure TFBigPic.MenuRejectPicClick(Sender: TObject);
+begin
+
+
+  ShowHideMemo(False);
+  ShowHideMenu(True, False, False);
 end;
 
 procedure TFBigPic.MenuDeletePicClick(Sender: TObject);
@@ -274,15 +294,15 @@ var
 begin
   FGallery.DeleteNode(PicInfo, FGallery.changedHead);
   FGallery.DeleteNode(PicInfo, FGallery.head);
- Close;
-// ReCreateAllPanels();
+  Close;
+  FGallery.ReCreateAllPanels(FGallery.ChangedHead);
 
 end;
 
 procedure TFBigPic.MenuEditPicClick(Sender: TObject);
 begin
 
-  showHideMenu(Self, False, True);
+  showHideMenu(False, True, False);
 
   // to memos,  add text to edit
   MemoTitle.Text := LabelFieldTitle.Caption;
@@ -295,7 +315,7 @@ begin
   MemoUsrCmm.Text := LabelFieldUsrCmm.Caption;
 
 
-  showHideMemo(self, true);
+  showHideMemo(True);
 
 
 

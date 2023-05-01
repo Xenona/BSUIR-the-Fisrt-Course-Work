@@ -579,5 +579,15 @@ object FBigPic: TFBigPic
       Visible = False
       OnClick = MenuCancelClick
     end
+    object MenuCreatePic: TMenuItem
+      Caption = #1055#1086#1076#1090#1074#1077#1088#1076#1080#1090#1100' '#1089#1086#1079#1076#1072#1085#1080#1077
+      Visible = False
+      OnClick = MenuCreatePicClick
+    end
+    object MenuRejectPic: TMenuItem
+      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1089#1086#1079#1076#1072#1085#1080#1077
+      Visible = False
+      OnClick = MenuRejectPicClick
+    end
   end
 end
