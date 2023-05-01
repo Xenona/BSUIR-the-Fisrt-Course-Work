@@ -61,6 +61,7 @@ type
     procedure FormShortCut(var Msg: TWMKey; var Handled: Boolean);
     procedure MenuRejectPicClick(Sender: TObject);
     procedure MenuCreatePicClick(Sender: TObject);
+    procedure updatePicInfo(var picToUpdate: PPicElem);
 
   private
 
@@ -232,33 +233,38 @@ begin
     Close;
 end;
 
-procedure TFBigPic.MenuAcceptClick(Sender: TObject);
+procedure TFBigPic.updatePicInfo(var picToUpdate: PPicElem);
 begin
-
   // save info from memos
-  PicInfo.data.title := MemoTitle.Text;
-  PicInfo.data.YearOfStart := StrToInt(Copy(MemoYears.Text, 1, 4));
-  PicInfo.data.YearOfEnd := StrToInt(Copy(MemoYears.Text, 8, 11));
-  PicInfo.data.yearsOfWork := PicInfo.data.yearOfEnd - PicInfo.data.yearOfStart;
-  PicInfo.data.genre := MemoGenre.Text;
-  PicInfo.data.theme := MemoTheme.Text;
-  PicInfo.data.materials := MemoMats.Text;
-  PicInfo.data.place := MemoPlace.Text;
-  PicInfo.data.shortDescr := MemoDescr.Text;
-  PicInfo.data.userComment := MemoUsrCmm.Text;
+  picToUpdate.data.title := MemoTitle.Text;
+  picToUpdate.data.YearOfStart := StrToInt(Copy(MemoYears.Text, 1, 4));
+  picToUpdate.data.YearOfEnd := StrToInt(Copy(MemoYears.Text, 8, 11));
+  picToUpdate.data.yearsOfWork := PicInfo.data.yearOfEnd - PicInfo.data.yearOfStart;
+  picToUpdate.data.genre := MemoGenre.Text;
+  picToUpdate.data.theme := MemoTheme.Text;
+  picToUpdate.data.materials := MemoMats.Text;
+  picToUpdate.data.place := MemoPlace.Text;
+  picToUpdate.data.shortDescr := MemoDescr.Text;
+  picToUpdate.data.userComment := MemoUsrCmm.Text;
 
 
   // update labels from changed .data
-  LabelFieldTitle.Caption := PicInfo.data.title;
-  LabelFieldYears.Caption := intToStr(PicInfo.data.yearOfStart) + ' – ' + IntToStr(PicInfo.data.yearOfEnd) + ' (' + IntToStr(PicInfo.data.yearsOfWork) + ')';
-  LabelFieldGenre.Caption := PicInfo.data.genre;
-  LabelFieldTheme.Caption := PicInfo.data.theme;
-  LabelFieldMats.Caption := PicInfo.data.materials;
-  LabelFieldPlace.Caption := PicInfo.data.place;
-  LabelFieldDescr.Caption := PicInfo.data.shortDescr;
-  ChkBxFavourite.Checked := PicInfo.data.isFavourite;
-  LabelFieldUsrCmm.Caption := PicInfo.data.userComment;
-  CmbBxUserRate.Text := IntToStr(PicInfo.data.userRate);
+  LabelFieldTitle.Caption := picToUpdate.data.title;
+  LabelFieldYears.Caption := intToStr(picToUpdate.data.yearOfStart) + ' – ' + IntToStr(picToUpdate.data.yearOfEnd) + ' (' + IntToStr(picToUpdate.data.yearsOfWork) + ')';
+  LabelFieldGenre.Caption := picToUpdate.data.genre;
+  LabelFieldTheme.Caption := picToUpdate.data.theme;
+  LabelFieldMats.Caption := picToUpdate.data.materials;
+  LabelFieldPlace.Caption := picToUpdate.data.place;
+  LabelFieldDescr.Caption := picToUpdate.data.shortDescr;
+  ChkBxFavourite.Checked := picToUpdate.data.isFavourite;
+  LabelFieldUsrCmm.Caption := picToUpdate.data.userComment;
+  CmbBxUserRate.Text := IntToStr(picToUpdate.data.userRate);
+end;
+
+procedure TFBigPic.MenuAcceptClick(Sender: TObject);
+begin
+
+  updatePicInfo(PicInfo);
 
 
   showHideMemo(False);
@@ -276,6 +282,8 @@ end;
 
 procedure TFBigPic.MenuCreatePicClick(Sender: TObject);
 begin
+
+  updatePicInfo(PicInfo);
   FGallery.AddNewNode(PicInfo, FGallery.changedHead);
   FGallery.AddNewNode(PicInfo, FGallery.head);
 end;

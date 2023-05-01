@@ -17,7 +17,9 @@ object FBigPic: TFBigPic
   OnActivate = FormActivate
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
+  OnKeyDown = FormKeyDown
   OnResize = FormResize
+  OnShortCut = FormShortCut
   PixelsPerInch = 96
   TextHeight = 13
   object PanelPic: TPanel
@@ -31,9 +33,6 @@ object FBigPic: TFBigPic
     ParentColor = True
     ShowCaption = False
     TabOrder = 0
-    ExplicitLeft = -6
-    ExplicitTop = 696
-    ExplicitWidth = 648
     object ImageItself: TImage
       Left = 72
       Top = 42
@@ -57,8 +56,7 @@ object FBigPic: TFBigPic
     ParentFont = False
     ShowCaption = False
     TabOrder = 1
-    ExplicitLeft = 648
-    ExplicitTop = -8
+    ExplicitLeft = 657
     object LabelFieldYears: TLabel
       AlignWithMargins = True
       Left = 22
@@ -415,6 +413,7 @@ object FBigPic: TFBigPic
       Font.Style = []
       ParentFont = False
       TabOrder = 0
+      OnClick = ChkBxFavouriteClick
     end
     object CmbBxUserRate: TComboBox
       Left = 264
@@ -428,6 +427,7 @@ object FBigPic: TFBigPic
       Font.Style = []
       ParentFont = False
       TabOrder = 1
+      OnChange = CmbBxUserRateChange
     end
     object MemoTitle: TMemo
       Left = 23
@@ -495,7 +495,7 @@ object FBigPic: TFBigPic
     end
     object MemoMats: TMemo
       Left = 263
-      Top = 241
+      Top = 237
       Width = 260
       Height = 35
       Font.Charset = DEFAULT_CHARSET
@@ -567,6 +567,7 @@ object FBigPic: TFBigPic
     end
     object MenuDeletePic: TMenuItem
       Caption = #1059#1076#1072#1083#1080#1090#1100' '#1082#1072#1088#1090#1080#1085#1091
+      OnClick = MenuDeletePicClick
     end
     object MenuAccept: TMenuItem
       Caption = #1055#1086#1076#1090#1074#1077#1088#1076#1080#1090#1100' '#1080#1079#1084#1077#1085#1077#1085#1080#1103
@@ -577,6 +578,16 @@ object FBigPic: TFBigPic
       Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1080#1079#1084#1077#1085#1077#1085#1080#1103
       Visible = False
       OnClick = MenuCancelClick
+    end
+    object MenuCreatePic: TMenuItem
+      Caption = #1055#1086#1076#1090#1074#1077#1088#1076#1080#1090#1100' '#1089#1086#1079#1076#1072#1085#1080#1077
+      Visible = False
+      OnClick = MenuCreatePicClick
+    end
+    object MenuRejectPic: TMenuItem
+      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1089#1086#1079#1076#1072#1085#1080#1077
+      Visible = False
+      OnClick = MenuRejectPicClick
     end
   end
 end
