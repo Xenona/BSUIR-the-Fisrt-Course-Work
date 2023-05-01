@@ -381,7 +381,8 @@ object FGallery: TFGallery
       Caption = #1055#1086#1084#1086#1097#1100
     end
     object DeveloperMenu: TMenuItem
-      Caption = #1054' '#1088#1072#1079#1088#1072#1073#1086#1090#1095#1080#1082#1077
+      Caption = #1057#1073#1088#1086#1089#1080#1090#1100' '#1085#1072#1089#1090#1088#1086#1081#1082#1080
+      OnClick = DeveloperMenuClick
     end
   end
   object OpenDialog1: TOpenDialog

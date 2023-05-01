@@ -4,10 +4,12 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, SharedTypes, Math, MainForm,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, SharedTypes, Math,
   Vcl.Menus;
 
 type
+
+
 
   TFBigPic = class(TForm)
     PanelPic: TPanel;
@@ -68,7 +70,6 @@ type
 
 var
   FBigPic: TFBigPic;
-
 
 implementation
 
@@ -158,7 +159,7 @@ begin
   Margin := 50;
 
   LabelFieldTitle.Caption := PicInfo.data.title;
-  LabelFieldYears.Caption := intToStr(PicInfo.data.yearOfStart) + ' ‚Äì ' + IntToStr(PicInfo.data.yearOfEnd) + ' (' + IntToStr(PicInfo.data.yearsOfWork) + ')';
+  LabelFieldYears.Caption := intToStr(PicInfo.data.yearOfStart) + ' ñ ' + IntToStr(PicInfo.data.yearOfEnd) + ' (' + IntToStr(PicInfo.data.yearsOfWork) + ')';
   LabelFieldGenre.Caption := PicInfo.data.genre;
   LabelFieldTheme.Caption := PicInfo.data.theme;
   LabelFieldMats.Caption := PicInfo.data.materials;
@@ -192,8 +193,13 @@ begin
 end;
 
 procedure TFBigPic.FormCreate(Sender: TObject);
+var
+  Scale: Single;
+  Margin: integer;
+  Image: TImage;
+  i: integer;
 begin
-  CmbBxUserRate.Items.Add('–ù–µ—Ç –æ—Ü–µ–Ω–∫–∏');
+  CmbBxUserRate.Items.Add('ÕÂÚ ÓˆÂÌÍË');
   CmbBxUserRate.Items.Add('1');
   CmbBxUserRate.Items.Add('2');
   CmbBxUserRate.Items.Add('3');
@@ -229,7 +235,7 @@ begin
 
   // update labels from changed .data
   LabelFieldTitle.Caption := PicInfo.data.title;
-  LabelFieldYears.Caption := intToStr(PicInfo.data.yearOfStart) + ' ‚Äì ' + IntToStr(PicInfo.data.yearOfEnd) + ' (' + IntToStr(PicInfo.data.yearsOfWork) + ')';
+  LabelFieldYears.Caption := intToStr(PicInfo.data.yearOfStart) + ' ñ ' + IntToStr(PicInfo.data.yearOfEnd) + ' (' + IntToStr(PicInfo.data.yearsOfWork) + ')';
   LabelFieldGenre.Caption := PicInfo.data.genre;
   LabelFieldTheme.Caption := PicInfo.data.theme;
   LabelFieldMats.Caption := PicInfo.data.materials;
@@ -258,7 +264,9 @@ var
   Temp: PPicElem;
 begin
 
- FGallery.DeleteNode(PicInfo, FGallery.head);
+  PrevPicInfo.Next := PrevPicInfo^.Next^.Next;
+  Dispose(PicInfo);
+
 
 end;
 

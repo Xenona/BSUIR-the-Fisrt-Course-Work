@@ -4,12 +4,10 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, SharedTypes, Math,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, SharedTypes, Math, MainForm,
   Vcl.Menus;
 
 type
-
-
 
   TFBigPic = class(TForm)
     PanelPic: TPanel;
@@ -70,6 +68,7 @@ type
 
 var
   FBigPic: TFBigPic;
+
 
 implementation
 
@@ -193,11 +192,6 @@ begin
 end;
 
 procedure TFBigPic.FormCreate(Sender: TObject);
-var
-  Scale: Single;
-  Margin: integer;
-  Image: TImage;
-  i: integer;
 begin
   CmbBxUserRate.Items.Add('Нет оценки');
   CmbBxUserRate.Items.Add('1');
@@ -264,9 +258,7 @@ var
   Temp: PPicElem;
 begin
 
-  PrevPicInfo.Next := PrevPicInfo^.Next^.Next;
-  Dispose(PicInfo);
-
+ FGallery.DeleteNode(PicInfo, FGallery.head);
 
 end;
 

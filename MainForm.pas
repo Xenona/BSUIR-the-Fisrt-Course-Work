@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.Menus, Math,
-  Vcl.Grids, BigPic, SharedTypes;
+  Vcl.Grids,  SharedTypes;
 
 
 type
@@ -53,6 +53,8 @@ type
       WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
     procedure CmbBxFilterChange(Sender: TObject);
     procedure ShowBigPic(Sender: TObject);
+    procedure DeleteNode(NodeToDelete: PPicElem; var NewHead: PPicElem);
+    procedure DeveloperMenuClick(Sender: TObject);
 //    procedure CreatePicture(var ImgToCreate: TImage; const PanelParent: TPanel; const APicLink: TPicture; const AMargin: Integer);
   private
     { Private declarations }
@@ -70,6 +72,8 @@ var
   FGallery: TFGallery;
 
 implementation
+   uses BigPic;
+
 
 {$R *.dfm}
 {$D+}
@@ -80,6 +84,43 @@ implementation
 
 
 
+// Delete a node from the linked list
+procedure TFGallery.DeleteNode(NodeToDelete: PPicElem; var NewHead: PPicElem);
+var
+  Current, Prev: PPicElem;
+begin
+  Prev := nil;
+  Current := NewHead;
+
+  // Traverse the linked list to find the node to be deleted
+  while (Current <> nil) and (Current <> NodeToDelete) do
+  begin
+    Prev := Current;
+    Current := Current^.Next;
+  end;
+
+  // If the node to be deleted is the head, update the head pointer
+  if Current = NewHead then
+    NewHead := Current^.Next
+  else // If the node to be deleted is in the middle or end of the list, update the links in the previous node
+    Prev^.Next := Current^.Next;
+
+  // Free the memory allocated to the node being deleted
+  Dispose(NodeToDelete);
+end;
+
+
+
+procedure DeleteAllNodes(HeadToCheck, MajorHead: PPicElem);
+begin
+  while headToCheck <> nil do
+  begin
+    if headToCheck.data.isToBeChanged then
+      FGallery.DeleteNode(headToCheck, MajorHead);
+    headToCheck := headToCheck^.Next;
+  end;
+
+end;
 
 
 // to fetch all pics from dataset.pic file
@@ -265,6 +306,10 @@ begin
 end;
 
 
+procedure TFGallery.DeveloperMenuClick(Sender: TObject);
+begin
+  ReCreateAllPanels(head);
+end;
 // VISUAL section END
 //---------------------------------------------------------------------------------
 
