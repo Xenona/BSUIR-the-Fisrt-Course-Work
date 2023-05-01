@@ -78,7 +78,7 @@ implementation
 
 procedure LoadImageToFitPanel(PanelPic: TPanel; Image: TImage; Picture: TPicture; Margin: Integer);
 var
-  Ratio, PanelRatio: Double;
+  Ratio, PanelRatio: Single;
 begin
 
   Ratio := Picture.Width / Picture.Height;

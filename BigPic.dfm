@@ -31,9 +31,6 @@ object FBigPic: TFBigPic
     ParentColor = True
     ShowCaption = False
     TabOrder = 0
-    ExplicitLeft = -6
-    ExplicitTop = 696
-    ExplicitWidth = 648
     object ImageItself: TImage
       Left = 72
       Top = 42
@@ -57,8 +54,6 @@ object FBigPic: TFBigPic
     ParentFont = False
     ShowCaption = False
     TabOrder = 1
-    ExplicitLeft = 648
-    ExplicitTop = -8
     object LabelFieldYears: TLabel
       AlignWithMargins = True
       Left = 22

@@ -236,8 +236,6 @@ var
   PrevNumOfCtrls: integer;
 begin
 
-
-
  if headToUse = nil then
     begin
       FGallery.FlowPanelPics.Margins.Top := 500;
