@@ -17,7 +17,9 @@ object FBigPic: TFBigPic
   OnActivate = FormActivate
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
+  OnKeyDown = FormKeyDown
   OnResize = FormResize
+  OnShortCut = FormShortCut
   PixelsPerInch = 96
   TextHeight = 13
   object PanelPic: TPanel

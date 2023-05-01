@@ -55,6 +55,9 @@ type
     procedure ShowBigPic(Sender: TObject);
     procedure DeleteNode(NodeToDelete: PPicElem; var NewHead: PPicElem);
     procedure DeveloperMenuClick(Sender: TObject);
+    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure FormShortCut(var Msg: TWMKey; var Handled: Boolean);
+
 //    procedure CreatePicture(var ImgToCreate: TImage; const PanelParent: TPanel; const APicLink: TPicture; const AMargin: Integer);
   private
     { Private declarations }
@@ -483,6 +486,12 @@ begin
 end;
 
 // remove focus from combobox
+procedure TFGallery.FormShortCut(var Msg: TWMKey; var Handled: Boolean);
+begin
+  If Msg.CharCode = VK_ESCAPE Then
+    Close;
+end;
+
 procedure TFGallery.FormShow(Sender: TObject);
 begin
   ActiveControl := PanelSideBar ; // Set focus to form
@@ -545,6 +554,8 @@ begin
     end;
   end;
 end;
+
+
 
 // SORT section END
 //---------------------------------------------------------------------------------
@@ -790,6 +801,13 @@ begin
 
 
 
+end;
+
+procedure TFGallery.FormKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+ if Key = VK_ESCAPE then
+    Close;
 end;
 
 procedure TFGallery.FormResize(Sender: TObject);

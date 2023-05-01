@@ -55,6 +55,8 @@ type
     procedure CmbBxUserRateChange(Sender: TObject);
     procedure ChkBxFavouriteClick(Sender: TObject);
     procedure MenuDeletePicClick(Sender: TObject);
+    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure FormShortCut(var Msg: TWMKey; var Handled: Boolean);
 
   private
 
@@ -201,6 +203,13 @@ begin
   CmbBxUserRate.Items.Add('5');
 end;
 
+procedure TFBigPic.FormKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if Key = VK_ESCAPE then
+    ShowMessage('lflflf');
+end;
+
 procedure TFBigPic.FormResize(Sender: TObject);
 var
   Margin: Integer;
@@ -209,6 +218,12 @@ begin
   Margin := 50;
   if PicInfo <> nil then
     LoadImageToFitPanel(PanelPic, ImageItself, PicInfo.data.imgBuffer, Margin);
+end;
+
+procedure TFBigPic.FormShortCut(var Msg: TWMKey; var Handled: Boolean);
+begin
+  If Msg.CharCode = VK_ESCAPE Then
+    Close;
 end;
 
 procedure TFBigPic.MenuAcceptClick(Sender: TObject);
