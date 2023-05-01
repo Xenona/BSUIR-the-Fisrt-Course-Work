@@ -16,12 +16,12 @@ type
     PanelSideBar: TPanel;
     ScrollBoxPics: TScrollBox;
     MainMenu: TMainMenu;
-    FileMenu: TMenuItem ;
-    OpenFile: TMenuItem;
-    SaveFile: TMenuItem;
-    HelpMenu: TMenuItem;
-    DeveloperMenu: TMenuItem;
-    OpenDialog1: TOpenDialog;
+    MenuAlbum: TMenuItem;
+    MenuSavePage: TMenuItem;
+    MenuDeleteAlbum: TMenuItem;
+    MenuUpload: TMenuItem;
+    MenuReset: TMenuItem;
+    OpenPic: TOpenDialog;
     CmbBxAlbum: TComboBox;
     LabelAlbum: TLabel;
     LabelSearch: TLabel;
@@ -42,7 +42,9 @@ type
     LabelSortDir: TLabel;
     CmbBxSortDir: TComboBox;
     FlowPanelPics: TFlowPanel;
-    procedure OpenFileClick(Sender: TObject);
+    MenuExportAlbum: TMenuItem;
+    MenuImportAlbum: TMenuItem;
+    MenuCreateAlbum: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -54,9 +56,10 @@ type
     procedure CmbBxFilterChange(Sender: TObject);
     procedure ShowBigPic(Sender: TObject);
     procedure DeleteNode(NodeToDelete: PPicElem; var NewHead: PPicElem);
-    procedure DeveloperMenuClick(Sender: TObject);
+    procedure MenuResetClick(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormShortCut(var Msg: TWMKey; var Handled: Boolean);
+    procedure MenuUploadClick(Sender: TObject);
 
 //    procedure CreatePicture(var ImgToCreate: TImage; const PanelParent: TPanel; const APicLink: TPicture; const AMargin: Integer);
   private
@@ -307,7 +310,7 @@ begin
 end;
 
 
-procedure TFGallery.DeveloperMenuClick(Sender: TObject);
+procedure TFGallery.MenuResetClick(Sender: TObject);
 begin
   ReCreateAllPanels(head);
 end;
@@ -373,35 +376,6 @@ begin
     end;
   end;
   result := slow;
-end;
-
-function CopyList2(head: PPicElem): PPicElem;
-var
-  current, newHead, newNode: PPicElem;
-begin
-  newHead := nil;
-  current := head;
-
-  while (current <> nil) do
-  begin
-    newNode := New(PPicElem);
-    newNode^.data := current^.data;
-    newNode^.Next := nil;
-
-    if (newHead = nil) then
-    begin
-      newHead := newNode;
-    end
-    else
-    begin
-      newNode^.Next := newHead;
-      newHead := newNode;
-    end;
-
-    current := current^.Next;
-  end;
-
-  result := newHead;
 end;
 
 function CopyList(head: PPicElem): PPicElem;
@@ -519,6 +493,12 @@ end;
 procedure TFGallery.FormShow(Sender: TObject);
 begin
   ActiveControl := PanelSideBar ; // Set focus to form
+end;
+
+procedure TFGallery.MenuUploadClick(Sender: TObject);
+begin
+  if OpenPic.Execute then
+    Image1.Picture.LoadFromFile(OpenPic.FileName);
 end;
 
 // for both of sort cmbBxes
@@ -845,25 +825,6 @@ begin
   currNumOfPics := FlowPanelPics.ControlCount;
   if FlowPanelPics.Width >= 210 then
     FlowPanelPics.Height := Max(270*(currNumOfPics div (FlowPanelPics.Width div 210) + 1), PanelSideBar.Height);
-
-end;
-
-procedure TFGallery.OpenFileClick(Sender: TObject);
-Var
-    GalleryFile: TextFile;
-begin
-    If OpenDialog1.Execute() Then
-    begin
-      AssignFile(GalleryFile, OpenDialog1.Files[0]);
-      Try
-        Reset(GalleryFile);
-      Finally
-        CloseFile(GalleryFile);
-      End;
-    end;
-
-
-
 
 end;
 

@@ -35,13 +35,14 @@ object FGallery: TFGallery
     ParentColor = False
     TabOrder = 0
     OnMouseWheel = ScrollBoxPicsMouseWheel
+    ExplicitLeft = -3
     object FlowPanelPics: TFlowPanel
       Left = 0
       Top = 0
       Width = 712
       Height = 390
       Align = alTop
-      Caption = #1058#1072#1082#1080#1093' '#1082#1072#1088#1090#1080#1085' '#1085#1077' '#1085#1072#1081#1076#1077#1085#1086
+      Caption = #1050#1072#1088#1090#1080#1085' '#1085#1077' '#1085#1072#1081#1076#1077#1085#1086
       Font.Charset = DEFAULT_CHARSET
       Font.Color = 3553851
       Font.Height = -24
@@ -369,25 +370,35 @@ object FGallery: TFGallery
   object MainMenu: TMainMenu
     Left = 310
     Top = 320
-    object FileMenu: TMenuItem
-      Caption = #1060#1072#1081#1083
-      object OpenFile: TMenuItem
-        Caption = #1054#1090#1082#1088#1099#1090#1100
-        OnClick = OpenFileClick
+    object MenuAlbum: TMenuItem
+      Caption = #1040#1083#1100#1073#1086#1084'...'
+      object MenuCreateAlbum: TMenuItem
+        Caption = #1057#1086#1079#1076#1072#1090#1100' '#1072#1083#1100#1073#1086#1084
       end
-      object SaveFile: TMenuItem
-        Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100
+      object MenuImportAlbum: TMenuItem
+        Caption = #1048#1084#1087#1086#1088#1090#1080#1088#1086#1074#1072#1090#1100' '#1072#1083#1100#1073#1086#1084' '
+      end
+      object MenuSavePage: TMenuItem
+        Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1090#1077#1082#1091#1097#1091#1102' '#1089#1090#1088#1072#1085#1080#1094#1091' '#1082#1072#1082' '#1072#1083#1100#1073#1086#1084
+      end
+      object MenuExportAlbum: TMenuItem
+        Caption = #1069#1082#1089#1087#1086#1088#1090#1080#1088#1086#1074#1072#1090#1100' '#1090#1077#1082#1091#1097#1080#1081' '#1072#1083#1100#1073#1086#1084
+      end
+      object MenuDeleteAlbum: TMenuItem
+        Caption = #1059#1076#1072#1083#1080#1090#1100' '#1090#1077#1082#1091#1097#1080#1081' '#1072#1083#1100#1073#1086#1084
       end
     end
-    object HelpMenu: TMenuItem
-      Caption = #1055#1086#1084#1086#1097#1100
+    object MenuUpload: TMenuItem
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1082#1072#1088#1090#1080#1085#1091
+      OnClick = MenuUploadClick
     end
-    object DeveloperMenu: TMenuItem
+    object MenuReset: TMenuItem
       Caption = #1057#1073#1088#1086#1089#1080#1090#1100' '#1085#1072#1089#1090#1088#1086#1081#1082#1080
-      OnClick = DeveloperMenuClick
+      OnClick = MenuResetClick
     end
   end
-  object OpenDialog1: TOpenDialog
+  object OpenPic: TOpenDialog
+    Filter = '*.bmp'
     Left = 406
     Top = 448
   end

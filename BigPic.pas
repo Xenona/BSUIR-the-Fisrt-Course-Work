@@ -273,7 +273,9 @@ var
   Temp: PPicElem;
 begin
   FGallery.DeleteNode(PicInfo, FGallery.changedHead);
- FGallery.DeleteNode(PicInfo, FGallery.head);
+  FGallery.DeleteNode(PicInfo, FGallery.head);
+ Close;
+// ReCreateAllPanels();
 
 end;
 

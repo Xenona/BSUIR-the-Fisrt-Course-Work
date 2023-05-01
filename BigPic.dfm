@@ -56,6 +56,7 @@ object FBigPic: TFBigPic
     ParentFont = False
     ShowCaption = False
     TabOrder = 1
+    ExplicitLeft = 657
     object LabelFieldYears: TLabel
       AlignWithMargins = True
       Left = 22
@@ -494,7 +495,7 @@ object FBigPic: TFBigPic
     end
     object MemoMats: TMemo
       Left = 263
-      Top = 241
+      Top = 237
       Width = 260
       Height = 35
       Font.Charset = DEFAULT_CHARSET

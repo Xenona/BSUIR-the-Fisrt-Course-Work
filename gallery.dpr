@@ -14,7 +14,7 @@ begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
   TStyleManager.TrySetStyle('Smokey Quartz Kamri');
-//  TStyleManager.TrySetStyle('Windows10Blue');
+
   Application.CreateForm(TFGallery, FGallery);
   Application.CreateForm(TFBigPic, FBigPic);
   Application.Run;
