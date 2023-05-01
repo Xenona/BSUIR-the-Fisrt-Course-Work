@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.Menus, Math,
-  Vcl.Grids, BigPic, SharedTypes;
+  Vcl.Grids,  SharedTypes;
 
 
 type
@@ -53,6 +53,11 @@ type
       WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
     procedure CmbBxFilterChange(Sender: TObject);
     procedure ShowBigPic(Sender: TObject);
+    procedure DeleteNode(NodeToDelete: PPicElem; var NewHead: PPicElem);
+    procedure DeveloperMenuClick(Sender: TObject);
+    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure FormShortCut(var Msg: TWMKey; var Handled: Boolean);
+
 //    procedure CreatePicture(var ImgToCreate: TImage; const PanelParent: TPanel; const APicLink: TPicture; const AMargin: Integer);
   private
     { Private declarations }
@@ -70,6 +75,8 @@ var
   FGallery: TFGallery;
 
 implementation
+   uses BigPic;
+
 
 {$R *.dfm}
 {$D+}
@@ -80,6 +87,43 @@ implementation
 
 
 
+// Delete a node from the linked list
+procedure TFGallery.DeleteNode(NodeToDelete: PPicElem; var NewHead: PPicElem);
+var
+  Current, Prev: PPicElem;
+begin
+  Prev := nil;
+  Current := NewHead;
+
+  // Traverse the linked list to find the node to be deleted
+  while (Current <> nil) and (Current <> NodeToDelete) do
+  begin
+    Prev := Current;
+    Current := Current^.Next;
+  end;
+
+  // If the node to be deleted is the head, update the head pointer
+  if Current = NewHead then
+    NewHead := Current^.Next
+  else // If the node to be deleted is in the middle or end of the list, update the links in the previous node
+    Prev^.Next := Current^.Next;
+
+  // Free the memory allocated to the node being deleted
+  Dispose(NodeToDelete);
+end;
+
+
+
+procedure DeleteAllNodes(HeadToCheck, MajorHead: PPicElem);
+begin
+  while headToCheck <> nil do
+  begin
+    if headToCheck.data.isToBeChanged then
+      FGallery.DeleteNode(headToCheck, MajorHead);
+    headToCheck := headToCheck^.Next;
+  end;
+
+end;
 
 
 // to fetch all pics from dataset.pic file
@@ -236,8 +280,6 @@ var
   PrevNumOfCtrls: integer;
 begin
 
-
-
  if headToUse = nil then
     begin
       FGallery.FlowPanelPics.Margins.Top := 500;
@@ -267,6 +309,10 @@ begin
 end;
 
 
+procedure TFGallery.DeveloperMenuClick(Sender: TObject);
+begin
+  ReCreateAllPanels(head);
+end;
 // VISUAL section END
 //---------------------------------------------------------------------------------
 
@@ -440,6 +486,12 @@ begin
 end;
 
 // remove focus from combobox
+procedure TFGallery.FormShortCut(var Msg: TWMKey; var Handled: Boolean);
+begin
+  If Msg.CharCode = VK_ESCAPE Then
+    Close;
+end;
+
 procedure TFGallery.FormShow(Sender: TObject);
 begin
   ActiveControl := PanelSideBar ; // Set focus to form
@@ -503,6 +555,8 @@ begin
   end;
 end;
 
+
+
 // SORT section END
 //---------------------------------------------------------------------------------
 
@@ -540,12 +594,15 @@ begin
 
  end;
 
-function searchSingleTitle(const head: PPicElem; titleToSearch: string): PPicElem;
+function searchPrevTitle(const head: PPicElem; titleToSearch: string): PPicElem;
 begin
   result := head;
-  while (result.data.title <> titleToSearch) and (result^.Next <> nil) do
+  if not ((Result <> nil) and (Result^.Data.title = titleToSearch)) then
+    while (result^.Next.data.title <> titleToSearch) and (result^.Next <> nil) do
     result := result^.Next;
 end;
+
+
 
 function searchData(head: PPicElem; infoToSearch: string; fieldSearch: integer): PPicElem;
 var
@@ -669,19 +726,24 @@ end;
 procedure TFGallery.ShowBigPic(Sender: TObject);
 var
    Window: TFBigPic;
+   LabelToSearch: String;
 begin
-//  FBigPic.LabelTitle.Font.Style := FBigPic.LabelTitle.Font.Style + [fsLineGapOnly];
-//  FBigPic.LabelTitle.LineHeight := -15;
-
-//  ShowMessage(TLabel(TPanel(TImage(Sender).Parent).Controls[1]).Caption);
-
 
   Window := TFBigPic.Create(nil);
   try
-   FBigPic.PicInfo := SearchSingleTitle(head, TLabel(TPanel(TImage(Sender).Parent).Controls[1]).Caption);
-   FBigPic.ShowModal;
+    FBigPic.header := head;
+
+    LabelToSearch := TLabel(TPanel(TImage(Sender).Parent).Controls[1]).Caption;
+    FBigPic.PrevPicInfo := SearchPrevTitle(head, LabelToSearch);
+
+    if (FBigPic.PrevPicInfo <> head) or (LabelToSearch <> head.data.title) then
+      FBigPic.PicInfo := FBigPic.PrevPicInfo^.Next
+    else
+      FBigPic.PicInfo := FBigPic.PrevPicInfo;
+
+    FBigPic.ShowModal;
   finally
-   Window.Free;
+    Window.Free;
   end;
 
 
@@ -739,6 +801,13 @@ begin
 
 
 
+end;
+
+procedure TFGallery.FormKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+ if Key = VK_ESCAPE then
+    Close;
 end;
 
 procedure TFGallery.FormResize(Sender: TObject);

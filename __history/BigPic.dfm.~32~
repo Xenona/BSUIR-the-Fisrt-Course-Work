@@ -2,8 +2,10 @@ object FBigPic: TFBigPic
   Left = 0
   Top = 0
   ClientHeight = 870
-  ClientWidth = 1207
+  ClientWidth = 1210
   Color = clBtnFace
+  Constraints.MinHeight = 870
+  Constraints.MinWidth = 1210
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
@@ -13,13 +15,17 @@ object FBigPic: TFBigPic
   OldCreateOrder = False
   Position = poDesktopCenter
   OnActivate = FormActivate
+  OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
+  OnKeyDown = FormKeyDown
+  OnResize = FormResize
+  OnShortCut = FormShortCut
   PixelsPerInch = 96
   TextHeight = 13
   object PanelPic: TPanel
     Left = 0
     Top = 0
-    Width = 648
+    Width = 651
     Height = 870
     Align = alClient
     Caption = 'Panel1'
@@ -27,16 +33,15 @@ object FBigPic: TFBigPic
     ParentColor = True
     ShowCaption = False
     TabOrder = 0
-    ExplicitWidth = 617
     object ImageItself: TImage
-      Left = 48
-      Top = 82
+      Left = 72
+      Top = 42
       Width = 545
       Height = 674
     end
   end
-  object Panel1: TPanel
-    Left = 648
+  object PanelInfo: TPanel
+    Left = 651
     Top = 0
     Width = 559
     Height = 870
@@ -51,7 +56,6 @@ object FBigPic: TFBigPic
     ParentFont = False
     ShowCaption = False
     TabOrder = 1
-    ExplicitLeft = 654
     object LabelFieldYears: TLabel
       AlignWithMargins = True
       Left = 22
@@ -103,7 +107,7 @@ object FBigPic: TFBigPic
       AlignWithMargins = True
       Left = 264
       Top = 386
-      Width = 256
+      Width = 260
       Height = 225
       Margins.Left = 0
       Margins.Top = 0
@@ -130,14 +134,14 @@ object FBigPic: TFBigPic
       AlignWithMargins = True
       Left = 264
       Top = 134
-      Width = 75
+      Width = 130
       Height = 25
       Margins.Left = 0
       Margins.Top = 0
       Margins.Right = 0
       Margins.Bottom = 0
       AutoSize = False
-      Caption = #1052#1086#1076#1077#1088#1085
+      Caption = #1052#1086#1076#1077#1088#1085#1080#1079#1084#1072
       Color = clBtnFace
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack
@@ -153,7 +157,7 @@ object FBigPic: TFBigPic
       AlignWithMargins = True
       Left = 264
       Top = 241
-      Width = 117
+      Width = 260
       Height = 25
       Margins.Left = 0
       Margins.Top = 0
@@ -176,7 +180,7 @@ object FBigPic: TFBigPic
       AlignWithMargins = True
       Left = 264
       Top = 185
-      Width = 54
+      Width = 130
       Height = 25
       Margins.Left = 0
       Margins.Top = 0
@@ -197,9 +201,9 @@ object FBigPic: TFBigPic
     end
     object LabelFieldTitle: TLabel
       AlignWithMargins = True
-      Left = 19
-      Top = 13
-      Width = 379
+      Left = 23
+      Top = 12
+      Width = 380
       Height = 70
       Margins.Left = 0
       Margins.Top = 0
@@ -212,7 +216,7 @@ object FBigPic: TFBigPic
       Font.Color = clBlack
       Font.Height = 35
       Font.Name = 'Montserrat SemiBold'
-      Font.Style = [fsBold]
+      Font.Style = []
       ParentColor = False
       ParentFont = False
       Transparent = True
@@ -222,8 +226,8 @@ object FBigPic: TFBigPic
       AlignWithMargins = True
       Left = 264
       Top = 779
-      Width = 233
-      Height = 75
+      Width = 260
+      Height = 70
       Margins.Left = 0
       Margins.Top = 0
       Margins.Right = 0
@@ -377,14 +381,14 @@ object FBigPic: TFBigPic
       AlignWithMargins = True
       Left = 264
       Top = 300
-      Width = 117
+      Width = 195
       Height = 25
       Margins.Left = 0
       Margins.Top = 0
       Margins.Right = 0
       Margins.Bottom = 0
       AutoSize = False
-      Caption = #1061#1086#1083#1089#1090', '#1084#1072#1089#1083#1086
+      Caption = #1055#1088#1072#1075#1072
       Color = clBtnFace
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack
@@ -408,10 +412,11 @@ object FBigPic: TFBigPic
       Font.Style = []
       ParentFont = False
       TabOrder = 0
+      OnClick = ChkBxFavouriteClick
     end
     object CmbBxUserRate: TComboBox
       Left = 264
-      Top = 687
+      Top = 703
       Width = 120
       Height = 35
       Font.Charset = DEFAULT_CHARSET
@@ -421,16 +426,157 @@ object FBigPic: TFBigPic
       Font.Style = []
       ParentFont = False
       TabOrder = 1
+      OnChange = CmbBxUserRateChange
+    end
+    object MemoTitle: TMemo
+      Left = 23
+      Top = 15
+      Width = 380
+      Height = 70
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -19
+      Font.Name = 'Montserrat'
+      Font.Style = []
+      Lines.Strings = (
+        'MemoTitle')
+      ParentFont = False
+      TabOrder = 2
+      Visible = False
+    end
+    object MemoYears: TMemo
+      Left = 23
+      Top = 85
+      Width = 180
+      Height = 35
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -19
+      Font.Name = 'Montserrat'
+      Font.Style = []
+      Lines.Strings = (
+        'Memo1')
+      ParentFont = False
+      TabOrder = 3
+      Visible = False
+    end
+    object MemoGenre: TMemo
+      Left = 263
+      Top = 130
+      Width = 130
+      Height = 35
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -19
+      Font.Name = 'Montserrat'
+      Font.Style = []
+      Lines.Strings = (
+        'Memo1')
+      ParentFont = False
+      TabOrder = 4
+      Visible = False
+    end
+    object MemoTheme: TMemo
+      Left = 263
+      Top = 185
+      Width = 130
+      Height = 35
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -19
+      Font.Name = 'Montserrat'
+      Font.Style = []
+      Lines.Strings = (
+        'Memo1')
+      ParentFont = False
+      TabOrder = 5
+      Visible = False
+    end
+    object MemoMats: TMemo
+      Left = 263
+      Top = 241
+      Width = 260
+      Height = 35
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -19
+      Font.Name = 'Montserrat'
+      Font.Style = []
+      Lines.Strings = (
+        'Memo1')
+      ParentFont = False
+      TabOrder = 6
+      Visible = False
+    end
+    object MemoPlace: TMemo
+      Left = 263
+      Top = 300
+      Width = 195
+      Height = 35
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -19
+      Font.Name = 'Montserrat'
+      Font.Style = []
+      Lines.Strings = (
+        'Memo1')
+      ParentFont = False
+      TabOrder = 7
+      Visible = False
+    end
+    object MemoDescr: TMemo
+      Left = 263
+      Top = 382
+      Width = 260
+      Height = 299
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -19
+      Font.Name = 'Montserrat'
+      Font.Style = []
+      Lines.Strings = (
+        'Memo1')
+      ParentFont = False
+      TabOrder = 8
+      Visible = False
+    end
+    object MemoUsrCmm: TMemo
+      Left = 263
+      Top = 774
+      Width = 260
+      Height = 75
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -19
+      Font.Name = 'Montserrat'
+      Font.Style = []
+      Lines.Strings = (
+        'Memo1')
+      ParentFont = False
+      TabOrder = 9
+      Visible = False
     end
   end
   object MainMenuBigPic: TMainMenu
-    Left = 584
-    Top = 432
+    Left = 528
+    Top = 376
     object MenuEditPic: TMenuItem
       Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1090#1100' '#1082#1072#1088#1090#1080#1085#1091
+      OnClick = MenuEditPicClick
     end
     object MenuDeletePic: TMenuItem
       Caption = #1059#1076#1072#1083#1080#1090#1100' '#1082#1072#1088#1090#1080#1085#1091
+      OnClick = MenuDeletePicClick
+    end
+    object MenuAccept: TMenuItem
+      Caption = #1055#1086#1076#1090#1074#1077#1088#1076#1080#1090#1100' '#1080#1079#1084#1077#1085#1077#1085#1080#1103
+      Visible = False
+      OnClick = MenuAcceptClick
+    end
+    object MenuCancel: TMenuItem
+      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1080#1079#1084#1077#1085#1077#1085#1080#1103
+      Visible = False
+      OnClick = MenuCancelClick
     end
   end
 end

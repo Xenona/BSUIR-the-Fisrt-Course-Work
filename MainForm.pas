@@ -65,6 +65,7 @@ type
      head: PPicElem;
      sortedHead: PPicElem;
      searchedHead: PPicElem;
+     changedHead: PPicElem;
      PicInfo: TData;
 
 
@@ -95,21 +96,18 @@ begin
   Prev := nil;
   Current := NewHead;
 
-  // Traverse the linked list to find the node to be deleted
-  while (Current <> nil) and (Current <> NodeToDelete) do
+  while (Current <> nil) and (Current.data.imgBuffer <> NodeToDelete.data.imgBuffer) do
   begin
     Prev := Current;
     Current := Current^.Next;
   end;
 
-  // If the node to be deleted is the head, update the head pointer
   if Current = NewHead then
     NewHead := Current^.Next
-  else // If the node to be deleted is in the middle or end of the list, update the links in the previous node
+  else
     Prev^.Next := Current^.Next;
 
-  // Free the memory allocated to the node being deleted
-  Dispose(NodeToDelete);
+  Dispose(Current);
 end;
 
 
@@ -377,7 +375,7 @@ begin
   result := slow;
 end;
 
-function CopyList(head: PPicElem): PPicElem;
+function CopyList2(head: PPicElem): PPicElem;
 var
   current, newHead, newNode: PPicElem;
 begin
@@ -405,6 +403,32 @@ begin
 
   result := newHead;
 end;
+
+function CopyList(head: PPicElem): PPicElem;
+var
+  current, newHead, newNode: PPicElem;
+begin
+  newHead := nil;
+  current := head;
+
+  while (current <> nil) do
+  begin
+    newNode := New(PPicElem);
+    newNode^.data := current^.data;
+    newNode^.Next := nil;
+
+    if not (newHead = nil) then
+    begin
+      newNode^.Next := newHead;
+    end;
+
+    newHead := newNode;
+    current := current^.Next;
+  end;
+
+  result := newHead;
+end;
+
 
 function MergeSort(head: PPicElem; sortDirection: integer; compare: TSortMethod): PPicElem;
 var
@@ -513,43 +537,43 @@ begin
     case CmbBxSort.ItemIndex of
       1: // title
       begin
-        sortedHead := MergeSort(head, sortDirection, cmpTitle);
-        ReCreateAllPanels(sortedHead);
+        changedHead := MergeSort(changedHead, sortDirection, cmpTitle);
+        ReCreateAllPanels(changedHead);
       end;
       2: // year of start
       begin
-        sortedHead := MergeSort(head, sortDirection, cmpYearStart);
-        ReCreateAllPanels(sortedHead);
+        changedHead := MergeSort(changedHead, sortDirection, cmpYearStart);
+        ReCreateAllPanels(changedHead);
       end;
       3: // year of end
       begin
-        sortedHead := MergeSort(head, sortDirection, cmpYearEnd);
-        ReCreateAllPanels(sortedHead);
+        changedHead := MergeSort(changedHead, sortDirection, cmpYearEnd);
+        ReCreateAllPanels(changedHead);
       end;
       4: // years of work
       begin
-        sortedHead := MergeSort(head, sortDirection, cmpYearsWork);
-        ReCreateAllPanels(sortedHead);
+        changedHead := MergeSort(changedHead, sortDirection, cmpYearsWork);
+        ReCreateAllPanels(changedHead);
       end;
       5: // genre
       begin
-        sortedHead := MergeSort(head, sortDirection, cmpGenre);
-        ReCreateAllPanels(sortedHead);
+        changedHead := MergeSort(changedHead, sortDirection, cmpGenre);
+        ReCreateAllPanels(changedHead);
       end;
       6: // theme
       begin
-        sortedHead := MergeSort(head, sortDirection, cmpTheme);
-        ReCreateAllPanels(sortedHead);
+        changedHead := MergeSort(changedHead, sortDirection, cmpTheme);
+        ReCreateAllPanels(changedHead);
       end;
       7: // place
       begin
-        sortedHead := MergeSort(head, sortDirection, cmpPlace);
-        ReCreateAllPanels(sortedHead);
+        changedHead := MergeSort(changedHead, sortDirection, cmpPlace);
+        ReCreateAllPanels(changedHead);
       end;
       8: // user rate
       begin
-        sortedHead := MergeSort(head, sortDirection, cmpUserRate);
-        ReCreateAllPanels(sortedHead);
+        changedHead := MergeSort(changedHead, sortDirection, cmpUserRate);
+        ReCreateAllPanels(changedHead);
       end;
     end;
   end;
@@ -649,9 +673,9 @@ begin
   begin
     if (CmbBxSearchParam.Text <> '') and (Trim(EditSearch.Text) <> '')  then
     begin
-      searchedHead := SearchData(head, EditSearch.Text, CmbBxSearchParam.ItemIndex);
+      changedHead := SearchData(changedHead, EditSearch.Text, CmbBxSearchParam.ItemIndex);
 
-      if searchedHead = nil then
+      if changedHead = nil then
       begin
         FlowPanelPics.Margins.Top := 500;
         FlowPanelPics.Height := PanelSideBar.Height;
@@ -660,7 +684,7 @@ begin
       else
         FlowPanelPics.ShowCaption := False;
 
-      ReCreateAllPanels(searchedHead);
+      ReCreateAllPanels(changedHead);
     end;
   end;
 
@@ -710,9 +734,9 @@ begin
 
   if (CmbBxFilter.Text <> '') and (CmbBxFiltVal.Text <> '') then
   begin
-    searchedHead := SearchData(head, IntToStr(CmbBxFiltVal.ItemIndex), CmbBxFilter.ItemIndex+11);
+    changedHead := SearchData(changedHead, IntToStr(CmbBxFiltVal.ItemIndex), CmbBxFilter.ItemIndex+11);
 
-    ReCreateAllPanels(searchedHead);
+    ReCreateAllPanels(changedHead);
   end;
 
 end;
@@ -731,12 +755,12 @@ begin
 
   Window := TFBigPic.Create(nil);
   try
-    FBigPic.header := head;
+    FBigPic.header := changedHead;
 
     LabelToSearch := TLabel(TPanel(TImage(Sender).Parent).Controls[1]).Caption;
-    FBigPic.PrevPicInfo := SearchPrevTitle(head, LabelToSearch);
+    FBigPic.PrevPicInfo := SearchPrevTitle(changedHead, LabelToSearch);
 
-    if (FBigPic.PrevPicInfo <> head) or (LabelToSearch <> head.data.title) then
+    if (FBigPic.PrevPicInfo <> changedHead) or (LabelToSearch <> changedHead.data.title) then
       FBigPic.PicInfo := FBigPic.PrevPicInfo^.Next
     else
       FBigPic.PicInfo := FBigPic.PrevPicInfo;
@@ -799,6 +823,8 @@ begin
   CmbBxSortDir.Items.Add('По возрастанию');
   CmbBxSortDir.Items.Add('По убыванию');
 
+
+  ChangedHead := CopyList(head);
 
 
 end;

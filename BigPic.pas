@@ -272,7 +272,7 @@ procedure TFBigPic.MenuDeletePicClick(Sender: TObject);
 var
   Temp: PPicElem;
 begin
-
+  FGallery.DeleteNode(PicInfo, FGallery.changedHead);
  FGallery.DeleteNode(PicInfo, FGallery.head);
 
 end;
