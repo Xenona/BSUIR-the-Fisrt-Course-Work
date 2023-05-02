@@ -10,6 +10,7 @@ uses
 
 type
   TSortMethod = function(elem1, elem2: TData; direction: integer): integer;
+  TEnumAlbs = array of array of PPicElem;
 
 
   TFGallery = class(TForm)
@@ -63,8 +64,10 @@ type
     procedure ReCreateAllPanels(headToUse: PPicElem);
     procedure CreatePicture(var ImgToCreate: TImage; const PanelParent: TPanel; const APicLink: TPicture; const AMargin: Integer);
     procedure AddNewNode(elem: PPicElem; var head: PPicElem);
-
-//    procedure CreatePicture(var ImgToCreate: TImage; const PanelParent: TPanel; const APicLink: TPicture; const AMargin: Integer);
+    procedure UploadAlbums();
+    procedure FetchAllPics(var Head: PPicElem; const filePath: String);
+    function CopyList(head: PPicElem): PPicElem;
+    procedure LoadImages(Var PicList: PPicElem);
   private
     { Private declarations }
   public
@@ -72,6 +75,10 @@ type
      sortedHead: PPicElem;
      searchedHead: PPicElem;
      changedHead: PPicElem;
+
+     headsEnum: TEnumAlbs;
+
+
      PicInfo: TData;
 
 
@@ -142,8 +149,53 @@ begin
 end;
 
 
+procedure TFGallery.uploadAlbums();
+var
+  AppPath: string;
+  enumPath: string;
+  enumFile: textFile;
+  currfilename: string;
+  countFiles: integer;
+  i: Integer;
+begin
+
+  AppPath := ExtractFilePath(Application.ExeName);
+  enumPath := AppPath + 'albums\enumerate.albums';
+
+  try
+    AssignFile(enumFile, enumPath);
+    countFiles := 0;
+    SetLength(headsEnum, 0);
+    Reset(enumFile);
+    while not EoF(enumFile) do
+    begin
+      readln(enumFile, currfilename );
+
+      // Create a new element in the array
+      SetLength(headsEnum, Length(headsEnum) + 1);
+      // Initialize the new element with an array of two pointers
+      SetLength(headsEnum[High(headsEnum)], 2);
+
+      // Get the list of images
+      FetchAllPics(headsEnum[High(headsEnum)][0], AppPath + '\albums\' +  currfilename);
+      LoadImages(headsEnum[High(headsEnum)][0]);
+
+      // Create a copy of the list
+      headsEnum[High(headsEnum)][1] := CopyList(headsEnum[High(headsEnum)][0]);
+
+
+      CmbBxAlbum.Items.Add(Copy(currfilename, 1, Pos(currfilename, '.')-1));
+
+  end;
+
+  finally
+
+    CloseFile(enumFile);
+  end;
+end;
+
 // to fetch all pics from dataset.pic file
-procedure FetchAllPics(var head: PPicElem);
+procedure TFGallery.FetchAllPics(var head: PPicElem; const filePath: string);
 var
   readPicList: PPicElem;
   storageFile: file of Tdata;
@@ -152,7 +204,7 @@ var
 begin
 
   // open a source file
-  Reset(storageFile, 'dataset.pics');
+  Reset(storageFile, filePath);
 
   // creation of list of pics
   new(readPicList);
@@ -189,7 +241,7 @@ begin
 end;
 
 // load imgs to buffer of aech record
-procedure LoadImages(PicList: PPicElem);
+procedure TFGallery.LoadImages(Var PicList: PPicElem);
 var
   SearchRec: TSearchRec;
   FileName: string;
@@ -393,7 +445,7 @@ begin
   result := slow;
 end;
 
-function CopyList(head: PPicElem): PPicElem;
+function TFGallery.CopyList(head: PPicElem): PPicElem;
 var
   current, newHead, newNode: PPicElem;
 begin
@@ -426,7 +478,7 @@ var
 begin
   isExit := false;
 
-  tempHead := CopyList(head);
+  tempHead := FGallery.CopyList(head);
 
   if (tempHead = nil) or (tempHead^.Next = nil) then
   begin
@@ -520,8 +572,6 @@ begin
   FillChar(newNode.data, SizeOf(newNode.data), 0);
   if OpenPic.Execute() then
   begin
-
-
     newNode.data.imgBuffer := TPicture.Create;
     NewNode.data.imgBuffer.LoadFromFile(OpenPic.FileName);
   end;
@@ -795,7 +845,8 @@ end;
 procedure TFGallery.FormCreate(Sender: TObject);
 begin
 
-  FetchAllPics(head);
+//  FetchAllPics(head, 'dataset.pics');
+  uploadAlbums();
   LoadImages(head);
   ReCreateAllPanels(head);
 

@@ -34,7 +34,6 @@ type
     LabelPlace: TLabel;
     LabelFieldPlace: TLabel;
     MemoTitle: TMemo;
-    MemoYears: TMemo;
     MemoGenre: TMemo;
     MemoTheme: TMemo;
     MemoMats: TMemo;
@@ -45,6 +44,7 @@ type
     MenuCancel: TMenuItem;
     MenuCreatePic: TMenuItem;
     MenuRejectPic: TMenuItem;
+    EditYears: TEdit;
     procedure FormActivate(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure MenuEditPicClick(Sender: TObject);
@@ -112,7 +112,7 @@ procedure TFBigPic.showHideMemo(status: Boolean);
 begin
 
   MemoTitle.Visible := status;
-  MemoYears.Visible := status;
+  EditYears.Visible := status;
   MemoGenre.Visible := status;
   MemoTheme.Visible := status;
   MemoMats.Visible := status;
@@ -234,9 +234,10 @@ end;
 procedure TFBigPic.updatePicInfo(var picToUpdate: PPicElem);
 begin
   // save info from memos
+
   picToUpdate.data.title := MemoTitle.Text;
-  picToUpdate.data.YearOfStart := StrToInt(Copy(MemoYears.Text, 1, 4));
-  picToUpdate.data.YearOfEnd := StrToInt(Copy(MemoYears.Text, 8, 11));
+  picToUpdate.data.YearOfStart := StrToInt(Copy(EditYears.Text, 1, 4));
+  picToUpdate.data.YearOfEnd := StrToInt(Copy(EditYears.Text, 8, 11));
   picToUpdate.data.yearsOfWork := PicInfo.data.yearOfEnd - PicInfo.data.yearOfStart;
   picToUpdate.data.genre := MemoGenre.Text;
   picToUpdate.data.theme := MemoTheme.Text;
@@ -268,6 +269,7 @@ begin
   showHideMemo(False);
 
   showHideMenu(True, False, False);
+  FGallery.ReCreateAllPanels(FGallery.ChangedHead);
 
 
 end;
@@ -312,7 +314,7 @@ begin
 
   // to memos,  add text to edit
   MemoTitle.Text := LabelFieldTitle.Caption;
-  MemoYears.Text := Copy(LabelFieldYears.Caption, 1, 11);
+  EditYears.Text := Copy(LabelFieldYears.Caption, 1, 11);
   MemoGenre.Text := LabelFieldGenre.Caption;
   MemoTheme.Text := LabelFieldTheme.Caption;
   MemoMats.Text := LabelFieldMats.Caption;

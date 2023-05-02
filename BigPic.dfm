@@ -445,22 +445,6 @@ object FBigPic: TFBigPic
       TabOrder = 2
       Visible = False
     end
-    object MemoYears: TMemo
-      Left = 23
-      Top = 85
-      Width = 180
-      Height = 35
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -19
-      Font.Name = 'Montserrat'
-      Font.Style = []
-      Lines.Strings = (
-        '0000 - 0000')
-      ParentFont = False
-      TabOrder = 3
-      Visible = False
-    end
     object MemoGenre: TMemo
       Left = 263
       Top = 130
@@ -474,7 +458,7 @@ object FBigPic: TFBigPic
       Lines.Strings = (
         #1053#1077#1090)
       ParentFont = False
-      TabOrder = 4
+      TabOrder = 3
       Visible = False
     end
     object MemoTheme: TMemo
@@ -490,7 +474,7 @@ object FBigPic: TFBigPic
       Lines.Strings = (
         #1053#1077#1090)
       ParentFont = False
-      TabOrder = 5
+      TabOrder = 4
       Visible = False
     end
     object MemoMats: TMemo
@@ -506,7 +490,7 @@ object FBigPic: TFBigPic
       Lines.Strings = (
         #1053#1077#1090)
       ParentFont = False
-      TabOrder = 6
+      TabOrder = 5
       Visible = False
     end
     object MemoPlace: TMemo
@@ -522,7 +506,7 @@ object FBigPic: TFBigPic
       Lines.Strings = (
         #1053#1077#1080#1079#1074#1077#1089#1090#1085#1086)
       ParentFont = False
-      TabOrder = 7
+      TabOrder = 6
       Visible = False
     end
     object MemoDescr: TMemo
@@ -538,7 +522,7 @@ object FBigPic: TFBigPic
       Lines.Strings = (
         #1054#1087#1080#1089#1072#1085#1080#1077' '#1086#1090#1089#1091#1090#1089#1090#1074#1091#1077#1090)
       ParentFont = False
-      TabOrder = 8
+      TabOrder = 7
       Visible = False
     end
     object MemoUsrCmm: TMemo
@@ -555,7 +539,23 @@ object FBigPic: TFBigPic
         #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081' '
         #1086#1090#1089#1091#1090#1089#1090#1074#1091#1077#1090)
       ParentFont = False
+      TabOrder = 8
+      Visible = False
+    end
+    object EditYears: TEdit
+      Left = 24
+      Top = 85
+      Width = 169
+      Height = 35
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -20
+      Font.Name = 'Montserrat'
+      Font.Style = []
+      ParentFont = False
       TabOrder = 9
+      Text = '0000 - 0000'
+      TextHint = 'YYYY - YYYY'
       Visible = False
     end
   end
