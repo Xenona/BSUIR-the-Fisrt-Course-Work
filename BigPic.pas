@@ -108,8 +108,6 @@ begin
   Image.Top := (PanelPic.ClientHeight - Image.Height) div 2;
 end;
 
-
-
 procedure TFBigPic.showHideMemo(status: Boolean);
 begin
 
@@ -153,7 +151,7 @@ end;
 
 procedure TFBigPic.CmbBxUserRateChange(Sender: TObject);
 begin
-  PicInfo.data.userRate := StrToInt(CmbBxUserRate.Text);
+  PicInfo.data.userRate := (CmbBxUserRate.ItemIndex);
 end;
 
 procedure TFBigPic.FormActivate(Sender: TObject);
@@ -196,7 +194,7 @@ begin
 
   showHideMemo(False);
   showHideMenu(True, False, False);
-
+//  FBigPic.Free;
 
 end;
 

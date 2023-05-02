@@ -764,23 +764,26 @@ procedure TFGallery.ShowBigPic(Sender: TObject);
 var
    Window: TFBigPic;
    LabelToSearch: String;
+   pic: TPicture;
 begin
 
   Window := TFBigPic.Create(nil);
   try
-    FBigPic.header := changedHead;
+    Window.header := changedHead;
 
     LabelToSearch := TLabel(TPanel(TImage(Sender).Parent).Controls[1]).Caption;
-    FBigPic.PrevPicInfo := SearchPrevTitle(changedHead, LabelToSearch);
+    Window.PrevPicInfo := SearchPrevTitle(changedHead, LabelToSearch);
 
-    if (FBigPic.PrevPicInfo <> changedHead) or (LabelToSearch <> changedHead.data.title) then
-      FBigPic.PicInfo := FBigPic.PrevPicInfo^.Next
+    if (Window.PrevPicInfo <> changedHead) or (LabelToSearch <> changedHead.data.title) then
+      Window.PicInfo := Window.PrevPicInfo^.Next
     else
-      FBigPic.PicInfo := FBigPic.PrevPicInfo;
+      Window.PicInfo := Window.PrevPicInfo;
 
-    FBigPic.ShowModal;
+    pic := TImage(Sender).Picture;
+
+    Window.Show;
   finally
-    Window.Free;
+//    Window.Free;
   end;
 
 

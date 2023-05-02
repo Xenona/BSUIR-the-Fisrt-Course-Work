@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.Menus, Math,
-  Vcl.Grids, BigPic, SharedTypes;
+  Vcl.Grids,  SharedTypes;
 
 
 type
@@ -16,12 +16,12 @@ type
     PanelSideBar: TPanel;
     ScrollBoxPics: TScrollBox;
     MainMenu: TMainMenu;
-    FileMenu: TMenuItem ;
-    OpenFile: TMenuItem;
-    SaveFile: TMenuItem;
-    HelpMenu: TMenuItem;
-    DeveloperMenu: TMenuItem;
-    OpenDialog1: TOpenDialog;
+    MenuAlbum: TMenuItem;
+    MenuSavePage: TMenuItem;
+    MenuDeleteAlbum: TMenuItem;
+    MenuUpload: TMenuItem;
+    MenuReset: TMenuItem;
+    OpenPic: TOpenDialog;
     CmbBxAlbum: TComboBox;
     LabelAlbum: TLabel;
     LabelSearch: TLabel;
@@ -42,7 +42,9 @@ type
     LabelSortDir: TLabel;
     CmbBxSortDir: TComboBox;
     FlowPanelPics: TFlowPanel;
-    procedure OpenFileClick(Sender: TObject);
+    MenuExportAlbum: TMenuItem;
+    MenuImportAlbum: TMenuItem;
+    MenuCreateAlbum: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -53,6 +55,15 @@ type
       WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
     procedure CmbBxFilterChange(Sender: TObject);
     procedure ShowBigPic(Sender: TObject);
+    procedure DeleteNode(NodeToDelete: PPicElem; var NewHead: PPicElem);
+    procedure MenuResetClick(Sender: TObject);
+    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure FormShortCut(var Msg: TWMKey; var Handled: Boolean);
+    procedure MenuUploadClick(Sender: TObject);
+    procedure ReCreateAllPanels(headToUse: PPicElem);
+    procedure CreatePicture(var ImgToCreate: TImage; const PanelParent: TPanel; const APicLink: TPicture; const AMargin: Integer);
+    procedure AddNewNode(elem: PPicElem; var head: PPicElem);
+
 //    procedure CreatePicture(var ImgToCreate: TImage; const PanelParent: TPanel; const APicLink: TPicture; const AMargin: Integer);
   private
     { Private declarations }
@@ -60,16 +71,18 @@ type
      head: PPicElem;
      sortedHead: PPicElem;
      searchedHead: PPicElem;
+     changedHead: PPicElem;
      PicInfo: TData;
 
 
-     procedure CreatePicture(var ImgToCreate: TImage; const PanelParent: TPanel; const APicLink: TPicture; const AMargin: Integer);
   end;
 
 var
   FGallery: TFGallery;
 
 implementation
+   uses BigPic;
+
 
 {$R *.dfm}
 {$D+}
@@ -77,9 +90,56 @@ implementation
 // --------------------------------------------------------------------------------
 // VISUAL section BEGIN
 
+procedure TFGallery.AddNewNode(elem: PPicElem; var head: PPicElem);
+begin
+  if (head = nil) then
+  begin
+    elem^.Next := nil;
+    head := elem;
+  end
+  else
+  begin
+    elem^.Next := head;
+    head := elem;
+  end;
+end;
 
 
 
+// Delete a node from the linked list
+procedure TFGallery.DeleteNode(NodeToDelete: PPicElem; var NewHead: PPicElem);
+var
+  Current, Prev: PPicElem;
+begin
+  Prev := nil;
+  Current := NewHead;
+
+  while (Current <> nil) and (Current.data.imgBuffer <> NodeToDelete.data.imgBuffer) do
+  begin
+    Prev := Current;
+    Current := Current^.Next;
+  end;
+
+  if Current = NewHead then
+    NewHead := Current^.Next
+  else
+    Prev^.Next := Current^.Next;
+
+  Dispose(Current);
+end;
+
+
+
+procedure DeleteAllNodes(HeadToCheck, MajorHead: PPicElem);
+begin
+  while headToCheck <> nil do
+  begin
+    if headToCheck.data.isToBeChanged then
+      FGallery.DeleteNode(headToCheck, MajorHead);
+    headToCheck := headToCheck^.Next;
+  end;
+
+end;
 
 
 // to fetch all pics from dataset.pic file
@@ -230,13 +290,11 @@ begin
 
 end;
 
-procedure ReCreateAllPanels(headToUse: PPicElem);
+procedure TFGAllery.ReCreateAllPanels(headToUse: PPicElem);
 var
   i: integer;
   PrevNumOfCtrls: integer;
 begin
-
-
 
  if headToUse = nil then
     begin
@@ -267,6 +325,10 @@ begin
 end;
 
 
+procedure TFGallery.MenuResetClick(Sender: TObject);
+begin
+  ReCreateAllPanels(head);
+end;
 // VISUAL section END
 //---------------------------------------------------------------------------------
 
@@ -344,21 +406,18 @@ begin
     newNode^.data := current^.data;
     newNode^.Next := nil;
 
-    if (newHead = nil) then
-    begin
-      newHead := newNode;
-    end
-    else
+    if not (newHead = nil) then
     begin
       newNode^.Next := newHead;
-      newHead := newNode;
     end;
 
+    newHead := newNode;
     current := current^.Next;
   end;
 
   result := newHead;
 end;
+
 
 function MergeSort(head: PPicElem; sortDirection: integer; compare: TSortMethod): PPicElem;
 var
@@ -440,9 +499,39 @@ begin
 end;
 
 // remove focus from combobox
+procedure TFGallery.FormShortCut(var Msg: TWMKey; var Handled: Boolean);
+begin
+  If Msg.CharCode = VK_ESCAPE Then
+    Close;
+end;
+
 procedure TFGallery.FormShow(Sender: TObject);
 begin
   ActiveControl := PanelSideBar ; // Set focus to form
+end;
+
+procedure TFGallery.MenuUploadClick(Sender: TObject);
+var
+  newNode: PPicElem;
+  pic: TPicture;
+begin
+
+  new(newNode);
+  FillChar(newNode.data, SizeOf(newNode.data), 0);
+  if OpenPic.Execute() then
+  begin
+
+
+    newNode.data.imgBuffer := TPicture.Create;
+    NewNode.data.imgBuffer.LoadFromFile(OpenPic.FileName);
+  end;
+
+  FBigPic.showHideMenu(False, False, True);
+  FBigPic.showHideMemo(True);
+
+  FBigPic.PicInfo := newNode;
+
+  FBigPic.Show;
 end;
 
 // for both of sort cmbBxes
@@ -461,47 +550,49 @@ begin
     case CmbBxSort.ItemIndex of
       1: // title
       begin
-        sortedHead := MergeSort(head, sortDirection, cmpTitle);
-        ReCreateAllPanels(sortedHead);
+        changedHead := MergeSort(changedHead, sortDirection, cmpTitle);
+        ReCreateAllPanels(changedHead);
       end;
       2: // year of start
       begin
-        sortedHead := MergeSort(head, sortDirection, cmpYearStart);
-        ReCreateAllPanels(sortedHead);
+        changedHead := MergeSort(changedHead, sortDirection, cmpYearStart);
+        ReCreateAllPanels(changedHead);
       end;
       3: // year of end
       begin
-        sortedHead := MergeSort(head, sortDirection, cmpYearEnd);
-        ReCreateAllPanels(sortedHead);
+        changedHead := MergeSort(changedHead, sortDirection, cmpYearEnd);
+        ReCreateAllPanels(changedHead);
       end;
       4: // years of work
       begin
-        sortedHead := MergeSort(head, sortDirection, cmpYearsWork);
-        ReCreateAllPanels(sortedHead);
+        changedHead := MergeSort(changedHead, sortDirection, cmpYearsWork);
+        ReCreateAllPanels(changedHead);
       end;
       5: // genre
       begin
-        sortedHead := MergeSort(head, sortDirection, cmpGenre);
-        ReCreateAllPanels(sortedHead);
+        changedHead := MergeSort(changedHead, sortDirection, cmpGenre);
+        ReCreateAllPanels(changedHead);
       end;
       6: // theme
       begin
-        sortedHead := MergeSort(head, sortDirection, cmpTheme);
-        ReCreateAllPanels(sortedHead);
+        changedHead := MergeSort(changedHead, sortDirection, cmpTheme);
+        ReCreateAllPanels(changedHead);
       end;
       7: // place
       begin
-        sortedHead := MergeSort(head, sortDirection, cmpPlace);
-        ReCreateAllPanels(sortedHead);
+        changedHead := MergeSort(changedHead, sortDirection, cmpPlace);
+        ReCreateAllPanels(changedHead);
       end;
       8: // user rate
       begin
-        sortedHead := MergeSort(head, sortDirection, cmpUserRate);
-        ReCreateAllPanels(sortedHead);
+        changedHead := MergeSort(changedHead, sortDirection, cmpUserRate);
+        ReCreateAllPanels(changedHead);
       end;
     end;
   end;
 end;
+
+
 
 // SORT section END
 //---------------------------------------------------------------------------------
@@ -595,9 +686,9 @@ begin
   begin
     if (CmbBxSearchParam.Text <> '') and (Trim(EditSearch.Text) <> '')  then
     begin
-      searchedHead := SearchData(head, EditSearch.Text, CmbBxSearchParam.ItemIndex);
+      changedHead := SearchData(changedHead, EditSearch.Text, CmbBxSearchParam.ItemIndex);
 
-      if searchedHead = nil then
+      if changedHead = nil then
       begin
         FlowPanelPics.Margins.Top := 500;
         FlowPanelPics.Height := PanelSideBar.Height;
@@ -606,7 +697,7 @@ begin
       else
         FlowPanelPics.ShowCaption := False;
 
-      ReCreateAllPanels(searchedHead);
+      ReCreateAllPanels(changedHead);
     end;
   end;
 
@@ -656,9 +747,9 @@ begin
 
   if (CmbBxFilter.Text <> '') and (CmbBxFiltVal.Text <> '') then
   begin
-    searchedHead := SearchData(head, IntToStr(CmbBxFiltVal.ItemIndex), CmbBxFilter.ItemIndex+11);
+    changedHead := SearchData(changedHead, IntToStr(CmbBxFiltVal.ItemIndex), CmbBxFilter.ItemIndex+11);
 
-    ReCreateAllPanels(searchedHead);
+    ReCreateAllPanels(changedHead);
   end;
 
 end;
@@ -677,12 +768,12 @@ begin
 
   Window := TFBigPic.Create(nil);
   try
-    FBigPic.header := head;
+    FBigPic.header := changedHead;
 
     LabelToSearch := TLabel(TPanel(TImage(Sender).Parent).Controls[1]).Caption;
-    FBigPic.PrevPicInfo := SearchPrevTitle(head, LabelToSearch);
+    FBigPic.PrevPicInfo := SearchPrevTitle(changedHead, LabelToSearch);
 
-    if (FBigPic.PrevPicInfo <> head) or (LabelToSearch <> head.data.title) then
+    if (FBigPic.PrevPicInfo <> changedHead) or (LabelToSearch <> changedHead.data.title) then
       FBigPic.PicInfo := FBigPic.PrevPicInfo^.Next
     else
       FBigPic.PicInfo := FBigPic.PrevPicInfo;
@@ -746,7 +837,16 @@ begin
   CmbBxSortDir.Items.Add('По убыванию');
 
 
+  ChangedHead := CopyList(head);
 
+
+end;
+
+procedure TFGallery.FormKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+ if Key = VK_ESCAPE then
+    Close;
 end;
 
 procedure TFGallery.FormResize(Sender: TObject);
@@ -758,25 +858,6 @@ begin
   currNumOfPics := FlowPanelPics.ControlCount;
   if FlowPanelPics.Width >= 210 then
     FlowPanelPics.Height := Max(270*(currNumOfPics div (FlowPanelPics.Width div 210) + 1), PanelSideBar.Height);
-
-end;
-
-procedure TFGallery.OpenFileClick(Sender: TObject);
-Var
-    GalleryFile: TextFile;
-begin
-    If OpenDialog1.Execute() Then
-    begin
-      AssignFile(GalleryFile, OpenDialog1.Files[0]);
-      Try
-        Reset(GalleryFile);
-      Finally
-        CloseFile(GalleryFile);
-      End;
-    end;
-
-
-
 
 end;
 

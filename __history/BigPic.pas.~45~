@@ -43,19 +43,25 @@ type
     MemoUsrCmm: TMemo;
     MenuAccept: TMenuItem;
     MenuCancel: TMenuItem;
+    MenuCreatePic: TMenuItem;
+    MenuRejectPic: TMenuItem;
     procedure FormActivate(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure MenuEditPicClick(Sender: TObject);
     procedure MenuAcceptClick(Sender: TObject);
     procedure MenuCancelClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
-    procedure showHideMemo(Sender: TObject; status: Boolean);
-    procedure showHideMenu(Sender: TObject; EditDeleteStatus, acceptCancelStatus: Boolean);
+    procedure showHideMemo(status: Boolean);
+    procedure showHideMenu(EditDeleteStatus, acceptCancelStatus: Boolean; CreateRejectStatus: Boolean);
     procedure FormResize(Sender: TObject);
     procedure CmbBxUserRateChange(Sender: TObject);
     procedure ChkBxFavouriteClick(Sender: TObject);
     procedure MenuDeletePicClick(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure FormShortCut(var Msg: TWMKey; var Handled: Boolean);
+    procedure MenuRejectPicClick(Sender: TObject);
+    procedure MenuCreatePicClick(Sender: TObject);
+    procedure updatePicInfo(var picToUpdate: PPicElem);
 
   private
 
@@ -102,9 +108,7 @@ begin
   Image.Top := (PanelPic.ClientHeight - Image.Height) div 2;
 end;
 
-
-
-procedure TFBigPic.showHideMemo(Sender: TObject; status: Boolean);
+procedure TFBigPic.showHideMemo(status: Boolean);
 begin
 
   MemoTitle.Visible := status;
@@ -118,7 +122,7 @@ begin
 
 end;
 
-procedure TFBigPic.showHideMenu(Sender: TObject; EditDeleteStatus: Boolean; acceptCancelStatus: Boolean);
+procedure TFBigPic.showHideMenu(EditDeleteStatus: Boolean; acceptCancelStatus: Boolean; CreateRejectStatus: Boolean);
 begin
 
   if EditDeleteStatus = False then
@@ -135,6 +139,8 @@ begin
     MenuEditPic.Visible := EditDeleteStatus;
     MenuDeletePic.Visible := EditDeleteStatus;
   end;
+  MenuCreatePic.Visible :=  CreateRejectStatus;
+  MenuRejectPic.Visible := CreateRejectStatus;
 
 end;
 
@@ -145,7 +151,7 @@ end;
 
 procedure TFBigPic.CmbBxUserRateChange(Sender: TObject);
 begin
-  PicInfo.data.userRate := StrToInt(CmbBxUserRate.Text);
+  PicInfo.data.userRate := (CmbBxUserRate.ItemIndex);
 end;
 
 procedure TFBigPic.FormActivate(Sender: TObject);
@@ -186,8 +192,8 @@ end;
 procedure TFBigPic.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
 
-  showHideMemo(Self, False);
-  showHideMenu(Self, True, False);
+  showHideMemo(False);
+  showHideMenu(True, False, False);
 
 
 end;
@@ -219,61 +225,90 @@ begin
     LoadImageToFitPanel(PanelPic, ImageItself, PicInfo.data.imgBuffer, Margin);
 end;
 
-procedure TFBigPic.MenuAcceptClick(Sender: TObject);
+procedure TFBigPic.FormShortCut(var Msg: TWMKey; var Handled: Boolean);
 begin
+  If Msg.CharCode = VK_ESCAPE Then
+    Close;
+end;
 
+procedure TFBigPic.updatePicInfo(var picToUpdate: PPicElem);
+begin
   // save info from memos
-  PicInfo.data.title := MemoTitle.Text;
-  PicInfo.data.YearOfStart := StrToInt(Copy(MemoYears.Text, 1, 4));
-  PicInfo.data.YearOfEnd := StrToInt(Copy(MemoYears.Text, 8, 11));
-  PicInfo.data.yearsOfWork := PicInfo.data.yearOfEnd - PicInfo.data.yearOfStart;
-  PicInfo.data.genre := MemoGenre.Text;
-  PicInfo.data.theme := MemoTheme.Text;
-  PicInfo.data.materials := MemoMats.Text;
-  PicInfo.data.place := MemoPlace.Text;
-  PicInfo.data.shortDescr := MemoDescr.Text;
-  PicInfo.data.userComment := MemoUsrCmm.Text;
+  picToUpdate.data.title := MemoTitle.Text;
+  picToUpdate.data.YearOfStart := StrToInt(Copy(MemoYears.Text, 1, 4));
+  picToUpdate.data.YearOfEnd := StrToInt(Copy(MemoYears.Text, 8, 11));
+  picToUpdate.data.yearsOfWork := PicInfo.data.yearOfEnd - PicInfo.data.yearOfStart;
+  picToUpdate.data.genre := MemoGenre.Text;
+  picToUpdate.data.theme := MemoTheme.Text;
+  picToUpdate.data.materials := MemoMats.Text;
+  picToUpdate.data.place := MemoPlace.Text;
+  picToUpdate.data.shortDescr := MemoDescr.Text;
+  picToUpdate.data.userComment := MemoUsrCmm.Text;
 
 
   // update labels from changed .data
-  LabelFieldTitle.Caption := PicInfo.data.title;
-  LabelFieldYears.Caption := intToStr(PicInfo.data.yearOfStart) + ' – ' + IntToStr(PicInfo.data.yearOfEnd) + ' (' + IntToStr(PicInfo.data.yearsOfWork) + ')';
-  LabelFieldGenre.Caption := PicInfo.data.genre;
-  LabelFieldTheme.Caption := PicInfo.data.theme;
-  LabelFieldMats.Caption := PicInfo.data.materials;
-  LabelFieldPlace.Caption := PicInfo.data.place;
-  LabelFieldDescr.Caption := PicInfo.data.shortDescr;
-  ChkBxFavourite.Checked := PicInfo.data.isFavourite;
-  LabelFieldUsrCmm.Caption := PicInfo.data.userComment;
-  CmbBxUserRate.Text := IntToStr(PicInfo.data.userRate);
+  LabelFieldTitle.Caption := picToUpdate.data.title;
+  LabelFieldYears.Caption := intToStr(picToUpdate.data.yearOfStart) + ' – ' + IntToStr(picToUpdate.data.yearOfEnd) + ' (' + IntToStr(picToUpdate.data.yearsOfWork) + ')';
+  LabelFieldGenre.Caption := picToUpdate.data.genre;
+  LabelFieldTheme.Caption := picToUpdate.data.theme;
+  LabelFieldMats.Caption := picToUpdate.data.materials;
+  LabelFieldPlace.Caption := picToUpdate.data.place;
+  LabelFieldDescr.Caption := picToUpdate.data.shortDescr;
+  ChkBxFavourite.Checked := picToUpdate.data.isFavourite;
+  LabelFieldUsrCmm.Caption := picToUpdate.data.userComment;
+  CmbBxUserRate.Text := IntToStr(picToUpdate.data.userRate);
+end;
+
+procedure TFBigPic.MenuAcceptClick(Sender: TObject);
+begin
+
+  updatePicInfo(PicInfo);
 
 
-  showHideMemo(self, false);
+  showHideMemo(False);
 
-  showHideMenu(Self, True, False);
+  showHideMenu(True, False, False);
 
 
 end;
 
 procedure TFBigPic.MenuCancelClick(Sender: TObject);
 begin
-  showHideMemo(self, false);
-  showHideMenu(Self, True, False);
+  showHideMemo(False);
+  showHideMenu(True, False, False);
+end;
+
+procedure TFBigPic.MenuCreatePicClick(Sender: TObject);
+begin
+
+  updatePicInfo(PicInfo);
+  FGallery.AddNewNode(PicInfo, FGallery.changedHead);
+  FGallery.AddNewNode(PicInfo, FGallery.head);
+end;
+
+procedure TFBigPic.MenuRejectPicClick(Sender: TObject);
+begin
+
+
+  ShowHideMemo(False);
+  ShowHideMenu(True, False, False);
 end;
 
 procedure TFBigPic.MenuDeletePicClick(Sender: TObject);
 var
   Temp: PPicElem;
 begin
-
- FGallery.DeleteNode(PicInfo, FGallery.head);
+  FGallery.DeleteNode(PicInfo, FGallery.changedHead);
+  FGallery.DeleteNode(PicInfo, FGallery.head);
+  Close;
+  FGallery.ReCreateAllPanels(FGallery.ChangedHead);
 
 end;
 
 procedure TFBigPic.MenuEditPicClick(Sender: TObject);
 begin
 
-  showHideMenu(Self, False, True);
+  showHideMenu(False, True, False);
 
   // to memos,  add text to edit
   MemoTitle.Text := LabelFieldTitle.Caption;
@@ -286,7 +321,7 @@ begin
   MemoUsrCmm.Text := LabelFieldUsrCmm.Caption;
 
 
-  showHideMemo(self, true);
+  showHideMemo(True);
 
 
 

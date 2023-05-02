@@ -35,7 +35,6 @@ object FGallery: TFGallery
     ParentColor = False
     TabOrder = 0
     OnMouseWheel = ScrollBoxPicsMouseWheel
-    ExplicitLeft = -3
     object FlowPanelPics: TFlowPanel
       Left = 0
       Top = 0

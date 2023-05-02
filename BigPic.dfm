@@ -56,7 +56,6 @@ object FBigPic: TFBigPic
     ParentFont = False
     ShowCaption = False
     TabOrder = 1
-    ExplicitLeft = 657
     object LabelFieldYears: TLabel
       AlignWithMargins = True
       Left = 22
@@ -418,8 +417,9 @@ object FBigPic: TFBigPic
     object CmbBxUserRate: TComboBox
       Left = 264
       Top = 703
-      Width = 120
+      Width = 169
       Height = 35
+      Style = csDropDownList
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -20
@@ -440,7 +440,7 @@ object FBigPic: TFBigPic
       Font.Name = 'Montserrat'
       Font.Style = []
       Lines.Strings = (
-        'MemoTitle')
+        #1041#1077#1079' '#1085#1072#1079#1074#1072#1085#1080#1103)
       ParentFont = False
       TabOrder = 2
       Visible = False
@@ -456,7 +456,7 @@ object FBigPic: TFBigPic
       Font.Name = 'Montserrat'
       Font.Style = []
       Lines.Strings = (
-        'Memo1')
+        '0000 - 0000')
       ParentFont = False
       TabOrder = 3
       Visible = False
@@ -472,7 +472,7 @@ object FBigPic: TFBigPic
       Font.Name = 'Montserrat'
       Font.Style = []
       Lines.Strings = (
-        'Memo1')
+        #1053#1077#1090)
       ParentFont = False
       TabOrder = 4
       Visible = False
@@ -488,7 +488,7 @@ object FBigPic: TFBigPic
       Font.Name = 'Montserrat'
       Font.Style = []
       Lines.Strings = (
-        'Memo1')
+        #1053#1077#1090)
       ParentFont = False
       TabOrder = 5
       Visible = False
@@ -504,7 +504,7 @@ object FBigPic: TFBigPic
       Font.Name = 'Montserrat'
       Font.Style = []
       Lines.Strings = (
-        'Memo1')
+        #1053#1077#1090)
       ParentFont = False
       TabOrder = 6
       Visible = False
@@ -520,7 +520,7 @@ object FBigPic: TFBigPic
       Font.Name = 'Montserrat'
       Font.Style = []
       Lines.Strings = (
-        'Memo1')
+        #1053#1077#1080#1079#1074#1077#1089#1090#1085#1086)
       ParentFont = False
       TabOrder = 7
       Visible = False
@@ -536,7 +536,7 @@ object FBigPic: TFBigPic
       Font.Name = 'Montserrat'
       Font.Style = []
       Lines.Strings = (
-        'Memo1')
+        #1054#1087#1080#1089#1072#1085#1080#1077' '#1086#1090#1089#1091#1090#1089#1090#1074#1091#1077#1090)
       ParentFont = False
       TabOrder = 8
       Visible = False
@@ -552,7 +552,8 @@ object FBigPic: TFBigPic
       Font.Name = 'Montserrat'
       Font.Style = []
       Lines.Strings = (
-        'Memo1')
+        #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081' '
+        #1086#1090#1089#1091#1090#1089#1090#1074#1091#1077#1090)
       ParentFont = False
       TabOrder = 9
       Visible = False
