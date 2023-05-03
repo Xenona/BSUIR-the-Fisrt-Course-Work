@@ -285,12 +285,16 @@ begin
 
   updatePicInfo(PicInfo);
   FGallery.AddNewNode(PicInfo, FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][1]);
+  FGallery.ReCreateAllPanels(FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][1]);
+  Close;
 //  FGallery.AddNewNode(PicInfo, FGallery.head);
 end;
 
 procedure TFBigPic.MenuRejectPicClick(Sender: TObject);
 begin
 
+  Close;
+  Dispose(FGallery.newUploadNode);
 
   ShowHideMemo(False);
   ShowHideMenu(True, False, False);

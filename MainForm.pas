@@ -78,6 +78,7 @@ type
 //     changedHead: PPicElem;
 
      headsEnum: TEnumAlbs;
+       newUploadNode: PPicElem;
 
 
      PicInfo: TData;
@@ -569,26 +570,49 @@ begin
   ActiveControl := PanelSideBar ; // Set focus to form
 end;
 
+function GenerateShortHash: string;
+var
+  randNum: Integer;
+  nowDateTime: TDateTime;
+begin
+  Randomize;
+  randNum := Random(1000); // generate a random number between 0 and 999
+  nowDateTime := Now; // get the current date and time
+  Result := FormatDateTime('yymmddhhnnss', nowDateTime) + IntToStr(randNum);
+end;
+
 procedure TFGallery.MenuUploadClick(Sender: TObject);
 var
-  newNode: PPicElem;
   pic: TPicture;
+  UploadWindow: TFBigPic;
+  uniPostfix: string;
+  defaultTitle: string;
 begin
 
-  new(newNode);
-  FillChar(newNode.data, SizeOf(newNode.data), 0);
+  new(newUploadNode);
+  FillChar(newUploadNode.data, SizeOf(newUploadNode.data), 0);
   if OpenPic.Execute() then
   begin
-    newNode.data.imgBuffer := TPicture.Create;
-    NewNode.data.imgBuffer.LoadFromFile(OpenPic.FileName);
+    newUploadNode.data.imgBuffer := TPicture.Create;
+    newUploadNode.data.imgBuffer.LoadFromFile(OpenPic.FileName);
   end;
 
-  FBigPic.showHideMenu(False, False, True);
-  FBigPic.showHideMemo(True);
+  try
 
-  FBigPic.PicInfo := newNode;
+    UploadWindow := TFBigPic.Create(nil);
+    UploadWindow.showHideMenu(False, False, True);
+    UploadWindow.showHideMemo(True);
 
-  FBigPic.Show;
+    uniPostfix := GenerateShortHash();
+    defaultTitle := UploadWindow.MemoTitle.Text;
+    UploadWindow.MemoTitle.Text := Copy(defaultTitle, 1, length(defaultTitle)-1)  + Copy(uniPostfix, length(uniPostfix)-6, length(uniPostfix));
+
+    UploadWindow.PicInfo := newUploadNode;
+
+    UploadWindow.ShowModal;
+  finally
+    UploadWindow.Free;
+  end;
 end;
 
 // for both of sort cmbBxes
