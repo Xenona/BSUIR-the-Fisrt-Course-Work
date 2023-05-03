@@ -419,7 +419,6 @@ object FBigPic: TFBigPic
       Top = 703
       Width = 169
       Height = 35
-      Style = csDropDownList
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -20

@@ -139,6 +139,7 @@ object FGallery: TFGallery
         ParentFont = False
         TabOrder = 0
         Text = ' '
+        OnChange = CmbBxAlbumChange
       end
     end
     object PanelFilter: TPanel

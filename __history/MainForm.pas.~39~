@@ -10,6 +10,7 @@ uses
 
 type
   TSortMethod = function(elem1, elem2: TData; direction: integer): integer;
+  TEnumAlbs = array of array of PPicElem;
 
 
   TFGallery = class(TForm)
@@ -61,8 +62,13 @@ type
     procedure FormShortCut(var Msg: TWMKey; var Handled: Boolean);
     procedure MenuUploadClick(Sender: TObject);
     procedure ReCreateAllPanels(headToUse: PPicElem);
-
-//    procedure CreatePicture(var ImgToCreate: TImage; const PanelParent: TPanel; const APicLink: TPicture; const AMargin: Integer);
+    procedure CreatePicture(var ImgToCreate: TImage; const PanelParent: TPanel; const APicLink: TPicture; const AMargin: Integer);
+    procedure AddNewNode(elem: PPicElem; var head: PPicElem);
+    procedure UploadAlbums();
+    procedure FetchAllPics(var Head: PPicElem; const filePath: String);
+    function CopyList(head: PPicElem): PPicElem;
+    procedure LoadImages(Var PicList: PPicElem);
+    procedure CmbBxAlbumChange(Sender: TObject);
   private
     { Private declarations }
   public
@@ -70,10 +76,13 @@ type
      sortedHead: PPicElem;
      searchedHead: PPicElem;
      changedHead: PPicElem;
+
+     headsEnum: TEnumAlbs;
+
+
      PicInfo: TData;
 
 
-     procedure CreatePicture(var ImgToCreate: TImage; const PanelParent: TPanel; const APicLink: TPicture; const AMargin: Integer);
   end;
 
 var
@@ -89,6 +98,19 @@ implementation
 // --------------------------------------------------------------------------------
 // VISUAL section BEGIN
 
+procedure TFGallery.AddNewNode(elem: PPicElem; var head: PPicElem);
+begin
+  if (head = nil) then
+  begin
+    elem^.Next := nil;
+    head := elem;
+  end
+  else
+  begin
+    elem^.Next := head;
+    head := elem;
+  end;
+end;
 
 
 
@@ -127,9 +149,150 @@ begin
 
 end;
 
+//
+//procedure TFGallery.uploadAlbums();
+//var
+//  AppPath: string;
+//  enumPath: string;
+//  enumFile: textFile;
+//  currfilename: string;
+//  countFiles: integer;
+//  i: Integer;
+//begin
+//
+//  AppPath := ExtractFilePath(Application.ExeName);
+//  enumPath := AppPath + 'albums\enumerate.albums';
+//
+//  try
+//    AssignFile(enumFile, enumPath);
+//    countFiles := 0;
+//    SetLength(headsEnum, 0);
+//    Reset(enumFile);
+//    while not EoF(enumFile) do
+//    begin
+//      readln(enumFile, currfilename );
+//
+//      // Create a new element in the array
+//      SetLength(headsEnum, Length(headsEnum) + 1);
+//      // Initialize the new element with an array of two pointers
+//      SetLength(headsEnum[High(headsEnum)], 2);
+//
+//      // Get the list of images
+//      FetchAllPics(headsEnum[High(headsEnum)][0], AppPath + '\albums\' +  currfilename);
+//      LoadImages(head);
+//
+//      // Create a copy of the list
+//      headsEnum[High(headsEnum)][1] := CopyList(headsEnum[High(headsEnum)][0]);
+//
+//
+//      CmbBxAlbum.Items.Add(Copy(currfilename, 1, Pos(currfilename, '.')-1));
+//
+//  end;
+//
+//  finally
+//
+//    CloseFile(enumFile);
+//  end;
+//end;
+//
+//
+//procedure TFGallery.uploadAlbums();
+//var
+//  AppPath: string;
+//  enumPath: string;
+//  enumFile: textFile;
+//  currfilename: string;
+//  countFiles: integer;
+//  i: Integer;
+//begin
+//
+//  AppPath := ExtractFilePath(Application.ExeName);
+//  enumPath := AppPath + 'albums\enumerate.albums';
+//
+//  try
+//    AssignFile(enumFile, enumPath);
+//    countFiles := 0;
+//    SetLength(headsEnum, 0);
+//    Reset(enumFile);
+//    while not EoF(enumFile) do
+//    begin
+//      readln(enumFile, currfilename );
+//
+//      // Create a new element in the array
+//      SetLength(headsEnum, Length(headsEnum) + 1);
+//      // Initialize the new element with an array of two pointers
+//      SetLength(headsEnum[High(headsEnum)], 2);
+//
+//      // Get the list of images
+//      FetchAllPics(headsEnum[High(headsEnum)][0], currfilename);
+//      LoadImages(headsEnum[High(headsEnum)][0]);
+//
+//      // Create a copy of the list
+//      headsEnum[High(headsEnum)][1] := CopyList(headsEnum[High(headsEnum)][0]);
+//
+//
+//      CmbBxAlbum.Items.Add(Copy(currfilename, 1, Pos(currfilename, '.')-1));
+//
+//  end;
+//
+//  finally
+//
+//    CloseFile(enumFile);
+//  end;
+//end;
+
+
+
+procedure TFGallery.uploadAlbums();
+const
+  enumerated: string = 'enumerate.albums';
+var
+  AppPath: string;
+  enumPath: string;
+  enumFile: textFile;
+  currFile: string;
+
+
+begin
+
+  AppPath := ExtractFilePath(Application.ExeName);
+  enumPath := AppPath + 'albums\';
+
+  AssignFile(enumFile, enumPath + enumerated);
+
+  SetLength(headsEnum, 0);
+  Reset(enumFile);
+  while not EoF(enumFile) do
+  begin
+    readln(enumFile, currFile);
+
+    // Create a new element in the array
+    SetLength(headsEnum, Length(headsEnum) + 1);
+    // Initialize the new element with an array of two pointers
+    SetLength(headsEnum[High(headsEnum)], 2);
+
+    // Get the list of images
+    FetchAllPics(headsEnum[High(headsEnum)][0], enumPath + currFile);
+    LoadImages(headsEnum[High(headsEnum)][0]);
+
+    // Create a copy of the list
+    headsEnum[High(headsEnum)][1] := CopyList(headsEnum[High(headsEnum)][0]);
+
+
+
+
+
+    CmbBxAlbum.Items.Add(Copy(currFile, 1, Pos('.', currFile)-1 ));
+
+  end;
+
+  CmbBxAlbum.ItemIndex := 0;
+    CloseFile(enumFile);
+end;
+
 
 // to fetch all pics from dataset.pic file
-procedure FetchAllPics(var head: PPicElem);
+procedure TFGallery.FetchAllPics(var head: PPicElem; const filePath: string);
 var
   readPicList: PPicElem;
   storageFile: file of Tdata;
@@ -138,7 +301,7 @@ var
 begin
 
   // open a source file
-  Reset(storageFile, 'dataset.pics');
+  Reset(storageFile, filePath);
 
   // creation of list of pics
   new(readPicList);
@@ -175,13 +338,14 @@ begin
 end;
 
 // load imgs to buffer of aech record
-procedure LoadImages(PicList: PPicElem);
+procedure TFGallery.LoadImages(Var PicList: PPicElem);
 var
   SearchRec: TSearchRec;
   FileName: string;
   BasePath: string;
   breakFlag: Boolean;
   CurrentPic: PPicElem;
+  resPath: string;
 begin
   BasePath := ExtractFilePath(ParamStr(0)) + 'src\';
   if FindFirst(BasePath + '*.bmp', faAnyFile, SearchRec) = 0 then
@@ -198,7 +362,8 @@ begin
           begin
             CurrentPic^.data.imgBuffer := TPicture.Create;
             // Load the image into the buffer
-            CurrentPic^.data.imgBuffer.LoadFromFile(BasePath + FileName);
+            resPath := BasePath+FileName;
+            CurrentPic^.data.imgBuffer.LoadFromFile(resPath);
             breakFlag := True;
           end;
           CurrentPic := CurrentPic^.Next;
@@ -379,7 +544,7 @@ begin
   result := slow;
 end;
 
-function CopyList(head: PPicElem): PPicElem;
+function TFGallery.CopyList(head: PPicElem): PPicElem;
 var
   current, newHead, newNode: PPicElem;
 begin
@@ -412,7 +577,7 @@ var
 begin
   isExit := false;
 
-  tempHead := CopyList(head);
+  tempHead := FGallery.CopyList(head);
 
   if (tempHead = nil) or (tempHead^.Next = nil) then
   begin
@@ -497,11 +662,23 @@ begin
 end;
 
 procedure TFGallery.MenuUploadClick(Sender: TObject);
+var
+  newNode: PPicElem;
+  pic: TPicture;
 begin
-  if OpenPic.Execute then
-    FBigPic.ImageItself.Picture.LoadFromFile(OpenPic.FileName);
+
+  new(newNode);
+  FillChar(newNode.data, SizeOf(newNode.data), 0);
+  if OpenPic.Execute() then
+  begin
+    newNode.data.imgBuffer := TPicture.Create;
+    NewNode.data.imgBuffer.LoadFromFile(OpenPic.FileName);
+  end;
 
   FBigPic.showHideMenu(False, False, True);
+  FBigPic.showHideMemo(True);
+
+  FBigPic.PicInfo := newNode;
 
   FBigPic.Show;
 end;
@@ -682,6 +859,11 @@ end;
 // FILTER section BEGIN
 //---------------------------------------------------------------------------------
 
+procedure TFGallery.CmbBxAlbumChange(Sender: TObject);
+begin
+ RecreateAllPanels(headsEnum[CmbBxAlbum.ItemIndex][1])
+end;
+
 procedure TFGallery.CmbBxFilterChange(Sender: TObject);
 begin
 
@@ -736,23 +918,26 @@ procedure TFGallery.ShowBigPic(Sender: TObject);
 var
    Window: TFBigPic;
    LabelToSearch: String;
+   pic: TPicture;
 begin
 
   Window := TFBigPic.Create(nil);
   try
-    FBigPic.header := changedHead;
+    Window.header := changedHead;
 
     LabelToSearch := TLabel(TPanel(TImage(Sender).Parent).Controls[1]).Caption;
-    FBigPic.PrevPicInfo := SearchPrevTitle(changedHead, LabelToSearch);
+    Window.PrevPicInfo := SearchPrevTitle(changedHead, LabelToSearch);
 
-    if (FBigPic.PrevPicInfo <> changedHead) or (LabelToSearch <> changedHead.data.title) then
-      FBigPic.PicInfo := FBigPic.PrevPicInfo^.Next
+    if (Window.PrevPicInfo <> changedHead) or (LabelToSearch <> changedHead.data.title) then
+      Window.PicInfo := Window.PrevPicInfo^.Next
     else
-      FBigPic.PicInfo := FBigPic.PrevPicInfo;
+      Window.PicInfo := Window.PrevPicInfo;
 
-    FBigPic.ShowModal;
+    pic := TImage(Sender).Picture;
+
+    Window.Show;
   finally
-    Window.Free;
+//    Window.Free;
   end;
 
 
@@ -764,9 +949,11 @@ end;
 procedure TFGallery.FormCreate(Sender: TObject);
 begin
 
-  FetchAllPics(head);
-  LoadImages(head);
-  ReCreateAllPanels(head);
+//  FetchAllPics(head, './albums/dataset.pics');
+
+//  LoadImages(head);
+    uploadAlbums();
+  ReCreateAllPanels(headsEnum[0][0]);
 
   // search params
   CmbBxSearchParam.Items.Add('');

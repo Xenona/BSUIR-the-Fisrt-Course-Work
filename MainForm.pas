@@ -68,13 +68,14 @@ type
     procedure FetchAllPics(var Head: PPicElem; const filePath: String);
     function CopyList(head: PPicElem): PPicElem;
     procedure LoadImages(Var PicList: PPicElem);
+    procedure CmbBxAlbumChange(Sender: TObject);
   private
     { Private declarations }
   public
-     head: PPicElem;
-     sortedHead: PPicElem;
-     searchedHead: PPicElem;
-     changedHead: PPicElem;
+//     head: PPicElem;
+//     sortedHead: PPicElem;
+//     searchedHead: PPicElem;
+//     changedHead: PPicElem;
 
      headsEnum: TEnumAlbs;
 
@@ -149,50 +150,54 @@ begin
 end;
 
 
+
 procedure TFGallery.uploadAlbums();
+const
+  enumerated: string = 'enumerate.albums';
 var
   AppPath: string;
   enumPath: string;
   enumFile: textFile;
-  currfilename: string;
-  countFiles: integer;
-  i: Integer;
+  currFile: string;
+
+
 begin
 
   AppPath := ExtractFilePath(Application.ExeName);
-  enumPath := AppPath + 'albums\enumerate.albums';
+  enumPath := AppPath + 'albums\';
 
-  try
-    AssignFile(enumFile, enumPath);
-    countFiles := 0;
-    SetLength(headsEnum, 0);
-    Reset(enumFile);
-    while not EoF(enumFile) do
-    begin
-      readln(enumFile, currfilename );
+  AssignFile(enumFile, enumPath + enumerated);
 
-      // Create a new element in the array
-      SetLength(headsEnum, Length(headsEnum) + 1);
-      // Initialize the new element with an array of two pointers
-      SetLength(headsEnum[High(headsEnum)], 2);
+  SetLength(headsEnum, 0);
+  Reset(enumFile);
+  while not EoF(enumFile) do
+  begin
+    readln(enumFile, currFile);
 
-      // Get the list of images
-      FetchAllPics(headsEnum[High(headsEnum)][0], AppPath + '\albums\' +  currfilename);
-      LoadImages(headsEnum[High(headsEnum)][0]);
+    // Create a new element in the array
+    SetLength(headsEnum, Length(headsEnum) + 1);
+    // Initialize the new element with an array of two pointers
+    SetLength(headsEnum[High(headsEnum)], 2);
 
-      // Create a copy of the list
-      headsEnum[High(headsEnum)][1] := CopyList(headsEnum[High(headsEnum)][0]);
+    // Get the list of images
+    FetchAllPics(headsEnum[High(headsEnum)][0], enumPath + currFile);
+    LoadImages(headsEnum[High(headsEnum)][0]);
+
+    // Create a copy of the list
+    headsEnum[High(headsEnum)][1] := CopyList(headsEnum[High(headsEnum)][0]);
 
 
-      CmbBxAlbum.Items.Add(Copy(currfilename, 1, Pos(currfilename, '.')-1));
+
+
+
+    CmbBxAlbum.Items.Add(Copy(currFile, 1, Pos('.', currFile)-1 ));
 
   end;
 
-  finally
-
+  CmbBxAlbum.ItemIndex := 0;
     CloseFile(enumFile);
-  end;
 end;
+
 
 // to fetch all pics from dataset.pic file
 procedure TFGallery.FetchAllPics(var head: PPicElem; const filePath: string);
@@ -248,6 +253,7 @@ var
   BasePath: string;
   breakFlag: Boolean;
   CurrentPic: PPicElem;
+  resPath: string;
 begin
   BasePath := ExtractFilePath(ParamStr(0)) + 'src\';
   if FindFirst(BasePath + '*.bmp', faAnyFile, SearchRec) = 0 then
@@ -264,7 +270,8 @@ begin
           begin
             CurrentPic^.data.imgBuffer := TPicture.Create;
             // Load the image into the buffer
-            CurrentPic^.data.imgBuffer.LoadFromFile(BasePath + FileName);
+            resPath := BasePath+FileName;
+            CurrentPic^.data.imgBuffer.LoadFromFile(resPath);
             breakFlag := True;
           end;
           CurrentPic := CurrentPic^.Next;
@@ -379,7 +386,7 @@ end;
 
 procedure TFGallery.MenuResetClick(Sender: TObject);
 begin
-  ReCreateAllPanels(head);
+  ReCreateAllPanels(headsEnum[CmbBxAlbum.ItemIndex][0]);
 end;
 // VISUAL section END
 //---------------------------------------------------------------------------------
@@ -600,43 +607,43 @@ begin
     case CmbBxSort.ItemIndex of
       1: // title
       begin
-        changedHead := MergeSort(changedHead, sortDirection, cmpTitle);
-        ReCreateAllPanels(changedHead);
+        headsEnum[CmbBxAlbum.ItemIndex][1] := MergeSort(headsEnum[CmbBxAlbum.ItemIndex][1], sortDirection, cmpTitle);
+        ReCreateAllPanels(headsEnum[CmbBxAlbum.ItemIndex][1]);
       end;
       2: // year of start
       begin
-        changedHead := MergeSort(changedHead, sortDirection, cmpYearStart);
-        ReCreateAllPanels(changedHead);
+        headsEnum[CmbBxAlbum.ItemIndex][1] := MergeSort(headsEnum[CmbBxAlbum.ItemIndex][1], sortDirection, cmpYearStart);
+        ReCreateAllPanels(headsEnum[CmbBxAlbum.ItemIndex][1]);
       end;
       3: // year of end
       begin
-        changedHead := MergeSort(changedHead, sortDirection, cmpYearEnd);
-        ReCreateAllPanels(changedHead);
+        headsEnum[CmbBxAlbum.ItemIndex][1] := MergeSort(headsEnum[CmbBxAlbum.ItemIndex][1], sortDirection, cmpYearEnd);
+        ReCreateAllPanels(headsEnum[CmbBxAlbum.ItemIndex][1]);
       end;
       4: // years of work
       begin
-        changedHead := MergeSort(changedHead, sortDirection, cmpYearsWork);
-        ReCreateAllPanels(changedHead);
+        headsEnum[CmbBxAlbum.ItemIndex][1] := MergeSort(headsEnum[CmbBxAlbum.ItemIndex][1], sortDirection, cmpYearsWork);
+        ReCreateAllPanels(headsEnum[CmbBxAlbum.ItemIndex][1]);
       end;
       5: // genre
       begin
-        changedHead := MergeSort(changedHead, sortDirection, cmpGenre);
-        ReCreateAllPanels(changedHead);
+        headsEnum[CmbBxAlbum.ItemIndex][1] := MergeSort(headsEnum[CmbBxAlbum.ItemIndex][1], sortDirection, cmpGenre);
+        ReCreateAllPanels(headsEnum[CmbBxAlbum.ItemIndex][1]);
       end;
       6: // theme
       begin
-        changedHead := MergeSort(changedHead, sortDirection, cmpTheme);
-        ReCreateAllPanels(changedHead);
+        headsEnum[CmbBxAlbum.ItemIndex][1] := MergeSort(headsEnum[CmbBxAlbum.ItemIndex][1], sortDirection, cmpTheme);
+        ReCreateAllPanels(headsEnum[CmbBxAlbum.ItemIndex][1]);
       end;
       7: // place
       begin
-        changedHead := MergeSort(changedHead, sortDirection, cmpPlace);
-        ReCreateAllPanels(changedHead);
+        headsEnum[CmbBxAlbum.ItemIndex][1] := MergeSort(headsEnum[CmbBxAlbum.ItemIndex][1], sortDirection, cmpPlace);
+        ReCreateAllPanels(headsEnum[CmbBxAlbum.ItemIndex][1]);
       end;
       8: // user rate
       begin
-        changedHead := MergeSort(changedHead, sortDirection, cmpUserRate);
-        ReCreateAllPanels(changedHead);
+        headsEnum[CmbBxAlbum.ItemIndex][1] := MergeSort(headsEnum[CmbBxAlbum.ItemIndex][1], sortDirection, cmpUserRate);
+        ReCreateAllPanels(headsEnum[CmbBxAlbum.ItemIndex][1]);
       end;
     end;
   end;
@@ -736,9 +743,9 @@ begin
   begin
     if (CmbBxSearchParam.Text <> '') and (Trim(EditSearch.Text) <> '')  then
     begin
-      changedHead := SearchData(changedHead, EditSearch.Text, CmbBxSearchParam.ItemIndex);
+      headsEnum[CmbBxAlbum.ItemIndex][1] := SearchData(headsEnum[CmbBxAlbum.ItemIndex][1], EditSearch.Text, CmbBxSearchParam.ItemIndex);
 
-      if changedHead = nil then
+      if headsEnum[CmbBxAlbum.ItemIndex][1] = nil then
       begin
         FlowPanelPics.Margins.Top := 500;
         FlowPanelPics.Height := PanelSideBar.Height;
@@ -747,7 +754,7 @@ begin
       else
         FlowPanelPics.ShowCaption := False;
 
-      ReCreateAllPanels(changedHead);
+      ReCreateAllPanels(headsEnum[CmbBxAlbum.ItemIndex][1]);
     end;
   end;
 
@@ -759,6 +766,11 @@ end;
 
 // FILTER section BEGIN
 //---------------------------------------------------------------------------------
+
+procedure TFGallery.CmbBxAlbumChange(Sender: TObject);
+begin
+ RecreateAllPanels(headsEnum[CmbBxAlbum.ItemIndex][1])
+end;
 
 procedure TFGallery.CmbBxFilterChange(Sender: TObject);
 begin
@@ -797,9 +809,9 @@ begin
 
   if (CmbBxFilter.Text <> '') and (CmbBxFiltVal.Text <> '') then
   begin
-    changedHead := SearchData(changedHead, IntToStr(CmbBxFiltVal.ItemIndex), CmbBxFilter.ItemIndex+11);
+    headsEnum[CmbBxAlbum.ItemIndex][1] := SearchData(headsEnum[CmbBxAlbum.ItemIndex][1], IntToStr(CmbBxFiltVal.ItemIndex), CmbBxFilter.ItemIndex+11);
 
-    ReCreateAllPanels(changedHead);
+    ReCreateAllPanels(headsEnum[CmbBxAlbum.ItemIndex][1]);
   end;
 
 end;
@@ -819,12 +831,12 @@ begin
 
   Window := TFBigPic.Create(nil);
   try
-    Window.header := changedHead;
+    Window.header := headsEnum[CmbBxAlbum.ItemIndex][1];
 
     LabelToSearch := TLabel(TPanel(TImage(Sender).Parent).Controls[1]).Caption;
-    Window.PrevPicInfo := SearchPrevTitle(changedHead, LabelToSearch);
+    Window.PrevPicInfo := SearchPrevTitle(headsEnum[CmbBxAlbum.ItemIndex][1], LabelToSearch);
 
-    if (Window.PrevPicInfo <> changedHead) or (LabelToSearch <> changedHead.data.title) then
+    if (Window.PrevPicInfo <> headsEnum[CmbBxAlbum.ItemIndex][1]) or (LabelToSearch <> headsEnum[CmbBxAlbum.ItemIndex][1].data.title) then
       Window.PicInfo := Window.PrevPicInfo^.Next
     else
       Window.PicInfo := Window.PrevPicInfo;
@@ -845,10 +857,11 @@ end;
 procedure TFGallery.FormCreate(Sender: TObject);
 begin
 
-//  FetchAllPics(head, 'dataset.pics');
-  uploadAlbums();
-  LoadImages(head);
-  ReCreateAllPanels(head);
+//  FetchAllPics(head, './albums/dataset.pics');
+
+//  LoadImages(head);
+    uploadAlbums();
+  ReCreateAllPanels(headsEnum[0][0]);
 
   // search params
   CmbBxSearchParam.Items.Add('');
@@ -891,7 +904,7 @@ begin
   CmbBxSortDir.Items.Add('По убыванию');
 
 
-  ChangedHead := CopyList(head);
+//  ChangedHead := CopyList(head);
 
 
 end;
