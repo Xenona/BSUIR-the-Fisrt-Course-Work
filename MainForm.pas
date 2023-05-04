@@ -11,6 +11,7 @@ uses
 type
   TSortMethod = function(elem1, elem2: TData; direction: integer): integer;
   TEnumAlbs = array of array of PPicElem;
+  TAlbumFile = file of TData;
 
 
   TFGallery = class(TForm)
@@ -46,6 +47,8 @@ type
     MenuExportAlbum: TMenuItem;
     MenuImportAlbum: TMenuItem;
     MenuCreateAlbum: TMenuItem;
+    SaveCurrPage: TSaveDialog;
+    OpenImportAlbum: TOpenDialog;
     procedure FormCreate(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -69,6 +72,9 @@ type
     function CopyList(head: PPicElem): PPicElem;
     procedure LoadImages(Var PicList: PPicElem);
     procedure CmbBxAlbumChange(Sender: TObject);
+    procedure MenuSavePageClick(Sender: TObject);
+    procedure SaveAlbumToFile(head: PPicElem; const filePath: string);
+    procedure MenuImportAlbumClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -385,10 +391,80 @@ begin
 end;
 
 
+procedure TFGallery.MenuImportAlbumClick(Sender: TObject);
+begin
+  if openImportAlbum.Execute() then
+  begin
+
+
+
+
+  end;
+
+end;
+
 procedure TFGallery.MenuResetClick(Sender: TObject);
 begin
   ReCreateAllPanels(headsEnum[CmbBxAlbum.ItemIndex][0]);
 end;
+
+procedure TFGallery.SaveAlbumToFile(head: PPicElem; const filePath: string);
+var
+  fileBeingSaved: TAlbumFile;
+  currItem: TData;
+begin
+
+  try
+    AssignFile(fileBeingSaved, FilePath+'.pics');
+    ReWrite(fileBeingSaved);
+
+  while head <> nil do
+  begin
+    currItem.title := head.data.title;
+    currItem.yearOfStart := head.data.yearOfStart;
+    currItem.yearOfEnd := head.data.yearOfEnd;
+    currItem.yearsOfWork := head.data.yearsOfWork;
+    currItem.genre := head.data.genre;
+    currItem.theme := head.data.theme;
+    currItem.place := head.data.place;
+    currItem.materials := head.data.materials;
+    currItem.shortDescr := head.data.shortDescr;
+    currItem.userRate := head.data.userRate;
+    currItem.userComment := head.data.userComment;
+    currItem.isToBeChanged := false;
+    currItem.isFavourite := head.data.isFavourite;
+    currItem.filename := head.data.filename;
+    currItem.imgBuffer := nil;
+
+    write(fileBeingSaved, currItem);
+
+    head := head^.Next;
+  end;
+  finally
+    CloseFile(fileBeingSaved);
+  end;
+
+
+
+
+
+end;
+
+
+procedure TFGallery.MenuSavePageClick(Sender: TObject);
+begin
+
+  if SaveCurrPage.Execute() then
+  begin
+
+    saveAlbumToFile(headsEnum[CmbBxAlbum.ItemIndex][1], SaveCurrPage.FileName);
+
+
+  end;
+
+
+end;
+
 // VISUAL section END
 //---------------------------------------------------------------------------------
 

@@ -377,9 +377,11 @@ object FGallery: TFGallery
       end
       object MenuImportAlbum: TMenuItem
         Caption = #1048#1084#1087#1086#1088#1090#1080#1088#1086#1074#1072#1090#1100' '#1072#1083#1100#1073#1086#1084' '
+        OnClick = MenuImportAlbumClick
       end
       object MenuSavePage: TMenuItem
         Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1090#1077#1082#1091#1097#1091#1102' '#1089#1090#1088#1072#1085#1080#1094#1091' '#1082#1072#1082' '#1072#1083#1100#1073#1086#1084
+        OnClick = MenuSavePageClick
       end
       object MenuExportAlbum: TMenuItem
         Caption = #1069#1082#1089#1087#1086#1088#1090#1080#1088#1086#1074#1072#1090#1100' '#1090#1077#1082#1091#1097#1080#1081' '#1072#1083#1100#1073#1086#1084
@@ -401,5 +403,13 @@ object FGallery: TFGallery
     Filter = '*.bmp'
     Left = 406
     Top = 448
+  end
+  object SaveCurrPage: TSaveDialog
+    Left = 520
+    Top = 312
+  end
+  object OpenImportAlbum: TOpenDialog
+    Left = 552
+    Top = 168
   end
 end

@@ -71,6 +71,8 @@ type
     PrevPicInfo: PPicElem;
     header: PPicElem;
 
+
+
   end;
 
 var
