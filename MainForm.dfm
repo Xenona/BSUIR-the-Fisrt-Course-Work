@@ -415,7 +415,6 @@ object FGallery: TFGallery
   end
   object FileOpenFolder: TFileOpenDialog
     FavoriteLinks = <>
-    FileName = 'C:\Users\HP\Desktop\uchebka\year1\OAIP\workingOn\sort'
     FileTypes = <>
     Options = [fdoNoChangeDir, fdoPickFolders]
     Left = 320

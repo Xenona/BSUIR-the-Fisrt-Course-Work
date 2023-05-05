@@ -452,7 +452,9 @@ begin
 
     // обновить flowPanel
     CmbBxAlbum.Text := CmbBxAlbum.Items[CmbBxAlbum.Items.Count - 1];
+    CmbBxAlbum.ItemIndex := CmbBxAlbum.Items.Count - 1;
     ReCreateAllPanels(headsEnum[CmbBxAlbum.ItemIndex][1]);
+//    ShowMessage(IntTostr(CmbBxAlbum.ItemIndex));
 
   end;
 
@@ -1016,7 +1018,8 @@ begin
 
 //  LoadImages(head);
     uploadAlbums();
-  ReCreateAllPanels(headsEnum[0][0]);
+    if Length(headsEnum) > 0 then
+      ReCreateAllPanels(headsEnum[0][0]);
 
   // search params
   CmbBxSearchParam.Items.Add('');
