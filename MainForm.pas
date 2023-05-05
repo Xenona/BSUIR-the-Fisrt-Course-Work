@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.Menus, Math,
-  Vcl.Grids,  SharedTypes;
+  Vcl.Grids,  SharedTypes, System.IOUtils;
 
 
 type
@@ -49,6 +49,7 @@ type
     MenuCreateAlbum: TMenuItem;
     SaveCurrPage: TSaveDialog;
     OpenImportAlbum: TOpenDialog;
+    FileOpenFolder: TFileOpenDialog;
     procedure FormCreate(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -75,6 +76,7 @@ type
     procedure MenuSavePageClick(Sender: TObject);
     procedure SaveAlbumToFile(head: PPicElem; const filePath: string);
     procedure MenuImportAlbumClick(Sender: TObject);
+    procedure MenuExportAlbumClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -158,6 +160,14 @@ end;
 
 
 
+procedure CopyAlbumFile(const SrcFilename, DestDir: string);
+var
+  DestFilename: string;
+begin
+  DestFilename := TPath.Combine(DestDir, TPath.GetFileName(SrcFilename));
+  TFile.Copy(SrcFilename, DestFilename, True);
+end;
+
 procedure TFGallery.uploadAlbums();
 const
   enumerated: string = 'enumerate.albums';
@@ -192,10 +202,6 @@ begin
 
     // Create a copy of the list
     headsEnum[High(headsEnum)][1] := CopyList(headsEnum[High(headsEnum)][0]);
-
-
-
-
 
     CmbBxAlbum.Items.Add(Copy(currFile, 1, Pos('.', currFile)-1 ));
 
@@ -391,13 +397,62 @@ begin
 end;
 
 
-procedure TFGallery.MenuImportAlbumClick(Sender: TObject);
+procedure TFGallery.MenuExportAlbumClick(Sender: TObject);
+var
+  folderPath: String;
+  ExePath: string;
 begin
+  ExePath := ExtractFilePath(ParamStr(0));
+
+  if FileOpenFolder.Execute then
+    folderPath := FileOpenFolder.FileName;
+    CopyAlbumFile(ExePath + 'albums\' + CmbBxAlbum.Text  + '.pics', folderPath);
+
+end;
+
+procedure TFGallery.MenuImportAlbumClick(Sender: TObject);
+var
+  ExePath: string;
+  enumPath: string;
+  enumFile: textFile;
+  albPath: string;
+  alb: string;
+const
+  enumerated: string = 'enumerate.albums';
+
+begin
+  ExePath := ExtractFilePath(ParamStr(0));
   if openImportAlbum.Execute() then
   begin
 
+    albPath := openImportAlbum.FileName;
+    alb := ExtractFileName(albPath);
+    // скопировать файл в альбомы
+    CopyAlbumFile(albPath, ExePath + 'albums');
+    // дописать строчку в enumerate.ablums
 
 
+    enumPath := ExePath + 'albums\';
+
+    AssignFile(enumFile, enumPath + enumerated);
+    Append(enumFile);
+
+    Writeln(enumFile, alb);
+    Closefile(enumFIle);
+
+    // Ќарастить динамический массив, заполнить его двум€ списками
+
+    SetLength(headsEnum, length(headsEnum)+1);
+    SetLength(headsEnum[High(headsEnum)], 2);
+    FetchAllPics(headsEnum[High(headsEnum)][0], enumPath + alb);
+    LoadImages(headsEnum[High(headsEnum)][0]);
+    headsEnum[High(headsEnum)][1] := CopyList(headsEnum[High(headsEnum)][0]);
+    CmbBxAlbum.Items.Add(Copy(alb, 1, Pos('.', alb)-1 ));
+
+
+    // обновить flowPanel
+    CmbBxAlbum.Text := CmbBxAlbum.Items[CmbBxAlbum.Items.Count - 1];
+    ReCreateAllPanels(headsEnum[CmbBxAlbum.ItemIndex][1]);
 
   end;
 

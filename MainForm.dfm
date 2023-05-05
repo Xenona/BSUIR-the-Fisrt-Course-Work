@@ -385,6 +385,7 @@ object FGallery: TFGallery
       end
       object MenuExportAlbum: TMenuItem
         Caption = #1069#1082#1089#1087#1086#1088#1090#1080#1088#1086#1074#1072#1090#1100' '#1090#1077#1082#1091#1097#1080#1081' '#1072#1083#1100#1073#1086#1084
+        OnClick = MenuExportAlbumClick
       end
       object MenuDeleteAlbum: TMenuItem
         Caption = #1059#1076#1072#1083#1080#1090#1100' '#1090#1077#1082#1091#1097#1080#1081' '#1072#1083#1100#1073#1086#1084
@@ -411,5 +412,13 @@ object FGallery: TFGallery
   object OpenImportAlbum: TOpenDialog
     Left = 552
     Top = 168
+  end
+  object FileOpenFolder: TFileOpenDialog
+    FavoriteLinks = <>
+    FileName = 'C:\Users\HP\Desktop\uchebka\year1\OAIP\workingOn\sort'
+    FileTypes = <>
+    Options = [fdoNoChangeDir, fdoPickFolders]
+    Left = 320
+    Top = 568
   end
 end
