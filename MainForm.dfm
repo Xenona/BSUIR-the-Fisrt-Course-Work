@@ -389,6 +389,7 @@ object FGallery: TFGallery
       end
       object MenuDeleteAlbum: TMenuItem
         Caption = #1059#1076#1072#1083#1080#1090#1100' '#1090#1077#1082#1091#1097#1080#1081' '#1072#1083#1100#1073#1086#1084
+        OnClick = MenuDeleteAlbumClick
       end
     end
     object MenuUpload: TMenuItem

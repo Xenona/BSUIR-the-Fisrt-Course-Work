@@ -77,6 +77,7 @@ type
     procedure SaveAlbumToFile(head: PPicElem; const filePath: string);
     procedure MenuImportAlbumClick(Sender: TObject);
     procedure MenuExportAlbumClick(Sender: TObject);
+    procedure MenuDeleteAlbumClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -296,6 +297,21 @@ begin
   end;
 end;
 
+procedure DeleteArrayElement(var Arr: TEnumAlbs; Index: Integer);
+var
+  i: Integer;
+begin
+  if (Index >= Low(Arr)) and (Index <= High(Arr)) then // Check if index is valid
+  begin
+    for i := Index to High(Arr) - 1 do
+    begin
+      Arr[i] := Arr[i + 1]; // Shift all elements to the left
+    end;
+    SetLength(Arr, Length(Arr) - 1); // Resize the array to remove the last element
+  end;
+end;
+
+
 
 procedure TFGallery.CreatePicture( var ImgToCreate: TImage; const PanelParent: TPanel; const APicLink: TPicture; const AMargin: Integer);
 var
@@ -396,6 +412,56 @@ begin
     FGallery.FlowPanelPics.Controls[i].Visible := True;
 end;
 
+procedure RemoveStringFromFile(const FilePath, Str: string);
+var
+  FileInOut: TextFile;
+  Line: string;
+  Found: Boolean;
+  finalContents: string;
+begin
+  AssignFile(FileInOut, FilePath);
+  Reset(FileInOut);
+  try
+    while not Eof(FileInOut) do
+    begin
+      ReadLn(FileInOut, Line);
+      Found := Pos(Str, Line) > 0;
+      if not Found then
+      begin
+        WriteLn(FileInOut, Line);
+      end;
+    end;
+  finally
+    CloseFile(FileInOut);
+  end;
+end;
+
+
+procedure TFGallery.MenuDeleteAlbumClick(Sender: TObject);
+const
+  enumerated: string = 'enumerate.albums';
+var
+  ExePath: string;
+
+begin
+
+  ExePath := ExtractFilePath(ParamStr(0));
+  DeleteArrayElement(headsEnum, cmbBxAlbum.ItemIndex);
+  RemoveStringFromFile(ExePath+enumerated, CmbBxAlbum.Text);
+  CmbBxAlbum.Items.Delete(cmbBxAlbum.ItemIndex);
+  CmbBxAlbum.Text := '';
+  if CmbBxAlbum.Items.Count > 0 then
+  begin
+    CmbBxAlbum.ItemIndex := 0;
+    ReCreateAllPanels(headsEnum[CmbBxAlbum.ItemIndex][1]); // Set the selected item to the first item in the list
+  end
+  else
+  begin
+    ReCreateAllPanels(nil);
+  end;
+
+
+end;
 
 procedure TFGallery.MenuExportAlbumClick(Sender: TObject);
 var
@@ -454,7 +520,7 @@ begin
     CmbBxAlbum.Text := CmbBxAlbum.Items[CmbBxAlbum.Items.Count - 1];
     CmbBxAlbum.ItemIndex := CmbBxAlbum.Items.Count - 1;
     ReCreateAllPanels(headsEnum[CmbBxAlbum.ItemIndex][1]);
-//    ShowMessage(IntTostr(CmbBxAlbum.ItemIndex));
+
 
   end;
 
