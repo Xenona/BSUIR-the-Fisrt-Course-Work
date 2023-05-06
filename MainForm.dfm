@@ -72,7 +72,8 @@ object FGallery: TFGallery
     ParentBackground = False
     ShowCaption = False
     TabOrder = 1
-    ExplicitLeft = 716
+    ExplicitLeft = 736
+    ExplicitTop = -5
     object ButtonSlideshow: TButton
       Left = 21
       Top = 736
@@ -191,7 +192,7 @@ object FGallery: TFGallery
         Font.Name = 'Montserrat SemiBold'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitWidth = 182
+        ExplicitTop = 101
       end
       object CmbBxFilter: TComboBox
         Left = 0
@@ -232,11 +233,13 @@ object FGallery: TFGallery
       Align = alTop
       BevelEdges = []
       BevelOuter = bvNone
+      BevelWidth = 10
       Caption = 'Panel1'
       Padding.Top = 40
       ParentBackground = False
       ShowCaption = False
       TabOrder = 3
+      ExplicitTop = 97
       object LabelParam: TLabel
         Left = 0
         Top = 107
@@ -265,7 +268,7 @@ object FGallery: TFGallery
         Font.Name = 'Montserrat SemiBold'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitWidth = 104
+        ExplicitTop = 2
       end
       object EditSearch: TEdit
         Left = 0

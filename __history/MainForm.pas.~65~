@@ -178,7 +178,7 @@ begin
 
         IsInSelectMode := True;
 
-        TImage(Sender).Enabled := False;
+
         DrawPanelBorder(Sender);
 
 
@@ -599,9 +599,9 @@ begin
 
     albPath := openImportAlbum.FileName;
     alb := ExtractFileName(albPath);
-    // СЃРєРѕРїРёСЂРѕРІР°С‚СЊ С„Р°Р№Р» РІ Р°Р»СЊР±РѕРјС‹
+    // скопировать файл в альбомы
     CopyAlbumFile(albPath, ExePath + 'albums');
-    // РґРѕРїРёСЃР°С‚СЊ СЃС‚СЂРѕС‡РєСѓ РІ enumerate.ablums
+    // дописать строчку в enumerate.ablums
 
 
     enumPath := ExePath + 'albums\';
@@ -612,7 +612,7 @@ begin
     Writeln(enumFile, alb);
     Closefile(enumFIle);
 
-    // РќР°СЂР°СЃС‚РёС‚СЊ РґРёРЅР°РјРёС‡РµСЃРєРёР№ РјР°СЃСЃРёРІ, Р·Р°РїРѕР»РЅРёС‚СЊ РµРіРѕ РґРІСѓРјСЏ СЃРїРёСЃРєР°РјРё
+    // Нарастить динамический массив, заполнить его двумя списками
 
     SetLength(headsEnum, length(headsEnum)+1);
     SetLength(headsEnum[High(headsEnum)], 2);
@@ -622,7 +622,7 @@ begin
     CmbBxAlbum.Items.Add(Copy(alb, 1, Pos('.', alb)-1 ));
 
 
-    // РѕР±РЅРѕРІРёС‚СЊ flowPanel
+    // обновить flowPanel
     CmbBxAlbum.Text := CmbBxAlbum.Items[CmbBxAlbum.Items.Count - 1];
     CmbBxAlbum.ItemIndex := CmbBxAlbum.Items.Count - 1;
     ReCreateAllPanels(headsEnum[CmbBxAlbum.ItemIndex][1]);
@@ -1117,15 +1117,15 @@ begin
       CmbBxFiltVal.Items.Clear;
       CmbBxFiltVal.Text := '';
       CmbBxFiltVal.Items.Add('');
-      CmbBxFiltVal.Items.Add('Р”Р°');
-      CmbBxFiltVal.Items.Add('РќРµС‚');
+      CmbBxFiltVal.Items.Add('Да');
+      CmbBxFiltVal.Items.Add('Нет');
     end;
     2:
     begin
       CmbBxFiltVal.Items.Clear;
       CmbBxFiltVal.Text := '';
       CmbBxFiltVal.Items.Add('');
-      CmbBxFiltVal.Items.Add('РќРµС‚ РѕС†РµРЅРєРё');
+      CmbBxFiltVal.Items.Add('Нет оценки');
       CmbBxFiltVal.Items.Add('1');
       CmbBxFiltVal.Items.Add('2');
       CmbBxFiltVal.Items.Add('3');
@@ -1197,43 +1197,43 @@ begin
 
   // search params
   CmbBxSearchParam.Items.Add('');
-  CmbBxSearchParam.Items.Add('РќР°Р·РІР°РЅРёРµ');
-  CmbBxSearchParam.Items.Add('Р“РѕРґ РЅР°С‡Р°Р»Р°');
-  CmbBxSearchParam.Items.Add('Р“РѕРґ РєРѕРЅС†Р°');
-  CmbBxSearchParam.Items.Add('Р§РёСЃР»Рѕ Р»РµС‚');
-  CmbBxSearchParam.Items.Add('Р–Р°РЅСЂ');
-  CmbBxSearchParam.Items.Add('РўРµРјР°С‚РёРєР°');
-  CmbBxSearchParam.Items.Add('РњРµСЃС‚Рѕ РЅР°РїРёСЃР°РЅРёСЏ');
-  CmbBxSearchParam.Items.Add('РњР°С‚РµСЂРёР°Р»С‹');
-  CmbBxSearchParam.Items.Add('РћРїРёСЃР°РЅРёРµ');
-  CmbBxSearchParam.Items.Add('РљРѕРјРјРµРЅС‚Р°СЂРёР№');
-  CmbBxSearchParam.Items.Add('Р’СЃРµ');
+  CmbBxSearchParam.Items.Add('Название');
+  CmbBxSearchParam.Items.Add('Год начала');
+  CmbBxSearchParam.Items.Add('Год конца');
+  CmbBxSearchParam.Items.Add('Число лет');
+  CmbBxSearchParam.Items.Add('Жанр');
+  CmbBxSearchParam.Items.Add('Тематика');
+  CmbBxSearchParam.Items.Add('Место написания');
+  CmbBxSearchParam.Items.Add('Материалы');
+  CmbBxSearchParam.Items.Add('Описание');
+  CmbBxSearchParam.Items.Add('Комментарий');
+  CmbBxSearchParam.Items.Add('Все');
   // then goes user rate
   // then goes isFavourite
 
   // filter params
   CmbBxFilter.Items.Add('');
-  CmbBxFilter.Items.Add('РР·Р±СЂР°РЅРЅРѕРµ');
-  CmbBxFilter.Items.Add('РћС†РµРЅРєР°');
+  CmbBxFilter.Items.Add('Избранное');
+  CmbBxFilter.Items.Add('Оценка');
 
 
 
   // sort params
   CmbBxSort.Items.Add('');
-  CmbBxSort.Items.Add('РќР°Р·РІР°РЅРёРµ');
-  CmbBxSort.Items.Add('Р“РѕРґ РЅР°С‡Р°Р»Р°');
-  CmbBxSort.Items.Add('Р“РѕРґ РєРѕРЅС†Р°');
-  CmbBxSort.Items.Add('Р§РёСЃР»Рѕ Р»РµС‚');
-  CmbBxSort.Items.Add('Р–Р°РЅСЂ');
-  CmbBxSort.Items.Add('РўРµРјР°С‚РёРєР°');
-  CmbBxSort.Items.Add('РњРµСЃС‚Рѕ РЅР°РїРёСЃР°РЅРёСЏ');
-  CmbBxSort.Items.Add('РћС†РµРЅРєР°');
+  CmbBxSort.Items.Add('Название');
+  CmbBxSort.Items.Add('Год начала');
+  CmbBxSort.Items.Add('Год конца');
+  CmbBxSort.Items.Add('Число лет');
+  CmbBxSort.Items.Add('Жанр');
+  CmbBxSort.Items.Add('Тематика');
+  CmbBxSort.Items.Add('Место написания');
+  CmbBxSort.Items.Add('Оценка');
 
 
   // sort dir
   CmbBxSortDir.Items.Add('');
-  CmbBxSortDir.Items.Add('РџРѕ РІРѕР·СЂР°СЃС‚Р°РЅРёСЋ');
-  CmbBxSortDir.Items.Add('РџРѕ СѓР±С‹РІР°РЅРёСЋ');
+  CmbBxSortDir.Items.Add('По возрастанию');
+  CmbBxSortDir.Items.Add('По убыванию');
 
 
 //  ChangedHead := CopyList(head);

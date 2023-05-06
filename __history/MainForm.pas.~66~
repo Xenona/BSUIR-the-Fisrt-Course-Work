@@ -5,7 +5,8 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.Menus, Math,
-  Vcl.Grids,  SharedTypes, System.IOUtils;
+  Vcl.Grids,  SharedTypes, System.IOUtils, Vcl.ActnMan, Vcl.ActnColorMaps,
+  Vcl.ComCtrls, System.Actions, Vcl.ActnList;
 
 
 type
@@ -50,6 +51,8 @@ type
     SaveCurrPage: TSaveDialog;
     OpenImportAlbum: TOpenDialog;
     FileOpenFolder: TFileOpenDialog;
+    ActionList1: TActionList;
+    Action1: TAction;
     procedure FormCreate(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -78,8 +81,16 @@ type
     procedure MenuImportAlbumClick(Sender: TObject);
     procedure MenuExportAlbumClick(Sender: TObject);
     procedure MenuDeleteAlbumClick(Sender: TObject);
+    procedure PanelSortClick(Sender: TObject);
+    procedure ACTWhenImageClickedExecute(Sender: TObject);
+    procedure SetImageBorder(Image: TImage);
+    procedure DrawPanelBorder(Sender: TObject);
+    procedure ClearAllPanelBorders();
+
+
   private
-    { Private declarations }
+    IsInSelectMode: Boolean;
+
   public
 //     head: PPicElem;
 //     sortedHead: PPicElem;
@@ -107,6 +118,90 @@ implementation
 
 // --------------------------------------------------------------------------------
 // VISUAL section BEGIN
+
+procedure TFGallery.SetImageBorder(Image: TImage);
+begin
+  if Assigned(Image.Parent) then
+  begin
+    TPanel(Image.Parent).BorderWidth := 3;
+    TPanel(Image.Parent).Color := clBlack;
+  end;
+end;
+
+procedure TFGallery.DrawPanelBorder(Sender: TObject);
+var
+  Image: TImage;
+  p: TPanel;
+begin
+
+  p := TPanel(TImage(Sender).Parent);
+  p.BorderStyle := bsSingle;
+  p.BorderWidth := 10;
+
+end;
+
+
+
+procedure TFGallery.ClearAllPanelBorders();
+var
+  i: integer;
+  im: TImage;
+  p: TPanel;
+  pic: TPicture;
+begin
+  for i := 0 to FlowPanelPics.ControlCount - 1 do
+  begin
+    p :=  TPanel(FlowPanelPics.Controls[i]);
+
+    p.BorderStyle := bsNone;
+    p.BorderWidth := 0;
+
+  end;
+
+end;
+
+
+
+
+procedure TFGallery.ACTWhenImageClickedExecute(Sender: TObject);
+begin
+
+  if Sender is TImage then
+    begin
+
+    if not isInSelectMode then
+    begin
+      if (GetKeyState(VK_SHIFT) and $80) <> 0 then
+      begin
+
+
+        IsInSelectMode := True;
+        DrawPanelBorder(Sender);
+        MenuCreateAlbum.Enabled := IsInSelectMode;
+
+
+      end
+      else
+      begin
+
+        ShowBigPic(Sender);
+      end;
+    end
+    else
+    begin
+      if (GetKeyState(VK_SHIFT) and $80) <> 0 then
+        DrawPanelBorder(Sender);
+    end;
+  end
+  else
+    if (Sender is TPanel) and (isInSelectMode) then
+    begin
+      IsInSelectMode := False;
+      MenuCreateAlbum.Enabled := IsInSelectMode;
+      ClearAllPanelBorders();
+
+    end;
+end;
 
 procedure TFGallery.AddNewNode(elem: PPicElem; var head: PPicElem);
 begin
@@ -146,8 +241,6 @@ begin
   Dispose(Current);
 end;
 
-
-
 procedure DeleteAllNodes(HeadToCheck, MajorHead: PPicElem);
 begin
   while headToCheck <> nil do
@@ -157,9 +250,9 @@ begin
     headToCheck := headToCheck^.Next;
   end;
 
+
+
 end;
-
-
 
 procedure CopyAlbumFile(const SrcFilename, DestDir: string);
 var
@@ -211,7 +304,6 @@ begin
   CmbBxAlbum.ItemIndex := 0;
     CloseFile(enumFile);
 end;
-
 
 // to fetch all pics from dataset.pic file
 procedure TFGallery.FetchAllPics(var head: PPicElem; const filePath: string);
@@ -311,8 +403,6 @@ begin
   end;
 end;
 
-
-
 procedure TFGallery.CreatePicture( var ImgToCreate: TImage; const PanelParent: TPanel; const APicLink: TPicture; const AMargin: Integer);
 var
   Scale: Single;
@@ -330,7 +420,10 @@ begin
   ImgToCreate.Picture.Assign(APicLink);
 
 
+
+
 end;
+
 
 
 // create a panel with a pic and a label
@@ -357,10 +450,11 @@ begin
   // appear again in onResize
   Panel.ParentBackground := False;
   Panel.ParentColor := False;
-  Panel.Visible := False;
+//  Panel.Visible := False;
+  Panel.OnClick := FGallery.ACTWhenImageClickedExecute;
 
   FGallery.CreatePicture(Image, Panel, APic, Margin);
-  Image.OnClick := FGallery.ShowBigPic;
+  Image.OnClick := FGallery.ACTWhenImageClickedExecute;
 
   LabelTitle := TLabel.Create(Panel);
   LabelTitle.Parent := Panel;
@@ -383,6 +477,9 @@ var
   i: integer;
   PrevNumOfCtrls: integer;
 begin
+
+  FlowPanelPics.Visible := False;
+
 
  if headToUse = nil then
     begin
@@ -407,9 +504,13 @@ begin
   for i := PrevNumOfCtrls downto 0 do
     FGallery.FlowPanelPics.Controls[i].Free;
 
-  // making visible new panels;
-  for i := 0 to FGallery.FlowPanelPics.ControlCount - 1 do
-    FGallery.FlowPanelPics.Controls[i].Visible := True;
+//  // making visible new panels;
+//  for i := 0 to FGallery.FlowPanelPics.ControlCount - 1 do
+//    FGallery.FlowPanelPics.Controls[i].Visible := True;
+
+
+
+   FlowPanelPics.Visible := True;
 end;
 
 procedure RemoveStringFromFile(const FilePath, Str: string);
@@ -440,7 +541,6 @@ begin
     CloseFile(FileInOut);
   end;
 end;
-
 
 procedure TFGallery.MenuDeleteAlbumClick(Sender: TObject);
 const
@@ -578,7 +678,6 @@ begin
 
 end;
 
-
 procedure TFGallery.MenuSavePageClick(Sender: TObject);
 begin
 
@@ -681,7 +780,6 @@ begin
 
   result := newHead;
 end;
-
 
 function MergeSort(head: PPicElem; sortDirection: integer; compare: TSortMethod): PPicElem;
 var
@@ -819,6 +917,11 @@ begin
   end;
 end;
 
+procedure TFGallery.PanelSortClick(Sender: TObject);
+begin
+
+end;
+
 // for both of sort cmbBxes
 procedure TFGallery.CmbBxSortChange(Sender: TObject);
 var
@@ -877,8 +980,6 @@ begin
   end;
 end;
 
-
-
 // SORT section END
 //---------------------------------------------------------------------------------
 
@@ -923,8 +1024,6 @@ begin
     while (result^.Next.data.title <> titleToSearch) and (result^.Next <> nil) do
     result := result^.Next;
 end;
-
-
 
 function searchData(head: PPicElem; infoToSearch: string; fieldSearch: integer): PPicElem;
 var
@@ -994,6 +1093,7 @@ end;
 
 // FILTER section BEGIN
 //---------------------------------------------------------------------------------
+//
 
 procedure TFGallery.CmbBxAlbumChange(Sender: TObject);
 begin
@@ -1071,9 +1171,11 @@ begin
 
     pic := TImage(Sender).Picture;
 
-    Window.Show;
+
+    Window.ShowModal;
+
   finally
-//    Window.Free;
+    Window.Free;
   end;
 
 

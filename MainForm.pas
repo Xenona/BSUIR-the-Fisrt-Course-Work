@@ -84,7 +84,8 @@ type
     procedure PanelSortClick(Sender: TObject);
     procedure ACTWhenImageClickedExecute(Sender: TObject);
     procedure SetImageBorder(Image: TImage);
-    procedure DrawImageBorder(Sender: TObject);
+    procedure DrawPanelBorder(Sender: TObject);
+    procedure ClearAllPanelBorders();
 
 
   private
@@ -127,76 +128,79 @@ begin
   end;
 end;
 
-//procedure TFGallery.DrawImageBorder(Sender: TObject);
-//var
-//  Image: TImage;
-//begin
-//
-//  Image := TImage(Sender);
-//
-//  with Image.Canvas do
-//  begin
-//    Brush.Style := bsClear;
-//    Pen.Color := clRed;
-//    Pen.Width := 20;
-//    Rectangle(Image.Left * 120 div 100, Image.Top* 120 div 100, (Image.Left + Image.Width) * 120 div 100, (Image.Top + Image.Height)* 120 div 100);
-//  end;
-//end;
-
-
-procedure TFGallery.DrawImageBorder(Sender: TObject);
+procedure TFGallery.DrawPanelBorder(Sender: TObject);
 var
   Image: TImage;
+  p: TPanel;
 begin
-  Image := TImage(Sender);
-  with Image.Canvas do
-  begin
-    Brush.Style := bsClear;
-    Pen.Color := clWhite;
-    Pen.Width := 10;
-    // Set the pen style to psDot to create a dotted line border
-    Pen.Style := psDot;
-    // Draw a rectangle over the image with a 50% opacity
-    Brush.Color := RGB(255, 255, 255);
-    Brush.Style := bsSolid;
-    Font.Color := RGB(255, 255, 255);
-    Font.Style := [fsBold];
-    Font.Size := 20;
-    Font.Name := 'Arial';
-    Rectangle(Image.Left, Image.Top, Image.Left + Image.Width, Image.Top + Image.Height);
-    // Set the brush style to bsClear to avoid affecting other drawing operations
-    Brush.Style := bsClear;
-  end;
+
+  p := TPanel(TImage(Sender).Parent);
+  p.BorderStyle := bsSingle;
+  p.BorderWidth := 10;
+
 end;
 
-procedure TFGallery.ACTWhenImageClickedExecute(Sender: TObject);
+
+
+procedure TFGallery.ClearAllPanelBorders();
 var
-  ShiftState: TShiftState;
+  i: integer;
+  im: TImage;
+  p: TPanel;
+  pic: TPicture;
+begin
+  for i := 0 to FlowPanelPics.ControlCount - 1 do
+  begin
+    p :=  TPanel(FlowPanelPics.Controls[i]);
+
+    p.BorderStyle := bsNone;
+    p.BorderWidth := 0;
+
+  end;
+
+end;
+
+
+
+
+procedure TFGallery.ACTWhenImageClickedExecute(Sender: TObject);
 begin
 
-  if not isInSelectMode then
-  begin
-    if (GetKeyState(VK_SHIFT) and $80) <> 0 then
+  if Sender is TImage then
     begin
-      ShowMessage('Shift OK');
 
-      IsInSelectMode := True;
+    if not isInSelectMode then
+    begin
+      if (GetKeyState(VK_SHIFT) and $80) <> 0 then
+      begin
 
-      TImage(Sender).Enabled := False;
-      DrawImageBorder(Sender);
+
+        IsInSelectMode := True;
+        DrawPanelBorder(Sender);
+        MenuCreateAlbum.Enabled := IsInSelectMode;
 
 
+      end
+      else
+      begin
+
+        ShowBigPic(Sender);
+      end;
     end
     else
     begin
-
-      ShowBigPic(Sender);
+      if (GetKeyState(VK_SHIFT) and $80) <> 0 then
+        DrawPanelBorder(Sender);
     end;
   end
   else
-  begin
-    DrawImageBorder(Sender);
-  end;
+    if (Sender is TPanel) and (isInSelectMode) then
+    begin
+      IsInSelectMode := False;
+      MenuCreateAlbum.Enabled := IsInSelectMode;
+      ClearAllPanelBorders();
+
+    end;
 end;
 
 procedure TFGallery.AddNewNode(elem: PPicElem; var head: PPicElem);
@@ -416,6 +420,8 @@ begin
   ImgToCreate.Picture.Assign(APicLink);
 
 
+
+
 end;
 
 
@@ -445,6 +451,7 @@ begin
   Panel.ParentBackground := False;
   Panel.ParentColor := False;
 //  Panel.Visible := False;
+  Panel.OnClick := FGallery.ACTWhenImageClickedExecute;
 
   FGallery.CreatePicture(Image, Panel, APic, Margin);
   Image.OnClick := FGallery.ACTWhenImageClickedExecute;
