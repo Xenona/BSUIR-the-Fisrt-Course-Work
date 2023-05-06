@@ -3,7 +3,7 @@ object FGallery: TFGallery
   Top = 77
   Caption = #1043#1072#1083#1077#1088#1077#1103' '#1040#1083#1100#1092#1086#1085#1089#1072' '#1052#1091#1093#1080' '
   ClientHeight = 850
-  ClientWidth = 990
+  ClientWidth = 1009
   Color = clBtnFace
   Constraints.MinHeight = 870
   Constraints.MinWidth = 560
@@ -26,7 +26,7 @@ object FGallery: TFGallery
   object ScrollBoxPics: TScrollBox
     Left = 0
     Top = 0
-    Width = 716
+    Width = 735
     Height = 850
     HorzScrollBar.Visible = False
     VertScrollBar.Smooth = True
@@ -35,10 +35,12 @@ object FGallery: TFGallery
     ParentColor = False
     TabOrder = 0
     OnMouseWheel = ScrollBoxPicsMouseWheel
+    ExplicitLeft = -3
+    ExplicitTop = 8
     object FlowPanelPics: TFlowPanel
       Left = 0
       Top = 0
-      Width = 712
+      Width = 731
       Height = 390
       Align = alTop
       Caption = #1050#1072#1088#1090#1080#1085' '#1085#1077' '#1085#1072#1081#1076#1077#1085#1086
@@ -50,10 +52,12 @@ object FGallery: TFGallery
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 0
+      ExplicitLeft = -3
+      ExplicitTop = 3
     end
   end
   object PanelSideBar: TPanel
-    Left = 716
+    Left = 735
     Top = 0
     Width = 274
     Height = 850
@@ -68,6 +72,7 @@ object FGallery: TFGallery
     ParentBackground = False
     ShowCaption = False
     TabOrder = 1
+    ExplicitLeft = 716
     object ButtonSlideshow: TButton
       Left = 21
       Top = 736
@@ -370,8 +375,8 @@ object FGallery: TFGallery
     end
   end
   object MainMenu: TMainMenu
-    Left = 310
-    Top = 320
+    Left = 102
+    Top = 440
     object MenuAlbum: TMenuItem
       Caption = #1040#1083#1100#1073#1086#1084'...'
       object MenuCreateAlbum: TMenuItem
@@ -405,22 +410,29 @@ object FGallery: TFGallery
   end
   object OpenPic: TOpenDialog
     Filter = '*.bmp'
-    Left = 406
-    Top = 448
+    Left = 262
+    Top = 440
   end
   object SaveCurrPage: TSaveDialog
-    Left = 520
-    Top = 312
+    Left = 360
+    Top = 440
   end
   object OpenImportAlbum: TOpenDialog
-    Left = 552
-    Top = 168
+    Left = 488
+    Top = 448
   end
   object FileOpenFolder: TFileOpenDialog
     FavoriteLinks = <>
     FileTypes = <>
     Options = [fdoNoChangeDir, fdoPickFolders]
-    Left = 320
-    Top = 568
+    Left = 176
+    Top = 440
+  end
+  object ActionList1: TActionList
+    Left = 40
+    Top = 440
+    object Action1: TAction
+      Caption = 'Action1'
+    end
   end
 end

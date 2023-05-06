@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.Menus, Math,
   Vcl.Grids,  SharedTypes, System.IOUtils, Vcl.ActnMan, Vcl.ActnColorMaps,
-  Vcl.ComCtrls;
+  Vcl.ComCtrls, System.Actions, Vcl.ActnList;
 
 
 type
@@ -51,6 +51,8 @@ type
     SaveCurrPage: TSaveDialog;
     OpenImportAlbum: TOpenDialog;
     FileOpenFolder: TFileOpenDialog;
+    ActionList1: TActionList;
+    Action1: TAction;
     procedure FormCreate(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -79,11 +81,15 @@ type
     procedure MenuImportAlbumClick(Sender: TObject);
     procedure MenuExportAlbumClick(Sender: TObject);
     procedure MenuDeleteAlbumClick(Sender: TObject);
-    procedure StandardColorMap1ColorChange(Sender: TObject);
     procedure PanelSortClick(Sender: TObject);
+    procedure ACTWhenImageClickedExecute(Sender: TObject);
+    procedure SetImageBorder(Image: TImage);
+    procedure DrawImageBorder(Sender: TObject);
+
 
   private
-    { Private declarations }
+    IsInSelectMode: Boolean;
+
   public
 //     head: PPicElem;
 //     sortedHead: PPicElem;
@@ -112,8 +118,86 @@ implementation
 // --------------------------------------------------------------------------------
 // VISUAL section BEGIN
 
+procedure TFGallery.SetImageBorder(Image: TImage);
+begin
+  if Assigned(Image.Parent) then
+  begin
+    TPanel(Image.Parent).BorderWidth := 3;
+    TPanel(Image.Parent).Color := clBlack;
+  end;
+end;
+
+//procedure TFGallery.DrawImageBorder(Sender: TObject);
+//var
+//  Image: TImage;
+//begin
+//
+//  Image := TImage(Sender);
+//
+//  with Image.Canvas do
+//  begin
+//    Brush.Style := bsClear;
+//    Pen.Color := clRed;
+//    Pen.Width := 20;
+//    Rectangle(Image.Left * 120 div 100, Image.Top* 120 div 100, (Image.Left + Image.Width) * 120 div 100, (Image.Top + Image.Height)* 120 div 100);
+//  end;
+//end;
 
 
+procedure TFGallery.DrawImageBorder(Sender: TObject);
+var
+  Image: TImage;
+begin
+  Image := TImage(Sender);
+  with Image.Canvas do
+  begin
+    Brush.Style := bsClear;
+    Pen.Color := clWhite;
+    Pen.Width := 10;
+    // Set the pen style to psDot to create a dotted line border
+    Pen.Style := psDot;
+    // Draw a rectangle over the image with a 50% opacity
+    Brush.Color := RGB(255, 255, 255);
+    Brush.Style := bsSolid;
+    Font.Color := RGB(255, 255, 255);
+    Font.Style := [fsBold];
+    Font.Size := 20;
+    Font.Name := 'Arial';
+    Rectangle(Image.Left, Image.Top, Image.Left + Image.Width, Image.Top + Image.Height);
+    // Set the brush style to bsClear to avoid affecting other drawing operations
+    Brush.Style := bsClear;
+  end;
+end;
+
+procedure TFGallery.ACTWhenImageClickedExecute(Sender: TObject);
+var
+  ShiftState: TShiftState;
+begin
+
+  if not isInSelectMode then
+  begin
+    if (GetKeyState(VK_SHIFT) and $80) <> 0 then
+    begin
+      ShowMessage('Shift OK');
+
+      IsInSelectMode := True;
+
+      TImage(Sender).Enabled := False;
+      DrawImageBorder(Sender);
+
+
+    end
+    else
+    begin
+
+      ShowBigPic(Sender);
+    end;
+  end
+  else
+  begin
+    DrawImageBorder(Sender);
+  end;
+end;
 
 procedure TFGallery.AddNewNode(elem: PPicElem; var head: PPicElem);
 begin
@@ -153,8 +237,6 @@ begin
   Dispose(Current);
 end;
 
-
-
 procedure DeleteAllNodes(HeadToCheck, MajorHead: PPicElem);
 begin
   while headToCheck <> nil do
@@ -167,8 +249,6 @@ begin
 
 
 end;
-
-
 
 procedure CopyAlbumFile(const SrcFilename, DestDir: string);
 var
@@ -220,7 +300,6 @@ begin
   CmbBxAlbum.ItemIndex := 0;
     CloseFile(enumFile);
 end;
-
 
 // to fetch all pics from dataset.pic file
 procedure TFGallery.FetchAllPics(var head: PPicElem; const filePath: string);
@@ -320,8 +399,6 @@ begin
   end;
 end;
 
-
-
 procedure TFGallery.CreatePicture( var ImgToCreate: TImage; const PanelParent: TPanel; const APicLink: TPicture; const AMargin: Integer);
 var
   Scale: Single;
@@ -340,6 +417,7 @@ begin
 
 
 end;
+
 
 
 // create a panel with a pic and a label
@@ -369,7 +447,7 @@ begin
 //  Panel.Visible := False;
 
   FGallery.CreatePicture(Image, Panel, APic, Margin);
-  Image.OnClick := FGallery.ShowBigPic;
+  Image.OnClick := FGallery.ACTWhenImageClickedExecute;
 
   LabelTitle := TLabel.Create(Panel);
   LabelTitle.Parent := Panel;
@@ -456,7 +534,6 @@ begin
     CloseFile(FileInOut);
   end;
 end;
-
 
 procedure TFGallery.MenuDeleteAlbumClick(Sender: TObject);
 const
@@ -594,7 +671,6 @@ begin
 
 end;
 
-
 procedure TFGallery.MenuSavePageClick(Sender: TObject);
 begin
 
@@ -697,7 +773,6 @@ begin
 
   result := newHead;
 end;
-
 
 function MergeSort(head: PPicElem; sortDirection: integer; compare: TSortMethod): PPicElem;
 var
@@ -898,8 +973,6 @@ begin
   end;
 end;
 
-
-
 // SORT section END
 //---------------------------------------------------------------------------------
 
@@ -944,8 +1017,6 @@ begin
     while (result^.Next.data.title <> titleToSearch) and (result^.Next <> nil) do
     result := result^.Next;
 end;
-
-
 
 function searchData(head: PPicElem; infoToSearch: string; fieldSearch: integer): PPicElem;
 var
@@ -1016,9 +1087,6 @@ end;
 // FILTER section BEGIN
 //---------------------------------------------------------------------------------
 //
-
-
-
 
 procedure TFGallery.CmbBxAlbumChange(Sender: TObject);
 begin
@@ -1096,16 +1164,13 @@ begin
 
     pic := TImage(Sender).Picture;
 
-    Window.Show;
+
+    Window.ShowModal;
+
   finally
-//    Window.Free;
+    Window.Free;
   end;
 
-
-end;
-
-procedure TFGallery.StandardColorMap1ColorChange(Sender: TObject);
-begin
 
 end;
 

@@ -76,9 +76,6 @@ Coordinates=210,346,82,58
 [PanelSideBar]
 Coordinates=288,278,93,58
 
-[FileOpenFolder]
-Coordinates=157,497,103,36
-
 [LabelFilter]
 Coordinates=487,144,75,58
 
@@ -107,6 +104,6 @@ Coordinates=711,111,120,36
 Coordinates=711,298,88,36
 
 []
-Coordinates=121,144,57,58
+Coordinates=157,497,103,36
 Visible=True
 

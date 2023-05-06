@@ -401,8 +401,8 @@ object FBigPic: TFBigPic
       WordWrap = True
     end
     object ChkBxFavourite: TCheckBox
-      Left = 517
-      Top = 21
+      Left = 533
+      Top = 0
       Width = 18
       Height = 33
       Font.Charset = DEFAULT_CHARSET
