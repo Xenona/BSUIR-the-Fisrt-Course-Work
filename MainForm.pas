@@ -5,7 +5,8 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.Menus, Math,
-  Vcl.Grids,  SharedTypes, System.IOUtils;
+  Vcl.Grids,  SharedTypes, System.IOUtils, Vcl.ActnMan, Vcl.ActnColorMaps,
+  Vcl.ComCtrls;
 
 
 type
@@ -78,6 +79,9 @@ type
     procedure MenuImportAlbumClick(Sender: TObject);
     procedure MenuExportAlbumClick(Sender: TObject);
     procedure MenuDeleteAlbumClick(Sender: TObject);
+    procedure StandardColorMap1ColorChange(Sender: TObject);
+    procedure PanelSortClick(Sender: TObject);
+
   private
     { Private declarations }
   public
@@ -107,6 +111,9 @@ implementation
 
 // --------------------------------------------------------------------------------
 // VISUAL section BEGIN
+
+
+
 
 procedure TFGallery.AddNewNode(elem: PPicElem; var head: PPicElem);
 begin
@@ -156,6 +163,8 @@ begin
       FGallery.DeleteNode(headToCheck, MajorHead);
     headToCheck := headToCheck^.Next;
   end;
+
+
 
 end;
 
@@ -357,7 +366,7 @@ begin
   // appear again in onResize
   Panel.ParentBackground := False;
   Panel.ParentColor := False;
-  Panel.Visible := False;
+//  Panel.Visible := False;
 
   FGallery.CreatePicture(Image, Panel, APic, Margin);
   Image.OnClick := FGallery.ShowBigPic;
@@ -384,6 +393,9 @@ var
   PrevNumOfCtrls: integer;
 begin
 
+  FlowPanelPics.Visible := False;
+
+
  if headToUse = nil then
     begin
       FGallery.FlowPanelPics.Margins.Top := 500;
@@ -407,9 +419,13 @@ begin
   for i := PrevNumOfCtrls downto 0 do
     FGallery.FlowPanelPics.Controls[i].Free;
 
-  // making visible new panels;
-  for i := 0 to FGallery.FlowPanelPics.ControlCount - 1 do
-    FGallery.FlowPanelPics.Controls[i].Visible := True;
+//  // making visible new panels;
+//  for i := 0 to FGallery.FlowPanelPics.ControlCount - 1 do
+//    FGallery.FlowPanelPics.Controls[i].Visible := True;
+
+
+
+   FlowPanelPics.Visible := True;
 end;
 
 procedure RemoveStringFromFile(const FilePath, Str: string);
@@ -428,9 +444,14 @@ begin
       Found := Pos(Str, Line) > 0;
       if not Found then
       begin
-        WriteLn(FileInOut, Line);
+        FinalContents := finalContents + Line + #10#13;
       end;
+
+
     end;
+
+    Rewrite(FileInOut);
+    Write(FileInOut, FinalContents);
   finally
     CloseFile(FileInOut);
   end;
@@ -814,6 +835,11 @@ begin
   end;
 end;
 
+procedure TFGallery.PanelSortClick(Sender: TObject);
+begin
+
+end;
+
 // for both of sort cmbBxes
 procedure TFGallery.CmbBxSortChange(Sender: TObject);
 var
@@ -989,6 +1015,10 @@ end;
 
 // FILTER section BEGIN
 //---------------------------------------------------------------------------------
+//
+
+
+
 
 procedure TFGallery.CmbBxAlbumChange(Sender: TObject);
 begin
@@ -1071,6 +1101,11 @@ begin
 //    Window.Free;
   end;
 
+
+end;
+
+procedure TFGallery.StandardColorMap1ColorChange(Sender: TObject);
+begin
 
 end;
 

@@ -42,6 +42,7 @@ object FGallery: TFGallery
       Height = 390
       Align = alTop
       Caption = #1050#1072#1088#1090#1080#1085' '#1085#1077' '#1085#1072#1081#1076#1077#1085#1086
+      FullRepaint = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = 3553851
       Font.Height = -24
@@ -305,6 +306,7 @@ object FGallery: TFGallery
       ParentBackground = False
       ShowCaption = False
       TabOrder = 4
+      OnClick = PanelSortClick
       object LabelSort: TLabel
         Left = 0
         Top = 40

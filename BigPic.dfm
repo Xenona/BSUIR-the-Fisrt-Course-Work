@@ -429,10 +429,10 @@ object FBigPic: TFBigPic
       OnChange = CmbBxUserRateChange
     end
     object MemoTitle: TMemo
-      Left = 23
-      Top = 15
+      Left = 22
+      Top = 9
       Width = 380
-      Height = 70
+      Height = 73
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -19
@@ -542,7 +542,7 @@ object FBigPic: TFBigPic
       Visible = False
     end
     object EditYears: TEdit
-      Left = 24
+      Left = 22
       Top = 85
       Width = 169
       Height = 35
