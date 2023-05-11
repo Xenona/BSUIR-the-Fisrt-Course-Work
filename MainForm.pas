@@ -53,6 +53,7 @@ type
     FileOpenFolder: TFileOpenDialog;
     ActionList1: TActionList;
     Action1: TAction;
+
     procedure FormCreate(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -86,24 +87,22 @@ type
     procedure SetImageBorder(Image: TImage);
     procedure DrawPanelBorder(Sender: TObject);
     procedure ClearAllPanelBorders();
+    procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+    function GetModified: Boolean;
+    procedure SetModified(const Value: Boolean);
+    procedure SaveAllAlbums();
+
 
 
   private
     IsInSelectMode: Boolean;
+  property Modified: Boolean read GetModified write setModified;
 
   public
-//     head: PPicElem;
-//     sortedHead: PPicElem;
-//     searchedHead: PPicElem;
-//     changedHead: PPicElem;
-
      headsEnum: TEnumAlbs;
-       newUploadNode: PPicElem;
-
-
+     newUploadNode: PPicElem;
+     isModified: Boolean;
      PicInfo: TData;
-
-
   end;
 
 var
@@ -113,8 +112,21 @@ implementation
    uses BigPic;
 
 
+
+
 {$R *.dfm}
 {$D+}
+
+
+function TFGallery.GetModified: Boolean;
+begin
+  Result := isModified;
+end;
+
+procedure TFGallery.SetModified(const Value: Boolean);
+begin
+  isModified := Value;
+end;
 
 // --------------------------------------------------------------------------------
 // VISUAL section BEGIN
@@ -261,6 +273,10 @@ begin
   DestFilename := TPath.Combine(DestDir, TPath.GetFileName(SrcFilename));
   TFile.Copy(SrcFilename, DestFilename, True);
 end;
+
+
+
+
 
 procedure TFGallery.uploadAlbums();
 const
@@ -634,6 +650,12 @@ end;
 procedure TFGallery.MenuResetClick(Sender: TObject);
 begin
   ReCreateAllPanels(headsEnum[CmbBxAlbum.ItemIndex][0]);
+  EditSearch.Text := '';
+  CmbBxSearchParam.ItemIndex := -1;
+  CmbBxFilter.ItemIndex := -1;
+  CmbBxFiltVal.ItemIndex := -1;
+  CmbBxSort.ItemIndex := -1;
+  CmbBxSortDir.ItemIndex := -1;
 end;
 
 procedure TFGallery.SaveAlbumToFile(head: PPicElem; const filePath: string);
@@ -675,6 +697,21 @@ begin
 
 
 
+
+end;
+
+
+procedure TFGallery.SaveAllAlbums();
+var
+  i: integer;
+  AppPath: String;
+begin
+
+  AppPath := ExtractFilePath(Application.ExeName);
+  for i := low(headsEnum) to high(headsEnum) do
+  begin
+    saveAlbumToFile(headsEnum[i][0], AppPath + 'albums\' + CmbBxAlbum.Items[i])
+  end;
 
 end;
 
@@ -901,6 +938,7 @@ begin
     newUploadNode.data.imgBuffer := TPicture.Create;
     newUploadNode.data.imgBuffer.LoadFromFile(OpenPic.FileName);
     newUploadNode.data.imgBuffer.SaveToFile(AppPath + '.\src\' + ExtractFileName(OpenPic.FileName));
+    newUploadNode.data.filename := ExtractFileName(OpenPic.FileName);
   end;
 
   try
@@ -1187,6 +1225,26 @@ end;
 
 //---------------------------------------------------------------------------------
 // BIG PIC section END
+
+procedure TFGallery.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+var
+  MsgResult: Integer;
+begin
+
+
+  FGallery.Modified := true;
+   if FGallery.Modified then
+  begin
+    MsgResult := Application.MessageBox('Вы хотите сохранить изменения?', 'Внимание!', MB_ICONWARNING or MB_YESNOCANCEL);
+    case MsgResult of
+      IDYES: SaveAllAlbums();
+      IDNO: CanClose := True;
+      IDCANCEL: CanClose := False;
+    end;
+  end;
+
+
+end;
 
 procedure TFGallery.FormCreate(Sender: TObject);
 begin

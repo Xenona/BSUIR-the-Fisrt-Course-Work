@@ -288,7 +288,8 @@ procedure TFBigPic.MenuCreatePicClick(Sender: TObject);
 begin
 
   updatePicInfo(PicInfo);
-  FGallery.AddNewNode(PicInfo, FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][1]);
+  FGallery.AddNewNode(PicInfo, FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][0]);
+  FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][1] := FGallery.CopyList(FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][0]);
   FGallery.ReCreateAllPanels(FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][1]);
   Close;
 //  FGallery.AddNewNode(PicInfo, FGallery.head);
