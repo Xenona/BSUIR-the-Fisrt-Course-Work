@@ -250,6 +250,7 @@ begin
 
 
   // update labels from changed .data
+
   LabelFieldTitle.Caption := picToUpdate.data.title;
   LabelFieldYears.Caption := intToStr(picToUpdate.data.yearOfStart) + ' – ' + IntToStr(picToUpdate.data.yearOfEnd) + ' (' + IntToStr(picToUpdate.data.yearsOfWork) + ')';
   LabelFieldGenre.Caption := picToUpdate.data.genre;
@@ -283,6 +284,7 @@ begin
 end;
 
 procedure TFBigPic.MenuCreatePicClick(Sender: TObject);
+
 begin
 
   updatePicInfo(PicInfo);

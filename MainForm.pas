@@ -889,14 +889,18 @@ var
   UploadWindow: TFBigPic;
   uniPostfix: string;
   defaultTitle: string;
+  AppPath: String;
 begin
 
+
+  AppPath := ExtractFilePath(Application.ExeName);
   new(newUploadNode);
   FillChar(newUploadNode.data, SizeOf(newUploadNode.data), 0);
   if OpenPic.Execute() then
   begin
     newUploadNode.data.imgBuffer := TPicture.Create;
     newUploadNode.data.imgBuffer.LoadFromFile(OpenPic.FileName);
+    newUploadNode.data.imgBuffer.SaveToFile(AppPath + '.\src\' + ExtractFileName(OpenPic.FileName));
   end;
 
   try

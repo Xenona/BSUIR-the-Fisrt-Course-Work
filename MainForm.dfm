@@ -35,13 +35,11 @@ object FGallery: TFGallery
     ParentColor = False
     TabOrder = 0
     OnMouseWheel = ScrollBoxPicsMouseWheel
-    ExplicitLeft = -3
-    ExplicitTop = 8
     object FlowPanelPics: TFlowPanel
       Left = 0
       Top = 0
       Width = 731
-      Height = 390
+      Height = 361
       Align = alTop
       Caption = #1050#1072#1088#1090#1080#1085' '#1085#1077' '#1085#1072#1081#1076#1077#1085#1086
       FullRepaint = False
@@ -52,8 +50,8 @@ object FGallery: TFGallery
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 0
-      ExplicitLeft = -3
-      ExplicitTop = 3
+      ExplicitLeft = -1
+      ExplicitTop = -2
     end
   end
   object PanelSideBar: TPanel
@@ -72,8 +70,6 @@ object FGallery: TFGallery
     ParentBackground = False
     ShowCaption = False
     TabOrder = 1
-    ExplicitLeft = 736
-    ExplicitTop = -5
     object ButtonSlideshow: TButton
       Left = 21
       Top = 736
@@ -192,7 +188,7 @@ object FGallery: TFGallery
         Font.Name = 'Montserrat SemiBold'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitTop = 101
+        ExplicitWidth = 182
       end
       object CmbBxFilter: TComboBox
         Left = 0
@@ -239,7 +235,6 @@ object FGallery: TFGallery
       ParentBackground = False
       ShowCaption = False
       TabOrder = 3
-      ExplicitTop = 97
       object LabelParam: TLabel
         Left = 0
         Top = 107
@@ -268,7 +263,7 @@ object FGallery: TFGallery
         Font.Name = 'Montserrat SemiBold'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitTop = 2
+        ExplicitWidth = 104
       end
       object EditSearch: TEdit
         Left = 0
