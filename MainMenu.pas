@@ -26,6 +26,7 @@ type
     procedure ButtonExitClick(Sender: TObject);
     procedure FormShortCut(var Msg: TWMKey; var Handled: Boolean);
     procedure ButtonOpenGalleryClick(Sender: TObject);
+    procedure ButtonBiographyClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -38,7 +39,7 @@ var
 
 implementation
 
-uses MainForm;
+uses MainForm, Biography;
 
 {$R *.dfm}
 
@@ -46,6 +47,12 @@ procedure TTFMenu.ButtonOpenGalleryClick(Sender: TObject);
 begin
   TFMenu.Visible := False;
   FGallery.Show;
+end;
+
+procedure TTFMenu.ButtonBiographyClick(Sender: TObject);
+begin
+  TFMenu.Visible := False;
+  Bio.Show;
 end;
 
 procedure TTFMenu.ButtonExitClick(Sender: TObject);

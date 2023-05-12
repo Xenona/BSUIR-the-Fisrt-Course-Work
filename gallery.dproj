@@ -121,8 +121,7 @@
             <Form>TFMenu</Form>
         </DCCReference>
         <DCCReference Include="Biography.pas">
-            <Form>Form2</Form>
-            <FormType>dfm</FormType>
+            <Form>Bio</Form>
         </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
