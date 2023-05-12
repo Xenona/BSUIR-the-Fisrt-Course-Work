@@ -66,8 +66,7 @@ type
     procedure ShowBigPic(Sender: TObject);
     procedure DeleteNode(NodeToDelete: PPicElem; var NewHead: PPicElem);
     procedure MenuResetClick(Sender: TObject);
-    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
-    procedure FormShortCut(var Msg: TWMKey; var Handled: Boolean);
+    procedure OnCloseQuery(var Msg: TWMKey; var Handled: Boolean);
     procedure MenuUploadClick(Sender: TObject);
     procedure ReCreateAllPanels(headToUse: PPicElem);
     procedure CreatePicture(var ImgToCreate: TImage; const PanelParent: TPanel; const APicLink: TPicture; const AMargin: Integer);
@@ -795,12 +794,38 @@ begin
   result := slow;
 end;
 
+//function TFGallery.CopyList(head: PPicElem): PPicElem;
+//var
+//  current, newHead, newNode: PPicElem;
+//begin
+//  newHead := nil;
+//  current := head;
+//
+//  while (current <> nil) do
+//  begin
+//    newNode := New(PPicElem);
+//    newNode^.data := current^.data;
+//    newNode^.Next := nil;
+//
+//    if not (newHead = nil) then
+//    begin
+//      newNode^.Next := newHead;
+//    end;
+//
+//    newHead := newNode;
+//    current := current^.Next;
+//  end;
+//
+//  result := newHead;
+//end;
+
 function TFGallery.CopyList(head: PPicElem): PPicElem;
 var
-  current, newHead, newNode: PPicElem;
+  current, newHead, newNode, lastNode: PPicElem;
 begin
   newHead := nil;
   current := head;
+  lastNode := nil;
 
   while (current <> nil) do
   begin
@@ -808,17 +833,23 @@ begin
     newNode^.data := current^.data;
     newNode^.Next := nil;
 
-    if not (newHead = nil) then
+    if (newHead = nil) then
     begin
-      newNode^.Next := newHead;
+      newHead := newNode;
+      lastNode := newNode;
+    end
+    else
+    begin
+      lastNode^.Next := newNode;
+      lastNode := newNode;
     end;
 
-    newHead := newNode;
     current := current^.Next;
   end;
 
   result := newHead;
 end;
+
 
 function MergeSort(head: PPicElem; sortDirection: integer; compare: TSortMethod): PPicElem;
 var
@@ -900,15 +931,14 @@ begin
 end;
 
 // remove focus from combobox
-procedure TFGallery.FormShortCut(var Msg: TWMKey; var Handled: Boolean);
+procedure TFGallery.OnCloseQuery(var Msg: TWMKey; var Handled: Boolean);
 begin
   If Msg.CharCode = VK_ESCAPE Then
   begin
+
     Close;
-
     TFMenu.Visible := True;
-
-     TFMenu.BringToFront;
+    TFMenu.Show;
 
   end;
 end;
@@ -1240,20 +1270,6 @@ var
   MsgResult: Integer;
 begin
 
-//  begin
-//    MsgResult := Application.MessageBox('Вы хотите выйти?', 'Внимание!', MB_ICONWARNING or MB_YESNOCANCEL);
-//    case MsgResult of
-//      IDYES:
-//      begin
-////        SaveAllAlbums();
-//        Close;
-//
-////        TFMenu.Visible := True;
-//      end;
-//      IDNO: Close;
-//      IDCANCEL: ;
-//    end;
-//  end;
 
 end;
 
@@ -1345,12 +1361,6 @@ begin
 
 end;
 
-procedure TFGallery.FormKeyDown(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
-begin
- if Key = VK_ESCAPE then
-    Close;
-end;
 
 procedure TFGallery.FormResize(Sender: TObject);
 var

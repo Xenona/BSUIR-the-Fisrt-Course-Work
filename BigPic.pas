@@ -214,7 +214,7 @@ procedure TFBigPic.FormKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
   if Key = VK_ESCAPE then
-    ShowMessage('lflflf');
+    Close;
 end;
 
 procedure TFBigPic.FormResize(Sender: TObject);

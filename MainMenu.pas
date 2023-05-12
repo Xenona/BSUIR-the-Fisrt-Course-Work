@@ -24,7 +24,6 @@ type
     Panel4: TPanel;
     procedure Panel1Resize(Sender: TObject);
     procedure ButtonExitClick(Sender: TObject);
-    procedure FormShortCut(var Msg: TWMKey; var Handled: Boolean);
     procedure ButtonOpenGalleryClick(Sender: TObject);
     procedure ButtonBiographyClick(Sender: TObject);
 
@@ -60,11 +59,6 @@ begin
   TFMenu.Close;
 end;
 
-procedure TTFMenu.FormShortCut(var Msg: TWMKey; var Handled: Boolean);
-begin
-  If Msg.CharCode = VK_ESCAPE Then
-    Close;
-end;
 
 
 

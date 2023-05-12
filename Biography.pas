@@ -4,11 +4,15 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.Imaging.pngimage;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.Imaging.pngimage,
+  Vcl.Imaging.jpeg;
 
 type
   TBio = class(TForm)
     Image1: TImage;
+    Image2: TImage;
+    Panel1: TPanel;
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     { Private declarations }
   public
@@ -20,6 +24,15 @@ var
 
 implementation
 
+uses
+  MainMenu;
+
 {$R *.dfm}
+
+procedure TBio.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  TFMenu.Visible := True;
+  TFMenu.Show;
+end;
 
 end.
