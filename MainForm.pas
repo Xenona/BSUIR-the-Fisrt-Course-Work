@@ -91,6 +91,7 @@ type
     function GetModified: Boolean;
     procedure SetModified(const Value: Boolean);
     procedure SaveAllAlbums();
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
 
 
 
@@ -110,7 +111,7 @@ var
   FGallery: TFGallery;
 
 implementation
-   uses BigPic;
+   uses BigPic, MainMenu;
 
 
 
@@ -902,7 +903,14 @@ end;
 procedure TFGallery.FormShortCut(var Msg: TWMKey; var Handled: Boolean);
 begin
   If Msg.CharCode = VK_ESCAPE Then
+  begin
     Close;
+
+    TFMenu.Visible := True;
+
+     TFMenu.BringToFront;
+
+  end;
 end;
 
 procedure TFGallery.FormShow(Sender: TObject);
@@ -1227,6 +1235,28 @@ end;
 //---------------------------------------------------------------------------------
 // BIG PIC section END
 
+procedure TFGallery.FormClose(Sender: TObject; var Action: TCloseAction);
+var
+  MsgResult: Integer;
+begin
+
+//  begin
+//    MsgResult := Application.MessageBox('Вы хотите выйти?', 'Внимание!', MB_ICONWARNING or MB_YESNOCANCEL);
+//    case MsgResult of
+//      IDYES:
+//      begin
+////        SaveAllAlbums();
+//        Close;
+//
+////        TFMenu.Visible := True;
+//      end;
+//      IDNO: Close;
+//      IDCANCEL: ;
+//    end;
+//  end;
+
+end;
+
 procedure TFGallery.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 var
   MsgResult: Integer;
@@ -1238,10 +1268,22 @@ begin
   begin
     MsgResult := Application.MessageBox('Вы хотите сохранить изменения?', 'Внимание!', MB_ICONWARNING or MB_YESNOCANCEL);
     case MsgResult of
-      IDYES: SaveAllAlbums();
+      IDYES:
+      begin
+        SaveAllAlbums();
+
+        CanClose := True;
+        TFMenu.Visible := True;
+        TFMenu.Show;
+      end;
       IDNO: CanClose := True;
       IDCANCEL: CanClose := False;
     end;
+  end
+  else
+  begin
+     TFMenu.Visible := True;
+        TFMenu.Show;
   end;
 
 

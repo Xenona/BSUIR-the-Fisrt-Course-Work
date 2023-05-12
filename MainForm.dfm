@@ -16,6 +16,7 @@ object FGallery: TFGallery
   Menu = MainMenu
   OldCreateOrder = False
   Position = poDesktopCenter
+  OnClose = FormClose
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown

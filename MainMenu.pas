@@ -11,7 +11,7 @@ type
   TTFMenu = class(TForm)
     MainContainer: TPanel;
     ButtContainer: TPanel;
-    ButtonOpenGallery: TButton;
+    ButtonExit: TButton;
     ButtonDeveloper: TButton;
     ButtonBiography: TButton;
     Panel1: TPanel;
@@ -20,10 +20,13 @@ type
     LabelTop: TLabel;
     Image1: TImage;
     Image2: TImage;
-    Button1: TButton;
+    ButtonOpenGallery: TButton;
     Panel4: TPanel;
     procedure Panel1Resize(Sender: TObject);
+    procedure ButtonExitClick(Sender: TObject);
+    procedure FormShortCut(var Msg: TWMKey; var Handled: Boolean);
     procedure ButtonOpenGalleryClick(Sender: TObject);
+
   private
     { Private declarations }
   public
@@ -35,17 +38,33 @@ var
 
 implementation
 
+uses MainForm;
+
 {$R *.dfm}
 
 procedure TTFMenu.ButtonOpenGalleryClick(Sender: TObject);
 begin
+  TFMenu.Visible := False;
+  FGallery.Show;
+end;
+
+procedure TTFMenu.ButtonExitClick(Sender: TObject);
+begin
   TFMenu.Close;
 end;
+
+procedure TTFMenu.FormShortCut(var Msg: TWMKey; var Handled: Boolean);
+begin
+  If Msg.CharCode = VK_ESCAPE Then
+    Close;
+end;
+
+
 
 procedure TTFMenu.Panel1Resize(Sender: TObject);
 begin
   ButtContainer.Left := (TFMenu.Width - (ButtContainer.Width * 4 div 3)) div 2 - 50;
-  ButtContainer.Top := (TFMenu.Height - ButtContainer.Height) * 2 div 3;
+  ButtContainer.Top := (TFMenu.Height - ButtContainer.Height) * 2 div 3 + 50;
   labelTop.Left := ButtContainer.Left;
   labelTop.Top := ButtContainer.Top - LabelTop.Height - 100;
 
