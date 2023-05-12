@@ -96,13 +96,14 @@ type
 
   private
     IsInSelectMode: Boolean;
-  property Modified: Boolean read GetModified write setModified;
+
 
   public
      headsEnum: TEnumAlbs;
      newUploadNode: PPicElem;
      isModified: Boolean;
      PicInfo: TData;
+     property Modified: Boolean read GetModified write setModified;
   end;
 
 var
@@ -1201,12 +1202,12 @@ begin
 
   Window := TFBigPic.Create(nil);
   try
-    Window.header := headsEnum[CmbBxAlbum.ItemIndex][1];
+    Window.header := headsEnum[CmbBxAlbum.ItemIndex][0];
 
     LabelToSearch := TLabel(TPanel(TImage(Sender).Parent).Controls[1]).Caption;
-    Window.PrevPicInfo := SearchPrevTitle(headsEnum[CmbBxAlbum.ItemIndex][1], LabelToSearch);
+    Window.PrevPicInfo := SearchPrevTitle(headsEnum[CmbBxAlbum.ItemIndex][0], LabelToSearch);
 
-    if (Window.PrevPicInfo <> headsEnum[CmbBxAlbum.ItemIndex][1]) or (LabelToSearch <> headsEnum[CmbBxAlbum.ItemIndex][1].data.title) then
+    if (Window.PrevPicInfo <> headsEnum[CmbBxAlbum.ItemIndex][0]) or (LabelToSearch <> headsEnum[CmbBxAlbum.ItemIndex][0].data.title) then
       Window.PicInfo := Window.PrevPicInfo^.Next
     else
       Window.PicInfo := Window.PrevPicInfo;
@@ -1232,7 +1233,7 @@ var
 begin
 
 
-  FGallery.Modified := true;
+//
    if FGallery.Modified then
   begin
     MsgResult := Application.MessageBox('Вы хотите сохранить изменения?', 'Внимание!', MB_ICONWARNING or MB_YESNOCANCEL);

@@ -51,8 +51,6 @@ object FGallery: TFGallery
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 0
-      ExplicitLeft = -1
-      ExplicitTop = -2
     end
   end
   object PanelSideBar: TPanel

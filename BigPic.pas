@@ -265,13 +265,15 @@ end;
 
 procedure TFBigPic.MenuAcceptClick(Sender: TObject);
 begin
-
+  FGallery.Modified := true;
   updatePicInfo(PicInfo);
 
 
   showHideMemo(False);
 
   showHideMenu(True, False, False);
+
+  FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][1] := FGallery.CopyList(FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][0]);
   FGallery.ReCreateAllPanels(FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][1]);
 
 
@@ -293,6 +295,7 @@ begin
   FGallery.ReCreateAllPanels(FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][1]);
   Close;
 //  FGallery.AddNewNode(PicInfo, FGallery.head);
+  FGallery.Modified := true;
 end;
 
 procedure TFBigPic.MenuRejectPicClick(Sender: TObject);

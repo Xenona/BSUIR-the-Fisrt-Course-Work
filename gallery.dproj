@@ -114,7 +114,12 @@
             <Form>FBigPic</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="SharedTypes.pas"/>
+        <DCCReference Include="SharedTypes.pas">
+            <Form>$R *.res</Form>
+        </DCCReference>
+        <DCCReference Include="MainMenu.pas">
+            <Form>TFMenu</Form>
+        </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

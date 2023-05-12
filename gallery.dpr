@@ -6,7 +6,9 @@ uses
   Vcl.Themes,
   Vcl.Styles,
   BigPic in 'BigPic.pas' {FBigPic},
-  SharedTypes in 'SharedTypes.pas';
+
+  SharedTypes in 'SharedTypes.pas' {$R *.res},
+  MainMenu in 'MainMenu.pas' {TFMenu};
 
 {$R *.res}
 
@@ -15,7 +17,9 @@ begin
   Application.MainFormOnTaskbar := True;
   TStyleManager.TrySetStyle('Smokey Quartz Kamri');
 
+  Application.CreateForm(TTFMenu, TFMenu);
   Application.CreateForm(TFGallery, FGallery);
   Application.CreateForm(TFBigPic, FBigPic);
+
   Application.Run;
 end.
