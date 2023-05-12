@@ -6,9 +6,11 @@ uses
   Vcl.Themes,
   Vcl.Styles,
   BigPic in 'BigPic.pas' {FBigPic},
-
+  {$R}
+  {$R}
   SharedTypes in 'SharedTypes.pas' {$R *.res},
-  MainMenu in 'MainMenu.pas' {TFMenu};
+  MainMenu in 'MainMenu.pas' {TFMenu},
+  Biography in 'Biography.pas' {Form2};
 
 {$R *.res}
 
@@ -20,6 +22,6 @@ begin
   Application.CreateForm(TTFMenu, TFMenu);
   Application.CreateForm(TFGallery, FGallery);
   Application.CreateForm(TFBigPic, FBigPic);
-
+  Application.CreateForm(TForm2, Form2);
   Application.Run;
 end.
