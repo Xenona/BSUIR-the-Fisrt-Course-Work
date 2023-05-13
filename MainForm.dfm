@@ -100,7 +100,6 @@ object FGallery: TFGallery
       BevelOuter = bvNone
       BevelWidth = 10
       Caption = 'Panel1'
-      ParentBackground = False
       ShowCaption = False
       TabOrder = 1
       object LabelAlbum: TLabel
@@ -125,6 +124,7 @@ object FGallery: TFGallery
         ParentColor = False
         ParentFont = False
         Transparent = True
+        ExplicitLeft = -20
         ExplicitTop = -3
       end
       object CmbBxAlbum: TComboBox
@@ -156,7 +156,6 @@ object FGallery: TFGallery
       BevelWidth = 10
       Caption = 'Panel1'
       Padding.Top = 40
-      ParentBackground = False
       ShowCaption = False
       TabOrder = 2
       object LabelFilter: TLabel
@@ -231,7 +230,6 @@ object FGallery: TFGallery
       BevelWidth = 10
       Caption = 'Panel1'
       Padding.Top = 40
-      ParentBackground = False
       ShowCaption = False
       TabOrder = 3
       object LabelParam: TLabel
@@ -305,7 +303,6 @@ object FGallery: TFGallery
       BevelOuter = bvNone
       Caption = 'Panel1'
       Padding.Top = 40
-      ParentBackground = False
       ShowCaption = False
       TabOrder = 4
       OnClick = PanelSortClick

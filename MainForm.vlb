@@ -104,6 +104,15 @@ Coordinates=711,111,120,36
 Coordinates=711,298,88,36
 
 []
-Coordinates=157,497,103,36
+Coordinates=451,442,57,58
 Visible=True
+
+[FileOpenFolder]
+Coordinates=405,221,103,36
+
+[Action1]
+Coordinates=124,153,58,36
+
+[ActionList1]
+Coordinates=325,221,78,36
 

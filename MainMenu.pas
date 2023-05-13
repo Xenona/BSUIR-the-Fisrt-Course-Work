@@ -26,6 +26,7 @@ type
     procedure ButtonExitClick(Sender: TObject);
     procedure ButtonOpenGalleryClick(Sender: TObject);
     procedure ButtonBiographyClick(Sender: TObject);
+    procedure ButtonDeveloperClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -52,6 +53,12 @@ procedure TTFMenu.ButtonBiographyClick(Sender: TObject);
 begin
   TFMenu.Visible := False;
   Bio.Show;
+end;
+
+procedure TTFMenu.ButtonDeveloperClick(Sender: TObject);
+begin
+  TFMenu.Visible := False;
+  FGallery.Show;
 end;
 
 procedure TTFMenu.ButtonExitClick(Sender: TObject);

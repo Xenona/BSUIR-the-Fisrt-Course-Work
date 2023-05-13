@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.Menus, Math,
   Vcl.Grids,  SharedTypes, System.IOUtils, Vcl.ActnMan, Vcl.ActnColorMaps,
-  Vcl.ComCtrls, System.Actions, Vcl.ActnList;
+  Vcl.ComCtrls, System.Actions, Vcl.ActnList, Vcl.Imaging.pngimage;
 
 
 type
@@ -82,7 +82,7 @@ type
     procedure MenuExportAlbumClick(Sender: TObject);
     procedure MenuDeleteAlbumClick(Sender: TObject);
     procedure PanelSortClick(Sender: TObject);
-    procedure ACTWhenImageClickedExecute(Sender: TObject);
+    procedure ImageClicked(Sender: TObject);
     procedure SetImageBorder(Image: TImage);
     procedure DrawPanelBorder(Sender: TObject);
     procedure ClearAllPanelBorders();
@@ -176,7 +176,7 @@ end;
 
 
 
-procedure TFGallery.ACTWhenImageClickedExecute(Sender: TObject);
+procedure TFGallery.ImageClicked(Sender: TObject);
 begin
 
   if Sender is TImage then
@@ -468,10 +468,10 @@ begin
   Panel.ParentBackground := False;
   Panel.ParentColor := False;
 //  Panel.Visible := False;
-  Panel.OnClick := FGallery.ACTWhenImageClickedExecute;
+  Panel.OnClick := FGallery.ImageClicked;
 
   FGallery.CreatePicture(Image, Panel, APic, Margin);
-  Image.OnClick := FGallery.ACTWhenImageClickedExecute;
+  Image.OnClick := FGallery.ImageClicked;
 
   LabelTitle := TLabel.Create(Panel);
   LabelTitle.Parent := Panel;
@@ -793,31 +793,6 @@ begin
   end;
   result := slow;
 end;
-
-//function TFGallery.CopyList(head: PPicElem): PPicElem;
-//var
-//  current, newHead, newNode: PPicElem;
-//begin
-//  newHead := nil;
-//  current := head;
-//
-//  while (current <> nil) do
-//  begin
-//    newNode := New(PPicElem);
-//    newNode^.data := current^.data;
-//    newNode^.Next := nil;
-//
-//    if not (newHead = nil) then
-//    begin
-//      newNode^.Next := newHead;
-//    end;
-//
-//    newHead := newNode;
-//    current := current^.Next;
-//  end;
-//
-//  result := newHead;
-//end;
 
 function TFGallery.CopyList(head: PPicElem): PPicElem;
 var
