@@ -10,17 +10,40 @@ Type
   TStack = ^TStackElement;
 
 
+
+
   TStackElement = record
-    Prev: TStack;
     Element: TPicture;
+    Prev: TStack;
+
+  end;
+
+  TUStack = class
+  Procedure MakeStack(var Stack: TStack);
+  Procedure PopStack(var Stack: TStack);
+  Procedure PushStack(var Stack: TStack; const Picture: TPicture);
+  Function IsStackEmpty(var Stack: TStack): Boolean;
+  Function TopStack(var Stack: TStack): TPicture;
+
+
+  Private
+
+
+  Public
+
+
   end;
 
 Const
   maxLengthOfStack = 1000;
   SpecialCharacter = nil;
 
+var
+  CStack: TUStack;
+
 implementation
-  Procedure MakeStack(var Stack: TStack);
+
+Procedure TUStack.MakeStack(var Stack: TStack);
 var
   X: TStack;
 begin
@@ -33,7 +56,7 @@ begin
 end;
 
 
-Procedure PopStack(var Stack: TStack);
+Procedure TUStack.PopStack(var Stack: TStack);
 var
   X: TStack;
 begin
@@ -43,7 +66,7 @@ begin
 end;
 
 
-Procedure PushStack(var Stack: TStack; const Picture: TPicture);
+Procedure TUStack.PushStack(var Stack: TStack; const Picture: TPicture);
 var
   X: TStack;
 begin
@@ -55,12 +78,28 @@ end;
 
 
 
-Function IsStackEmpty(var Stack: TStack): Boolean;
+Function TUStack.IsStackEmpty(var Stack: TStack): Boolean;
 begin
   if Stack^.Prev = nil then
     Result := True
   else
     Result := False;
+end;
+
+Function TUStack.TopStack(var Stack: TStack): TPicture;
+begin
+//  Result := Stack^.Prev^.Element;
+  Result := Stack^.Element;
+end;
+
+
+Procedure PopStack(var Stack: TStack);
+var
+  X: TStack;
+begin
+  X := Stack^.Prev;
+  Dispose(Stack);
+  Stack := X;
 end;
 
 

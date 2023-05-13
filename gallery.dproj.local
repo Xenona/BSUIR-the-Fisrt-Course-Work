@@ -32,10 +32,13 @@
     <Transaction>2023/05/12 18:20:34.000.673,C:\Users\HP\Desktop\uchebka\year1\OAIP\theCoursach\ui\Biography.pas=C:\Users\HP\Desktop\uchebka\year1\OAIP\theCoursach\ui\Unit2.pas</Transaction>
     <Transaction>2023/05/12 18:20:34.000.673,C:\Users\HP\Desktop\uchebka\year1\OAIP\theCoursach\ui\Biography.dfm=C:\Users\HP\Desktop\uchebka\year1\OAIP\theCoursach\ui\Unit2.dfm</Transaction>
     <Transaction>2023/05/12 22:07:28.000.413,=C:\Users\HP\Desktop\uchebka\year1\OAIP\theCoursach\ui\Unit2.pas</Transaction>
-    <Transaction>2023/05/12 22:07:35.000.349,C:\Users\HP\Desktop\uchebka\year1\OAIP\theCoursach\ui\Developer.pas=C:\Users\HP\Desktop\uchebka\year1\OAIP\theCoursach\ui\Unit2.pas</Transaction>
     <Transaction>2023/05/12 22:07:35.000.349,C:\Users\HP\Desktop\uchebka\year1\OAIP\theCoursach\ui\Developer.dfm=C:\Users\HP\Desktop\uchebka\year1\OAIP\theCoursach\ui\Unit2.dfm</Transaction>
+    <Transaction>2023/05/12 22:07:35.000.349,C:\Users\HP\Desktop\uchebka\year1\OAIP\theCoursach\ui\Developer.pas=C:\Users\HP\Desktop\uchebka\year1\OAIP\theCoursach\ui\Unit2.pas</Transaction>
     <Transaction>2023/05/13 14:07:46.000.527,=C:\Users\HP\Desktop\uchebka\year1\OAIP\theCoursach\ui\Unit1.pas</Transaction>
     <Transaction>2023/05/13 14:07:51.000.702,C:\Users\HP\Desktop\uchebka\year1\OAIP\theCoursach\ui\Unit1.pas=C:\Users\HP\Desktop\uchebka\year1\OAIP\theCoursach\ui\Stack.pas</Transaction>
+    <Transaction>2023/05/13 15:36:24.621,=C:\Users\HP\Desktop\uchebka\year1\OAIP\theCoursach\ui\Unit3.pas</Transaction>
+    <Transaction>2023/05/13 15:36:59.826,C:\Users\HP\Desktop\uchebka\year1\OAIP\theCoursach\ui\SlideShow.dfm=C:\Users\HP\Desktop\uchebka\year1\OAIP\theCoursach\ui\Unit3.dfm</Transaction>
+    <Transaction>2023/05/13 15:36:59.826,C:\Users\HP\Desktop\uchebka\year1\OAIP\theCoursach\ui\SlideShow.pas=C:\Users\HP\Desktop\uchebka\year1\OAIP\theCoursach\ui\Unit3.pas</Transaction>
   </Transactions>
 	<ProjectSortOrder AutoSort="0" SortType="0">
     <File Path="BigPic.pas"/>
@@ -50,5 +53,7 @@
     <File Path="Developer.pas"/>
     <File Path="Developer.dfm"/>
     <File Path="Stack.pas"/>
+    <File Path="SlideShow.pas"/>
+    <File Path="SlideShow.dfm"/>
   </ProjectSortOrder>
 </BorlandProject>

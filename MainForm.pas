@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.Menus, Math,
   Vcl.Grids,  SharedTypes, System.IOUtils, Vcl.ActnMan, Vcl.ActnColorMaps,
-  Vcl.ComCtrls, System.Actions, Vcl.ActnList, Vcl.Imaging.pngimage, Stack;
+  Vcl.ComCtrls, System.Actions, Vcl.ActnList, Vcl.Imaging.pngimage, Stack, SlideShow;
 
 
 type
@@ -96,6 +96,7 @@ type
     procedure Filter();
     procedure Sort();
     procedure SearchFilterSort();
+    procedure ButtonSlideshowClick(Sender: TObject);
 
 
 
@@ -109,7 +110,9 @@ type
      newUploadNode: PPicElem;
      isModified: Boolean;
      PicInfo: TData;
+     PicStack: TStack;
      property Modified: Boolean read GetModified write setModified;
+
   end;
 
 var
@@ -163,6 +166,43 @@ begin
 end;
 
 
+
+procedure TFGallery.ButtonSlideshowClick(Sender: TObject);
+var
+  tempHead: PPicElem;
+begin
+  CStack.MakeStack(PicStack);
+
+  tempHead := headsEnum[CmbBxAlbum.ItemIndex][0];
+
+  while tempHead <> nil do
+  begin
+
+    CStack.PushStack(PicStack, tempHead.data.imgBuffer);
+
+
+    tempHead := tempHead^.Next
+  end;
+
+
+  Cstack.PopStack(PicStack);
+
+  FSlide.Show;
+  while CStack.TopStack(PicStack) <> nil do
+  begin
+
+    FSlide.ImageSlide.Picture.Assign(CStack.TopStack(PicStack));
+    FSlide.LoadSlide(FSlide.PanelSlide, FSlide.ImageSlide, CStack.TopStack(PicStack), 50);
+
+    CStack.PopStack(PicStack);
+    Application.ProcessMessages;
+    sleep(1000);
+  end;
+
+  FSlide.Close;
+
+
+end;
 
 procedure TFGallery.ClearAllPanelBorders();
 var
