@@ -97,8 +97,10 @@ type
     procedure Sort();
     procedure SearchFilterSort();
     procedure ButtonSlideshowClick(Sender: TObject);
-
-
+    function searchData(head: PPicElem; infoToSearch: string; fieldSearch: integer): PPicElem;
+    procedure MenuCreateAlbumClick(Sender: TObject);
+    function isRecordMatch(const data: Tdata; const searchStr: string; field: integer): boolean;
+    procedure clearChanged(tempHead: PPicElem);
 
 
   private
@@ -170,6 +172,7 @@ end;
 procedure TFGallery.ButtonSlideshowClick(Sender: TObject);
 var
   tempHead: PPicElem;
+  slidePage: TFSlide;
 begin
   CStack.MakeStack(PicStack);
 
@@ -187,19 +190,29 @@ begin
 
   Cstack.PopStack(PicStack);
 
-  FSlide.Show;
-  while CStack.TopStack(PicStack) <> nil do
-  begin
+  slidePage := TFSlide.Create(nil);
+  try
+    FSlide.Show;
 
-    FSlide.ImageSlide.Picture.Assign(CStack.TopStack(PicStack));
-    FSlide.LoadSlide(FSlide.PanelSlide, FSlide.ImageSlide, CStack.TopStack(PicStack), 50);
+    while (CStack.TopStack(PicStack) <> nil) and not (FSlide.Interrupt) do
+    begin
 
-    CStack.PopStack(PicStack);
-    Application.ProcessMessages;
-    sleep(1000);
+      FSlide.ImageSlide.Picture.Assign(CStack.TopStack(PicStack));
+      FSlide.LoadSlide(FSlide.PanelSlide, FSlide.ImageSlide, CStack.TopStack(PicStack), 50);
+
+      CStack.PopStack(PicStack);
+
+      Application.ProcessMessages;
+      sleep(1000);
+
+    end;
+    slidePage.Free;
+//    slidePage.Close;
+  finally
+
   end;
 
-  FSlide.Close;
+
 
 
 end;
@@ -226,6 +239,9 @@ end;
 
 
 procedure TFGallery.ImageClicked(Sender: TObject);
+var
+  LabelToSearch: String;
+  PicToChange: PPicElem;
 begin
 
   if Sender is TImage then
@@ -240,7 +256,19 @@ begin
         IsInSelectMode := True;
         DrawPanelBorder(Sender);
         MenuCreateAlbum.Enabled := IsInSelectMode;
+        LabelToSearch := TLabel(TPanel(TImage(Sender).Parent).Controls[1]).Caption;
+//        PicToChange := searchData(, LabelToSearch, 1);
 
+        PicToChange := headsEnum[CmbBxAlbum.ItemIndex][1];
+        while  not((isRecordMatch(PicToChange.data, LabelToSearch, 1))) do
+        begin
+
+
+
+
+          PicToChange := PicToChange^.Next;
+        end;
+        PicToChange.data.isToBeChanged := true;
 
       end
       else
@@ -256,11 +284,12 @@ begin
     end;
   end
   else
-    if (Sender is TPanel) and (isInSelectMode) then
+    if ((Sender is TPanel) or (Sender is TFlowPanel)) and (isInSelectMode) then
     begin
       IsInSelectMode := False;
       MenuCreateAlbum.Enabled := IsInSelectMode;
       ClearAllPanelBorders();
+      ClearChanged(headsEnum[CmbBxAlbum.ItemIndex][1]);
 
     end;
 end;
@@ -606,6 +635,38 @@ begin
   finally
     CloseFile(FileInOut);
   end;
+end;
+
+procedure TFGallery.clearChanged(tempHead: PPicElem);
+begin
+
+  while tempHead <> nil do
+  begin
+
+    tempHead.data.isToBeChanged := false;
+
+    tempHead := tempHead^.Next;
+  end;
+
+
+
+end;
+
+procedure TFGallery.MenuCreateAlbumClick(Sender: TObject);
+var
+  newAlbum: PPicElem;
+begin
+
+  newAlbum := SearchData(headsEnum[CmbBxAlbum.ItemIndex][1], '1', 14 );
+  if SaveCurrPage.Execute() then
+  begin
+
+    saveAlbumToFile(newAlbum, SaveCurrPage.FileName);
+    clearChanged(headsEnum[CmbBxAlbum.ItemIndex][1]);
+
+  end;
+
+
 end;
 
 procedure TFGallery.MenuDeleteAlbumClick(Sender: TObject);
@@ -1103,7 +1164,7 @@ end;
 //---------------------------------------------------------------------------------
 // SEARCH section BEGIN
 
-function isRecordMatch(const data: Tdata; const searchStr: string; field: integer): boolean;
+function TFGallery.isRecordMatch(const data: Tdata; const searchStr: string; field: integer): boolean;
 begin
 
   case field of
@@ -1130,6 +1191,7 @@ begin
       (Pos(searchStr, data.userComment) > 0);
     12: Result := (data.isFavourite = (StrToInt(searchStr) = 1));
     13: Result := (Pos(searchStr, IntToStr(data.userRate)) > 0);
+    14: Result := (data.isToBeChanged = (StrToInt(searchStr) = 1))
   end;
 
  end;
@@ -1142,7 +1204,7 @@ begin
     result := result^.Next;
 end;
 
-function searchData(head: PPicElem; infoToSearch: string; fieldSearch: integer): PPicElem;
+function TFGallery.searchData(head: PPicElem; infoToSearch: string; fieldSearch: integer): PPicElem;
 var
   curElem: PPicElem;
   newList: PPicElem;

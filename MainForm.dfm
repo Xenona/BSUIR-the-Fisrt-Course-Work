@@ -255,11 +255,13 @@ object FGallery: TFGallery
         Height = 32
         Align = alTop
         Caption = #1048#1089#1082#1072#1090#1100'...'
+        Color = clBtnFace
         Font.Charset = DEFAULT_CHARSET
         Font.Color = 3553851
         Font.Height = -23
         Font.Name = 'Montserrat SemiBold'
         Font.Style = [fsBold]
+        ParentColor = False
         ParentFont = False
         ExplicitWidth = 104
       end
@@ -377,6 +379,7 @@ object FGallery: TFGallery
       Caption = #1040#1083#1100#1073#1086#1084'...'
       object MenuCreateAlbum: TMenuItem
         Caption = #1057#1086#1079#1076#1072#1090#1100' '#1072#1083#1100#1073#1086#1084
+        OnClick = MenuCreateAlbumClick
       end
       object MenuImportAlbum: TMenuItem
         Caption = #1048#1084#1087#1086#1088#1090#1080#1088#1086#1074#1072#1090#1100' '#1072#1083#1100#1073#1086#1084' '

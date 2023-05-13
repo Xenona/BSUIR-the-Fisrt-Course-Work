@@ -1,8 +1,9 @@
 object FSlide: TFSlide
   Left = 0
   Top = 0
-  ClientHeight = 871
-  ClientWidth = 1184
+  BorderStyle = bsNone
+  ClientHeight = 1080
+  ClientWidth = 1920
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -10,21 +11,36 @@ object FSlide: TFSlide
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
+  Position = poDesktopCenter
+  OnActivate = FormActivate
   OnShortCut = FormShortCut
   PixelsPerInch = 96
   TextHeight = 13
   object PanelSlide: TPanel
     Left = 0
     Top = 0
-    Width = 1184
-    Height = 871
+    Width = 1920
+    Height = 1080
     Align = alClient
     Caption = 'Panel1'
+    ShowCaption = False
     TabOrder = 0
     ExplicitLeft = 192
     ExplicitTop = 200
     ExplicitWidth = 185
     ExplicitHeight = 41
+    object LabelBG: TLabel
+      Left = 1
+      Top = 1
+      Width = 1918
+      Height = 1078
+      Align = alClient
+      AutoSize = False
+      Color = 1973790
+      ParentColor = False
+      Transparent = False
+      ExplicitHeight = 1080
+    end
     object ImageSlide: TImage
       Left = 264
       Top = 40

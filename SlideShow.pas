@@ -4,18 +4,24 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls;
 
 type
   TFSlide = class(TForm)
     ImageSlide: TImage;
     PanelSlide: TPanel;
+    LabelBG: TLabel;
     procedure LoadSlide(PanelPic: TPanel; Image: TImage; Picture: TPicture; Margin: Integer);
     procedure FormShortCut(var Msg: TWMKey; var Handled: Boolean);
+    procedure SetInterrupt(const Value: Boolean);
+    function GetInterrupt: Boolean;
+    procedure FormActivate(Sender: TObject);
   private
     { Private declarations }
   public
-    { Public declarations }
+
+    isInterrupt: Boolean;
+    property Interrupt: Boolean read GetInterrupt write SetInterrupt;
   end;
 
 var
@@ -26,10 +32,29 @@ implementation
 {$R *.dfm}
 
 
+function TFSlide.GetInterrupt: Boolean;
+begin
+  Result := isInterrupt;
+end;
+
+procedure TFSlide.SetInterrupt(const Value: Boolean);
+begin
+  isInterrupt := Value;
+end;
+
+procedure TFSlide.FormActivate(Sender: TObject);
+begin
+ isInterrupt := False;
+end;
+
 procedure TFSlide.FormShortCut(var Msg: TWMKey; var Handled: Boolean);
 begin
-      If Msg.CharCode = VK_ESCAPE Then
-    Close;
+      If Msg.CharCode = VK_SPACE Then
+      begin
+          Close;
+          FSlide.Interrupt := True;
+      end;
+
 end;
 
 procedure TFSLide.LoadSlide(PanelPic: TPanel; Image: TImage; Picture: TPicture; Margin: Integer);
