@@ -6,7 +6,11 @@ uses
   Vcl.Themes,
   Vcl.Styles,
   BigPic in 'BigPic.pas' {FBigPic},
-  SharedTypes in 'SharedTypes.pas';
+
+  SharedTypes in 'SharedTypes.pas' {$R *.res},
+  MainMenu in 'MainMenu.pas' {TFMenu},
+  Biography in 'Biography.pas' {Bio},
+  Developer in 'Developer.pas' {Form2};
 
 {$R *.res}
 
@@ -14,8 +18,12 @@ begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
   TStyleManager.TrySetStyle('Smokey Quartz Kamri');
-//  TStyleManager.TrySetStyle('Windows10Blue');
+
   Application.CreateForm(TFGallery, FGallery);
+  Application.CreateForm(TTFMenu, TFMenu);
+
   Application.CreateForm(TFBigPic, FBigPic);
+  Application.CreateForm(TBio, Bio);
+  Application.CreateForm(TForm2, Form2);
   Application.Run;
 end.
