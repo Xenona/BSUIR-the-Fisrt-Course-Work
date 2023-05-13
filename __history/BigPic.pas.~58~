@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, SharedTypes, Math, MainForm,
-  Vcl.Menus;
+  Vcl.Menus, Vcl.Imaging.pngimage;
 
 type
 
@@ -34,7 +34,6 @@ type
     LabelPlace: TLabel;
     LabelFieldPlace: TLabel;
     MemoTitle: TMemo;
-    MemoYears: TMemo;
     MemoGenre: TMemo;
     MemoTheme: TMemo;
     MemoMats: TMemo;
@@ -45,6 +44,9 @@ type
     MenuCancel: TMenuItem;
     MenuCreatePic: TMenuItem;
     MenuRejectPic: TMenuItem;
+    EditYears: TEdit;
+    ImageGoldStar: TImage;
+    ImageGrayStar: TImage;
     procedure FormActivate(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure MenuEditPicClick(Sender: TObject);
@@ -62,6 +64,9 @@ type
     procedure MenuRejectPicClick(Sender: TObject);
     procedure MenuCreatePicClick(Sender: TObject);
     procedure updatePicInfo(var picToUpdate: PPicElem);
+    procedure DeletePictureFile(Picture: TPicture; const FileName: string);
+    procedure ImageGrayStarClick(Sender: TObject);
+    procedure ImageGoldStarClick(Sender: TObject);
 
   private
 
@@ -70,6 +75,8 @@ type
     PicInfo: PPicElem;
     PrevPicInfo: PPicElem;
     header: PPicElem;
+
+
 
   end;
 
@@ -112,7 +119,7 @@ procedure TFBigPic.showHideMemo(status: Boolean);
 begin
 
   MemoTitle.Visible := status;
-  MemoYears.Visible := status;
+  EditYears.Visible := status;
   MemoGenre.Visible := status;
   MemoTheme.Visible := status;
   MemoMats.Visible := status;
@@ -212,7 +219,7 @@ procedure TFBigPic.FormKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
   if Key = VK_ESCAPE then
-    ShowMessage('lflflf');
+    Close;
 end;
 
 procedure TFBigPic.FormResize(Sender: TObject);
@@ -231,12 +238,25 @@ begin
     Close;
 end;
 
+procedure TFBigPic.ImageGoldStarClick(Sender: TObject);
+begin
+  PicInfo.data.isFavourite := not PicInfo.data.isFavourite;
+  ImageGoldStar.SendToBack;
+end;
+
+procedure TFBigPic.ImageGrayStarClick(Sender: TObject);
+begin
+  PicInfo.data.isFavourite := not PicInfo.data.isFavourite;
+  ImageGoldStar.SendToBack;
+end;
+
 procedure TFBigPic.updatePicInfo(var picToUpdate: PPicElem);
 begin
   // save info from memos
+
   picToUpdate.data.title := MemoTitle.Text;
-  picToUpdate.data.YearOfStart := StrToInt(Copy(MemoYears.Text, 1, 4));
-  picToUpdate.data.YearOfEnd := StrToInt(Copy(MemoYears.Text, 8, 11));
+  picToUpdate.data.YearOfStart := StrToInt(Copy(EditYears.Text, 1, 4));
+  picToUpdate.data.YearOfEnd := StrToInt(Copy(EditYears.Text, 8, 11));
   picToUpdate.data.yearsOfWork := PicInfo.data.yearOfEnd - PicInfo.data.yearOfStart;
   picToUpdate.data.genre := MemoGenre.Text;
   picToUpdate.data.theme := MemoTheme.Text;
@@ -247,6 +267,7 @@ begin
 
 
   // update labels from changed .data
+
   LabelFieldTitle.Caption := picToUpdate.data.title;
   LabelFieldYears.Caption := intToStr(picToUpdate.data.yearOfStart) + ' – ' + IntToStr(picToUpdate.data.yearOfEnd) + ' (' + IntToStr(picToUpdate.data.yearsOfWork) + ')';
   LabelFieldGenre.Caption := picToUpdate.data.genre;
@@ -261,13 +282,16 @@ end;
 
 procedure TFBigPic.MenuAcceptClick(Sender: TObject);
 begin
-
+  FGallery.Modified := true;
   updatePicInfo(PicInfo);
 
 
   showHideMemo(False);
 
   showHideMenu(True, False, False);
+
+  FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][1] := FGallery.CopyList(FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][0]);
+  FGallery.ReCreateAllPanels(FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][1]);
 
 
 end;
@@ -279,31 +303,51 @@ begin
 end;
 
 procedure TFBigPic.MenuCreatePicClick(Sender: TObject);
+
 begin
 
   updatePicInfo(PicInfo);
-  FGallery.AddNewNode(PicInfo, FGallery.changedHead);
-  FGallery.AddNewNode(PicInfo, FGallery.head);
+  FGallery.AddNewNode(PicInfo, FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][0]);
+  FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][1] := FGallery.CopyList(FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][0]);
+  FGallery.ReCreateAllPanels(FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][1]);
+  Close;
+//  FGallery.AddNewNode(PicInfo, FGallery.head);
+  FGallery.Modified := true;
 end;
 
 procedure TFBigPic.MenuRejectPicClick(Sender: TObject);
 begin
 
+  Close;
+  Dispose(FGallery.newUploadNode);
 
   ShowHideMemo(False);
   ShowHideMenu(True, False, False);
+end;
+
+procedure TFBigPic.DeletePictureFile(Picture: TPicture; const FileName: string);
+begin
+  // First, set the picture to nil to release any locks on the file
+  Picture.Assign(nil);
+
+  // Then, delete the file from the folder
+  DeleteFile(FileName);
 end;
 
 procedure TFBigPic.MenuDeletePicClick(Sender: TObject);
 var
   Temp: PPicElem;
 begin
-  FGallery.DeleteNode(PicInfo, FGallery.changedHead);
-  FGallery.DeleteNode(PicInfo, FGallery.head);
-  Close;
-  FGallery.ReCreateAllPanels(FGallery.ChangedHead);
+  FGallery.DeleteNode(PicInfo, FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][0]);
+//  FGallery.DeleteNode(PicInfo, FGallery.head);
 
+  FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][1] := FGallery.CopyList(FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][0]);
+  FGallery.ReCreateAllPanels(FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][1]);
+  FGallery.Modified := True;
+   Close;
 end;
+
+
 
 procedure TFBigPic.MenuEditPicClick(Sender: TObject);
 begin
@@ -312,7 +356,7 @@ begin
 
   // to memos,  add text to edit
   MemoTitle.Text := LabelFieldTitle.Caption;
-  MemoYears.Text := Copy(LabelFieldYears.Caption, 1, 11);
+  EditYears.Text := Copy(LabelFieldYears.Caption, 1, 11);
   MemoGenre.Text := LabelFieldGenre.Caption;
   MemoTheme.Text := LabelFieldTheme.Caption;
   MemoMats.Text := LabelFieldMats.Caption;

@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, SharedTypes, Math, MainForm,
-  Vcl.Menus;
+  Vcl.Menus, Vcl.Imaging.pngimage;
 
 type
 
@@ -70,6 +70,8 @@ type
     PicInfo: PPicElem;
     PrevPicInfo: PPicElem;
     header: PPicElem;
+
+
 
   end;
 
@@ -212,7 +214,7 @@ procedure TFBigPic.FormKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
   if Key = VK_ESCAPE then
-    ShowMessage('lflflf');
+    Close;
 end;
 
 procedure TFBigPic.FormResize(Sender: TObject);
@@ -248,6 +250,7 @@ begin
 
 
   // update labels from changed .data
+
   LabelFieldTitle.Caption := picToUpdate.data.title;
   LabelFieldYears.Caption := intToStr(picToUpdate.data.yearOfStart) + ' – ' + IntToStr(picToUpdate.data.yearOfEnd) + ' (' + IntToStr(picToUpdate.data.yearsOfWork) + ')';
   LabelFieldGenre.Caption := picToUpdate.data.genre;
@@ -262,14 +265,16 @@ end;
 
 procedure TFBigPic.MenuAcceptClick(Sender: TObject);
 begin
-
+  FGallery.Modified := true;
   updatePicInfo(PicInfo);
 
 
   showHideMemo(False);
 
   showHideMenu(True, False, False);
-  FGallery.ReCreateAllPanels(FGallery.ChangedHead);
+
+  FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][1] := FGallery.CopyList(FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][0]);
+  FGallery.ReCreateAllPanels(FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][1]);
 
 
 end;
@@ -281,16 +286,23 @@ begin
 end;
 
 procedure TFBigPic.MenuCreatePicClick(Sender: TObject);
+
 begin
 
   updatePicInfo(PicInfo);
-  FGallery.AddNewNode(PicInfo, FGallery.changedHead);
-  FGallery.AddNewNode(PicInfo, FGallery.head);
+  FGallery.AddNewNode(PicInfo, FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][0]);
+  FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][1] := FGallery.CopyList(FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][0]);
+  FGallery.ReCreateAllPanels(FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][1]);
+  Close;
+//  FGallery.AddNewNode(PicInfo, FGallery.head);
+  FGallery.Modified := true;
 end;
 
 procedure TFBigPic.MenuRejectPicClick(Sender: TObject);
 begin
 
+  Close;
+  Dispose(FGallery.newUploadNode);
 
   ShowHideMemo(False);
   ShowHideMenu(True, False, False);
@@ -300,10 +312,10 @@ procedure TFBigPic.MenuDeletePicClick(Sender: TObject);
 var
   Temp: PPicElem;
 begin
-  FGallery.DeleteNode(PicInfo, FGallery.changedHead);
-  FGallery.DeleteNode(PicInfo, FGallery.head);
+  FGallery.DeleteNode(PicInfo, FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][1]);
+//  FGallery.DeleteNode(PicInfo, FGallery.head);
   Close;
-  FGallery.ReCreateAllPanels(FGallery.ChangedHead);
+  FGallery.ReCreateAllPanels(FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][1]);
 
 end;
 

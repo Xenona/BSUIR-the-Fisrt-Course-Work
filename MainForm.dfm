@@ -202,6 +202,7 @@ object FGallery: TFGallery
         ParentFont = False
         TabOrder = 0
         OnChange = CmbBxFilterChange
+        ExplicitTop = 66
       end
       object CmbBxFiltVal: TComboBox
         Left = 0
@@ -291,6 +292,8 @@ object FGallery: TFGallery
         Font.Style = []
         ParentFont = False
         TabOrder = 1
+        OnChange = CmbBxSearchParamChange
+        ExplicitTop = 145
       end
     end
     object PanelSort: TPanel

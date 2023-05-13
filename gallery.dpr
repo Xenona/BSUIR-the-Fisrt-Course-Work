@@ -19,8 +19,9 @@ begin
   Application.MainFormOnTaskbar := True;
   TStyleManager.TrySetStyle('Smokey Quartz Kamri');
 
-  Application.CreateForm(TTFMenu, TFMenu);
   Application.CreateForm(TFGallery, FGallery);
+  Application.CreateForm(TTFMenu, TFMenu);
+
   Application.CreateForm(TFBigPic, FBigPic);
   Application.CreateForm(TBio, Bio);
   Application.CreateForm(TForm2, Form2);

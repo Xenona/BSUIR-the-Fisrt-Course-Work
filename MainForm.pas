@@ -91,6 +91,12 @@ type
     procedure SetModified(const Value: Boolean);
     procedure SaveAllAlbums();
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure CmbBxSearchParamChange(Sender: TObject);
+    procedure Search();
+    procedure Filter();
+    procedure Sort();
+    procedure SearchFilterSort();
+
 
 
 
@@ -131,6 +137,9 @@ end;
 
 // --------------------------------------------------------------------------------
 // VISUAL section BEGIN
+
+
+
 
 procedure TFGallery.SetImageBorder(Image: TImage);
 begin
@@ -657,6 +666,7 @@ begin
   CmbBxFiltVal.ItemIndex := -1;
   CmbBxSort.ItemIndex := -1;
   CmbBxSortDir.ItemIndex := -1;
+  headsEnum[CmbBxAlbum.ItemIndex][1] := CopyList(headsEnum[CmbBxAlbum.ItemIndex][0]);
 end;
 
 procedure TFGallery.SaveAlbumToFile(head: PPicElem; const filePath: string);
@@ -979,11 +989,15 @@ begin
 end;
 
 // for both of sort cmbBxes
-procedure TFGallery.CmbBxSortChange(Sender: TObject);
+procedure TFGallery.CmbBxSearchParamChange(Sender: TObject);
+begin
+  SearchFilterSort();
+end;
+
+procedure TFGallery.Sort();
 var
   sortDirection: Integer;
 begin
-
   if (CmbBxSortDir.Text <> '') and (CmbBxSort.Text <> '') then
   begin
     case CmbBxSortDir.ItemIndex of
@@ -995,45 +1009,52 @@ begin
       1: // title
       begin
         headsEnum[CmbBxAlbum.ItemIndex][1] := MergeSort(headsEnum[CmbBxAlbum.ItemIndex][1], sortDirection, cmpTitle);
-        ReCreateAllPanels(headsEnum[CmbBxAlbum.ItemIndex][1]);
+//        ReCreateAllPanels(headsEnum[CmbBxAlbum.ItemIndex][1]);
       end;
       2: // year of start
       begin
         headsEnum[CmbBxAlbum.ItemIndex][1] := MergeSort(headsEnum[CmbBxAlbum.ItemIndex][1], sortDirection, cmpYearStart);
-        ReCreateAllPanels(headsEnum[CmbBxAlbum.ItemIndex][1]);
+//        ReCreateAllPanels(headsEnum[CmbBxAlbum.ItemIndex][1]);
       end;
       3: // year of end
       begin
         headsEnum[CmbBxAlbum.ItemIndex][1] := MergeSort(headsEnum[CmbBxAlbum.ItemIndex][1], sortDirection, cmpYearEnd);
-        ReCreateAllPanels(headsEnum[CmbBxAlbum.ItemIndex][1]);
+//        ReCreateAllPanels(headsEnum[CmbBxAlbum.ItemIndex][1]);
       end;
       4: // years of work
       begin
         headsEnum[CmbBxAlbum.ItemIndex][1] := MergeSort(headsEnum[CmbBxAlbum.ItemIndex][1], sortDirection, cmpYearsWork);
-        ReCreateAllPanels(headsEnum[CmbBxAlbum.ItemIndex][1]);
+//        ReCreateAllPanels(headsEnum[CmbBxAlbum.ItemIndex][1]);
       end;
       5: // genre
       begin
         headsEnum[CmbBxAlbum.ItemIndex][1] := MergeSort(headsEnum[CmbBxAlbum.ItemIndex][1], sortDirection, cmpGenre);
-        ReCreateAllPanels(headsEnum[CmbBxAlbum.ItemIndex][1]);
+//        ReCreateAllPanels(headsEnum[CmbBxAlbum.ItemIndex][1]);
       end;
       6: // theme
       begin
         headsEnum[CmbBxAlbum.ItemIndex][1] := MergeSort(headsEnum[CmbBxAlbum.ItemIndex][1], sortDirection, cmpTheme);
-        ReCreateAllPanels(headsEnum[CmbBxAlbum.ItemIndex][1]);
+//        ReCreateAllPanels(headsEnum[CmbBxAlbum.ItemIndex][1]);
       end;
       7: // place
       begin
         headsEnum[CmbBxAlbum.ItemIndex][1] := MergeSort(headsEnum[CmbBxAlbum.ItemIndex][1], sortDirection, cmpPlace);
-        ReCreateAllPanels(headsEnum[CmbBxAlbum.ItemIndex][1]);
+//        ReCreateAllPanels(headsEnum[CmbBxAlbum.ItemIndex][1]);
       end;
       8: // user rate
       begin
         headsEnum[CmbBxAlbum.ItemIndex][1] := MergeSort(headsEnum[CmbBxAlbum.ItemIndex][1], sortDirection, cmpUserRate);
-        ReCreateAllPanels(headsEnum[CmbBxAlbum.ItemIndex][1]);
+//        ReCreateAllPanels(headsEnum[CmbBxAlbum.ItemIndex][1]);
       end;
     end;
   end;
+end;
+
+procedure TFGallery.CmbBxSortChange(Sender: TObject);
+
+begin
+
+  SearchFilterSort();
 end;
 
 // SORT section END
@@ -1118,27 +1139,32 @@ begin
 
 end;
 
+procedure TFGallery.Search();
+begin
+  if (CmbBxSearchParam.Text <> '') and (Trim(EditSearch.Text) <> '')  then
+    begin
+      headsEnum[CmbBxAlbum.ItemIndex][1] := SearchData(headsEnum[CmbBxAlbum.ItemIndex][1], EditSearch.Text, CmbBxSearchParam.ItemIndex);
+
+//      if headsEnum[CmbBxAlbum.ItemIndex][1] = nil then
+//      begin
+//        FlowPanelPics.Margins.Top := 500;
+//        FlowPanelPics.Height := PanelSideBar.Height;
+//        FlowPanelPics.ShowCaption := True;
+//      end
+//      else
+//        FlowPanelPics.ShowCaption := False;
+
+//      ReCreateAllPanels(headsEnum[CmbBxAlbum.ItemIndex][1]);
+    end;
+end;
+
 procedure TFGallery.EditSearchKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
 begin
 
   // check if the user pressed the Enter key
   if Key = VK_RETURN then
   begin
-    if (CmbBxSearchParam.Text <> '') and (Trim(EditSearch.Text) <> '')  then
-    begin
-      headsEnum[CmbBxAlbum.ItemIndex][1] := SearchData(headsEnum[CmbBxAlbum.ItemIndex][1], EditSearch.Text, CmbBxSearchParam.ItemIndex);
-
-      if headsEnum[CmbBxAlbum.ItemIndex][1] = nil then
-      begin
-        FlowPanelPics.Margins.Top := 500;
-        FlowPanelPics.Height := PanelSideBar.Height;
-        FlowPanelPics.ShowCaption := True;
-      end
-      else
-        FlowPanelPics.ShowCaption := False;
-
-      ReCreateAllPanels(headsEnum[CmbBxAlbum.ItemIndex][1]);
-    end;
+     SearchFilterSort();
   end;
 
 
@@ -1147,13 +1173,62 @@ end;
 // SEARCH section END
 //---------------------------------------------------------------------------------
 
+procedure TFGallery.SearchFilterSort();
+begin
+  headsEnum[CmbBxAlbum.ItemIndex][1] := CopyList(headsEnum[CmbBxAlbum.ItemIndex][0]);
+
+
+  if headsEnum[CmbBxAlbum.ItemIndex][1] <> nil then
+  begin
+    Search();
+
+    if headsEnum[CmbBxAlbum.ItemIndex][1] <> nil then
+    begin
+      Filter();
+      if headsEnum[CmbBxAlbum.ItemIndex][1] <> nil then
+        Sort();
+    end;
+   
+  end;
+
+  if headsEnum[CmbBxAlbum.ItemIndex][1] = nil then
+  begin
+    FlowPanelPics.Margins.Top := 500;
+    FlowPanelPics.Height := PanelSideBar.Height;
+    FlowPanelPics.ShowCaption := True;
+  end
+  else
+    FlowPanelPics.ShowCaption := False;
+  ReCreateAllPanels(headsEnum[CmbBxAlbum.ItemIndex][1]);
+  
+      
+      
+end;
+
+
 // FILTER section BEGIN
 //---------------------------------------------------------------------------------
 //
 
 procedure TFGallery.CmbBxAlbumChange(Sender: TObject);
 begin
- RecreateAllPanels(headsEnum[CmbBxAlbum.ItemIndex][1])
+  RecreateAllPanels(headsEnum[CmbBxAlbum.ItemIndex][1]);
+  EditSearch.Text := '';
+  CmbBxSearchParam.ItemIndex := -1;
+  CmbBxFilter.ItemIndex := -1;
+  CmbBxFiltVal.ItemIndex := -1;
+  CmbBxSort.ItemIndex := -1;
+  CmbBxSortDir.ItemIndex := -1;
+end;
+
+procedure TFGallery.Filter();
+begin
+   if (CmbBxFilter.Text <> '') and (CmbBxFiltVal.Text <> '') then
+  begin
+    headsEnum[CmbBxAlbum.ItemIndex][1] := SearchData(headsEnum[CmbBxAlbum.ItemIndex][1], IntToStr(CmbBxFiltVal.ItemIndex), CmbBxFilter.ItemIndex+11);
+
+//    ReCreateAllPanels(headsEnum[CmbBxAlbum.ItemIndex][1]);
+  end;
 end;
 
 procedure TFGallery.CmbBxFilterChange(Sender: TObject);
@@ -1191,12 +1266,7 @@ begin
 
 
 
-  if (CmbBxFilter.Text <> '') and (CmbBxFiltVal.Text <> '') then
-  begin
-    headsEnum[CmbBxAlbum.ItemIndex][1] := SearchData(headsEnum[CmbBxAlbum.ItemIndex][1], IntToStr(CmbBxFiltVal.ItemIndex), CmbBxFilter.ItemIndex+11);
-
-    ReCreateAllPanels(headsEnum[CmbBxAlbum.ItemIndex][1]);
-  end;
+ SearchFilterSort();
 
 end;
 

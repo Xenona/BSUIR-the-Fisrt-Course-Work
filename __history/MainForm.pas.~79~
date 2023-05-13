@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.Menus, Math,
   Vcl.Grids,  SharedTypes, System.IOUtils, Vcl.ActnMan, Vcl.ActnColorMaps,
-  Vcl.ComCtrls, System.Actions, Vcl.ActnList;
+  Vcl.ComCtrls, System.Actions, Vcl.ActnList, Vcl.Imaging.pngimage;
 
 
 type
@@ -66,8 +66,7 @@ type
     procedure ShowBigPic(Sender: TObject);
     procedure DeleteNode(NodeToDelete: PPicElem; var NewHead: PPicElem);
     procedure MenuResetClick(Sender: TObject);
-    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
-    procedure FormShortCut(var Msg: TWMKey; var Handled: Boolean);
+    procedure OnCloseQuery(var Msg: TWMKey; var Handled: Boolean);
     procedure MenuUploadClick(Sender: TObject);
     procedure ReCreateAllPanels(headToUse: PPicElem);
     procedure CreatePicture(var ImgToCreate: TImage; const PanelParent: TPanel; const APicLink: TPicture; const AMargin: Integer);
@@ -83,7 +82,7 @@ type
     procedure MenuExportAlbumClick(Sender: TObject);
     procedure MenuDeleteAlbumClick(Sender: TObject);
     procedure PanelSortClick(Sender: TObject);
-    procedure ACTWhenImageClickedExecute(Sender: TObject);
+    procedure ImageClicked(Sender: TObject);
     procedure SetImageBorder(Image: TImage);
     procedure DrawPanelBorder(Sender: TObject);
     procedure ClearAllPanelBorders();
@@ -91,25 +90,27 @@ type
     function GetModified: Boolean;
     procedure SetModified(const Value: Boolean);
     procedure SaveAllAlbums();
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
 
 
 
   private
     IsInSelectMode: Boolean;
-  property Modified: Boolean read GetModified write setModified;
+
 
   public
      headsEnum: TEnumAlbs;
      newUploadNode: PPicElem;
      isModified: Boolean;
      PicInfo: TData;
+     property Modified: Boolean read GetModified write setModified;
   end;
 
 var
   FGallery: TFGallery;
 
 implementation
-   uses BigPic;
+   uses BigPic, MainMenu;
 
 
 
@@ -175,7 +176,7 @@ end;
 
 
 
-procedure TFGallery.ACTWhenImageClickedExecute(Sender: TObject);
+procedure TFGallery.ImageClicked(Sender: TObject);
 begin
 
   if Sender is TImage then
@@ -467,10 +468,10 @@ begin
   Panel.ParentBackground := False;
   Panel.ParentColor := False;
 //  Panel.Visible := False;
-  Panel.OnClick := FGallery.ACTWhenImageClickedExecute;
+  Panel.OnClick := FGallery.ImageClicked;
 
   FGallery.CreatePicture(Image, Panel, APic, Margin);
-  Image.OnClick := FGallery.ACTWhenImageClickedExecute;
+  Image.OnClick := FGallery.ImageClicked;
 
   LabelTitle := TLabel.Create(Panel);
   LabelTitle.Parent := Panel;
@@ -795,10 +796,11 @@ end;
 
 function TFGallery.CopyList(head: PPicElem): PPicElem;
 var
-  current, newHead, newNode: PPicElem;
+  current, newHead, newNode, lastNode: PPicElem;
 begin
   newHead := nil;
   current := head;
+  lastNode := nil;
 
   while (current <> nil) do
   begin
@@ -806,17 +808,23 @@ begin
     newNode^.data := current^.data;
     newNode^.Next := nil;
 
-    if not (newHead = nil) then
+    if (newHead = nil) then
     begin
-      newNode^.Next := newHead;
+      newHead := newNode;
+      lastNode := newNode;
+    end
+    else
+    begin
+      lastNode^.Next := newNode;
+      lastNode := newNode;
     end;
 
-    newHead := newNode;
     current := current^.Next;
   end;
 
   result := newHead;
 end;
+
 
 function MergeSort(head: PPicElem; sortDirection: integer; compare: TSortMethod): PPicElem;
 var
@@ -898,10 +906,16 @@ begin
 end;
 
 // remove focus from combobox
-procedure TFGallery.FormShortCut(var Msg: TWMKey; var Handled: Boolean);
+procedure TFGallery.OnCloseQuery(var Msg: TWMKey; var Handled: Boolean);
 begin
   If Msg.CharCode = VK_ESCAPE Then
+  begin
+
     Close;
+    TFMenu.Visible := True;
+    TFMenu.Show;
+
+  end;
 end;
 
 procedure TFGallery.FormShow(Sender: TObject);
@@ -1201,12 +1215,12 @@ begin
 
   Window := TFBigPic.Create(nil);
   try
-    Window.header := headsEnum[CmbBxAlbum.ItemIndex][1];
+    Window.header := headsEnum[CmbBxAlbum.ItemIndex][0];
 
     LabelToSearch := TLabel(TPanel(TImage(Sender).Parent).Controls[1]).Caption;
-    Window.PrevPicInfo := SearchPrevTitle(headsEnum[CmbBxAlbum.ItemIndex][1], LabelToSearch);
+    Window.PrevPicInfo := SearchPrevTitle(headsEnum[CmbBxAlbum.ItemIndex][0], LabelToSearch);
 
-    if (Window.PrevPicInfo <> headsEnum[CmbBxAlbum.ItemIndex][1]) or (LabelToSearch <> headsEnum[CmbBxAlbum.ItemIndex][1].data.title) then
+    if (Window.PrevPicInfo <> headsEnum[CmbBxAlbum.ItemIndex][0]) or (LabelToSearch <> headsEnum[CmbBxAlbum.ItemIndex][0].data.title) then
       Window.PicInfo := Window.PrevPicInfo^.Next
     else
       Window.PicInfo := Window.PrevPicInfo;
@@ -1226,21 +1240,41 @@ end;
 //---------------------------------------------------------------------------------
 // BIG PIC section END
 
+procedure TFGallery.FormClose(Sender: TObject; var Action: TCloseAction);
+var
+  MsgResult: Integer;
+begin
+
+
+end;
+
 procedure TFGallery.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 var
   MsgResult: Integer;
 begin
 
 
-  FGallery.Modified := true;
+//
    if FGallery.Modified then
   begin
     MsgResult := Application.MessageBox('Вы хотите сохранить изменения?', 'Внимание!', MB_ICONWARNING or MB_YESNOCANCEL);
     case MsgResult of
-      IDYES: SaveAllAlbums();
+      IDYES:
+      begin
+        SaveAllAlbums();
+
+        CanClose := True;
+        TFMenu.Visible := True;
+        TFMenu.Show;
+      end;
       IDNO: CanClose := True;
       IDCANCEL: CanClose := False;
     end;
+  end
+  else
+  begin
+     TFMenu.Visible := True;
+        TFMenu.Show;
   end;
 
 
@@ -1302,12 +1336,6 @@ begin
 
 end;
 
-procedure TFGallery.FormKeyDown(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
-begin
- if Key = VK_ESCAPE then
-    Close;
-end;
 
 procedure TFGallery.FormResize(Sender: TObject);
 var

@@ -26,7 +26,6 @@ type
     LabelTheme: TLabel;
     LabelUserComm: TLabel;
     LabelUserRate: TLabel;
-    ChkBxFavourite: TCheckBox;
     CmbBxUserRate: TComboBox;
     MenuEditPic: TMenuItem;
     MenuDeletePic: TMenuItem;
@@ -45,6 +44,8 @@ type
     MenuCreatePic: TMenuItem;
     MenuRejectPic: TMenuItem;
     EditYears: TEdit;
+    ImageGoldStar: TImage;
+    ImageGrayStar: TImage;
     procedure FormActivate(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure MenuEditPicClick(Sender: TObject);
@@ -55,13 +56,16 @@ type
     procedure showHideMenu(EditDeleteStatus, acceptCancelStatus: Boolean; CreateRejectStatus: Boolean);
     procedure FormResize(Sender: TObject);
     procedure CmbBxUserRateChange(Sender: TObject);
-    procedure ChkBxFavouriteClick(Sender: TObject);
+
     procedure MenuDeletePicClick(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormShortCut(var Msg: TWMKey; var Handled: Boolean);
     procedure MenuRejectPicClick(Sender: TObject);
     procedure MenuCreatePicClick(Sender: TObject);
     procedure updatePicInfo(var picToUpdate: PPicElem);
+    procedure DeletePictureFile(Picture: TPicture; const FileName: string);
+    procedure ImageGrayStarClick(Sender: TObject);
+    procedure ImageGoldStarClick(Sender: TObject);
 
   private
 
@@ -146,10 +150,7 @@ begin
 
 end;
 
-procedure TFBigPic.ChkBxFavouriteClick(Sender: TObject);
-begin
-  PicInfo.data.isFavourite := ChkBxFavourite.Checked;
-end;
+
 
 procedure TFBigPic.CmbBxUserRateChange(Sender: TObject);
 begin
@@ -173,7 +174,18 @@ begin
   LabelFieldMats.Caption := PicInfo.data.materials;
   LabelFieldPlace.Caption := PicInfo.data.place;
   LabelFieldDescr.Caption := PicInfo.data.shortDescr;
-  ChkBxFavourite.Checked := PicInfo.data.isFavourite;
+
+
+  if PicInfo.data.isFavourite then
+  begin
+    ImageGoldStar.BringToFront;
+  end
+  else
+  begin
+    ImageGoldStar.SendToBack;
+  end;
+
+
   LabelFieldUsrCmm.Caption := PicInfo.data.userComment;
   CmbBxUserRate.Text := IntToStr(PicInfo.data.userRate);
 
@@ -233,6 +245,20 @@ begin
     Close;
 end;
 
+procedure TFBigPic.ImageGoldStarClick(Sender: TObject);
+begin
+  PicInfo.data.isFavourite := not PicInfo.data.isFavourite;
+
+      ImageGoldStar.SendToBack;
+end;
+
+procedure TFBigPic.ImageGrayStarClick(Sender: TObject);
+begin
+  PicInfo.data.isFavourite := not PicInfo.data.isFavourite;
+  ImageGrayStar.SendToBack;
+
+end;
+
 procedure TFBigPic.updatePicInfo(var picToUpdate: PPicElem);
 begin
   // save info from memos
@@ -258,7 +284,7 @@ begin
   LabelFieldMats.Caption := picToUpdate.data.materials;
   LabelFieldPlace.Caption := picToUpdate.data.place;
   LabelFieldDescr.Caption := picToUpdate.data.shortDescr;
-  ChkBxFavourite.Checked := picToUpdate.data.isFavourite;
+//  ChkBxFavourite.Checked := picToUpdate.data.isFavourite;
   LabelFieldUsrCmm.Caption := picToUpdate.data.userComment;
   CmbBxUserRate.Text := IntToStr(picToUpdate.data.userRate);
 end;
@@ -308,16 +334,29 @@ begin
   ShowHideMenu(True, False, False);
 end;
 
+procedure TFBigPic.DeletePictureFile(Picture: TPicture; const FileName: string);
+begin
+  // First, set the picture to nil to release any locks on the file
+  Picture.Assign(nil);
+
+  // Then, delete the file from the folder
+  DeleteFile(FileName);
+end;
+
 procedure TFBigPic.MenuDeletePicClick(Sender: TObject);
 var
   Temp: PPicElem;
 begin
-  FGallery.DeleteNode(PicInfo, FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][1]);
+  FGallery.DeleteNode(PicInfo, FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][0]);
 //  FGallery.DeleteNode(PicInfo, FGallery.head);
-  Close;
-  FGallery.ReCreateAllPanels(FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][1]);
 
+  FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][1] := FGallery.CopyList(FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][0]);
+  FGallery.ReCreateAllPanels(FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][1]);
+  FGallery.Modified := True;
+   Close;
 end;
+
+
 
 procedure TFBigPic.MenuEditPicClick(Sender: TObject);
 begin

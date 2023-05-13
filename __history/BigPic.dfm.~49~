@@ -401,11 +401,10 @@ object FBigPic: TFBigPic
       WordWrap = True
     end
     object ImageGoldStar: TImage
-      Left = 500
+      Left = 516
       Top = 12
       Width = 35
       Height = 35
-      Cursor = crHandPoint
       Picture.Data = {
         0954506E67496D61676589504E470D0A1A0A0000000D49484452000000DF0000
         00D6080600000051F657E4000000097048597300000B1300000B1301009A9C18
@@ -700,11 +699,10 @@ object FBigPic: TFBigPic
       OnClick = ImageGoldStarClick
     end
     object ImageGrayStar: TImage
-      Left = 500
+      Left = 516
       Top = 12
       Width = 35
       Height = 35
-      Cursor = crHandPoint
       Picture.Data = {
         0954506E67496D61676589504E470D0A1A0A0000000D49484452000000D70000
         00CE0806000000ADA497E6000000097048597300000B1300000B1301009A9C18
