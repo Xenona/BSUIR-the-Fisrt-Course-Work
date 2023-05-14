@@ -835,7 +835,7 @@ object FBigPic: TFBigPic
     end
     object MemoTitle: TMemo
       Left = 22
-      Top = 9
+      Top = 6
       Width = 380
       Height = 73
       Font.Charset = DEFAULT_CHARSET

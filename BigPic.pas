@@ -155,6 +155,7 @@ end;
 procedure TFBigPic.CmbBxUserRateChange(Sender: TObject);
 begin
   PicInfo.data.userRate := (CmbBxUserRate.ItemIndex);
+  FGallery.Modified := true;
 end;
 
 procedure TFBigPic.FormActivate(Sender: TObject);
@@ -249,13 +250,15 @@ procedure TFBigPic.ImageGoldStarClick(Sender: TObject);
 begin
   PicInfo.data.isFavourite := not PicInfo.data.isFavourite;
 
-      ImageGoldStar.SendToBack;
+  ImageGoldStar.SendToBack;
+  FGallery.Modified := true;
 end;
 
 procedure TFBigPic.ImageGrayStarClick(Sender: TObject);
 begin
   PicInfo.data.isFavourite := not PicInfo.data.isFavourite;
   ImageGrayStar.SendToBack;
+  FGallery.Modified := true;
 
 end;
 
@@ -287,21 +290,43 @@ begin
 //  ChkBxFavourite.Checked := picToUpdate.data.isFavourite;
   LabelFieldUsrCmm.Caption := picToUpdate.data.userComment;
   CmbBxUserRate.Text := IntToStr(picToUpdate.data.userRate);
+   FGallery.Modified := true;
 end;
 
 procedure TFBigPic.MenuAcceptClick(Sender: TObject);
+var
+  tempHead: PPicElem;
+  isUnique: boolean;
 begin
-  FGallery.Modified := true;
-  updatePicInfo(PicInfo);
+
+  isUnique := true;
+  tempHead := FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][0];
+
+  if tempHead <> nil then
+  begin
+
+    if Trim(tempHead.data.title) = Trim(MemoTitle.Text) then
+      isUnique := false;
+
+    tempHead := tempHead^.Next;
+  end;
+
+  if isUnique then
+  begin
+    FGallery.Modified := true;
+    updatePicInfo(PicInfo);
 
 
-  showHideMemo(False);
+    showHideMemo(False);
 
-  showHideMenu(True, False, False);
+    showHideMenu(True, False, False);
 
-  FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][1] := FGallery.CopyList(FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][0]);
-  FGallery.ReCreateAllPanels(FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][1]);
-
+    FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][1] := FGallery.CopyList(FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][0]);
+    FGallery.ReCreateAllPanels(FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][1]);
+    FGallery.Modified := true;
+  end
+  else
+    Application.MessageBox('Названия картин должны быть уникальны!', 'Внимание!', MB_ICONWARNING);
 
 end;
 
@@ -312,16 +337,38 @@ begin
 end;
 
 procedure TFBigPic.MenuCreatePicClick(Sender: TObject);
-
+var
+  tempHead: PPicElem;
+  isUnique: boolean;
 begin
 
-  updatePicInfo(PicInfo);
-  FGallery.AddNewNode(PicInfo, FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][0]);
-  FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][1] := FGallery.CopyList(FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][0]);
-  FGallery.ReCreateAllPanels(FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][1]);
-  Close;
-//  FGallery.AddNewNode(PicInfo, FGallery.head);
-  FGallery.Modified := true;
+  isUnique := true;
+  tempHead := FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][0];
+
+  if tempHead <> nil then
+  begin
+
+    if Trim(tempHead.data.title) = Trim(MemoTitle.Text) then
+      isUnique := false;
+
+    tempHead := tempHead^.Next;
+  end;
+
+  if isUnique then
+  begin
+
+    updatePicInfo(PicInfo);
+    FGallery.AddNewNode(PicInfo, FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][0]);
+    FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][1] := FGallery.CopyList(FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][0]);
+    FGallery.ReCreateAllPanels(FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][1]);
+    Close;
+
+  //  FGallery.AddNewNode(PicInfo, FGallery.head);
+    FGallery.Modified := true;
+  end
+  else
+    Application.MessageBox('Названия картин должны быть уникальны!', 'Внимание!', MB_ICONWARNING);
+
 end;
 
 procedure TFBigPic.MenuRejectPicClick(Sender: TObject);
@@ -341,18 +388,22 @@ begin
 
   // Then, delete the file from the folder
   DeleteFile(FileName);
+  FGallery.Modified := true;
 end;
 
 procedure TFBigPic.MenuDeletePicClick(Sender: TObject);
 var
   Temp: PPicElem;
 begin
-  FGallery.DeleteNode(PicInfo, FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][0]);
+  try
+    FGallery.DeleteNode(PicInfo, FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][0]);
+    FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][1] := FGallery.CopyList(FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][0]);
+    FGallery.ReCreateAllPanels(FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][1]);
+    FGallery.Modified := True;
+  except
+    ShowMessage('fooooooooooooooooooooooooooooooooooool');
+  end;
 //  FGallery.DeleteNode(PicInfo, FGallery.head);
-
-  FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][1] := FGallery.CopyList(FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][0]);
-  FGallery.ReCreateAllPanels(FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][1]);
-  FGallery.Modified := True;
    Close;
 end;
 

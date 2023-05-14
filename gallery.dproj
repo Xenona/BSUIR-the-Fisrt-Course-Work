@@ -124,13 +124,11 @@
             <Form>Bio</Form>
         </DCCReference>
         <DCCReference Include="Developer.pas">
-            <Form>Form2</Form>
-            <FormType>dfm</FormType>
+            <Form>FDeveloper</Form>
         </DCCReference>
         <DCCReference Include="Stack.pas"/>
         <DCCReference Include="SlideShow.pas">
             <Form>FSlide</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>

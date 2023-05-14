@@ -1,0 +1,104 @@
+unit Biography;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.Imaging.pngimage,
+  Vcl.Imaging.jpeg, Vcl.StdCtrls;
+
+type
+  TBio = class(TForm)
+    ImageBG: TImage;
+    Image2: TImage;
+    PanelPortrait: TPanel;
+    Memo1: TMemo;
+    PanelBG: TPanel;
+    Memo2: TMemo;
+    Memo3: TMemo;
+    ScrollBox1: TScrollBox;
+    Memo4: TMemo;
+    Memo5: TMemo;
+    Memo6: TMemo;
+    Memo7: TMemo;
+    Memo9: TMemo;
+    Memo10: TMemo;
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormShortCut(var Msg: TWMKey; var Handled: Boolean);
+    procedure FormCreate(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Bio: TBio;
+
+implementation
+
+uses
+  MainMenu;
+
+{$R *.dfm}
+
+procedure TBio.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  TFMenu.Visible := True;
+  TFMenu.Show;
+end;
+
+procedure TBio.FormCreate(Sender: TObject);
+var
+  i: Integer;
+  bioFile: TextFile;
+  bioPath: String;
+  paragraph: string;
+begin
+
+  bioPath := '.\text\Biography.txt';
+  try
+    AssignFile(bioFile, bioPath);
+    if fileExists(bioPath) then
+    begin
+
+      Reset(bioFile);
+      i := 0;
+      while i < Bio.ControlCount do
+      begin
+
+        if Bio.Controls[i] is TMemo then
+        begin
+          Readln(bioFile, paragraph);
+          TMemo(Bio.Controls[i]).Text := paragraph;
+
+        end;
+        i := i + 1;
+      end;
+
+  end
+  else
+    ShowMessage('Файл биографии повреждён');
+  finally
+    CloseFile(bioFile);
+  end;
+
+
+
+
+end;
+
+procedure TBio.FormShortCut(var Msg: TWMKey; var Handled: Boolean);
+begin
+  if Msg.CharCode = VK_ESCAPE then
+  begin
+    Close;
+    TFMenu.Visible := True;
+    TFMenu.Show;
+  end;
+
+end;
+
+
+
+end.

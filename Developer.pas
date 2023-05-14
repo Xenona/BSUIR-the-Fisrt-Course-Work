@@ -7,8 +7,9 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs;
 
 type
-  TForm2 = class(TForm)
+  TFDeveloper = class(TForm)
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormShortCut(var Msg: TWMKey; var Handled: Boolean);
   private
     { Private declarations }
   public
@@ -16,7 +17,7 @@ type
   end;
 
 var
-  Form2: TForm2;
+  FDeveloper: TFDeveloper;
 
 implementation
 
@@ -24,10 +25,21 @@ uses MainMenu;
 
 {$R *.dfm}
 
-procedure TForm2.FormClose(Sender: TObject; var Action: TCloseAction);
+procedure TFDeveloper.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   TFMenu.Visible := True;
   TFMenu.Show;
+end;
+
+procedure TFDeveloper.FormShortCut(var Msg: TWMKey; var Handled: Boolean);
+begin
+  if Msg.CharCode = VK_ESCAPE then
+  begin
+    Close;
+    TFMenu.Visible := True;
+    TFMenu.Show;
+  end;
+
 end;
 
 end.

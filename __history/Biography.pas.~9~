@@ -1,0 +1,121 @@
+unit Biography;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.Imaging.pngimage,
+  Vcl.Imaging.jpeg, Vcl.StdCtrls;
+
+type
+  TBio = class(TForm)
+    ImageBG: TImage;
+    Image2: TImage;
+    PanelPortrait: TPanel;
+    Memo1: TMemo;
+    PanelBG: TPanel;
+    Memo2: TMemo;
+    Memo3: TMemo;
+    ScrollBoxBio: TScrollBox;
+    Memo10: TMemo;
+    LabelTop: TLabel;
+    Memo4: TMemo;
+    Label1: TLabel;
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormShortCut(var Msg: TWMKey; var Handled: Boolean);
+    procedure FormCreate(Sender: TObject);
+    procedure FormMouseWheel(Sender: TObject; Shift: TShiftState;
+      WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
+    procedure FormResize(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Bio: TBio;
+
+implementation
+
+uses
+  MainMenu;
+
+{$R *.dfm}
+
+procedure TBio.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  TFMenu.Visible := True;
+  TFMenu.Show;
+end;
+
+procedure TBio.FormCreate(Sender: TObject);
+var
+  i: Integer;
+  bioFile: TextFile;
+  bioPath: String;
+  paragraph: string;
+begin
+
+  bioPath := '.\text\Biography.txt';
+  try
+    AssignFile(bioFile, bioPath);
+    if fileExists(bioPath) then
+    begin
+
+      Reset(bioFile);
+      i := 0;
+      while i < ScrollBoxBio.ControlCount do
+      begin
+
+        if ScrollBoxBio.Controls[i] is TMemo then
+        begin
+          Readln(bioFile, paragraph);
+          TMemo(ScrollBoxBio.Controls[i]).Text := paragraph;
+
+        end;
+        i := i + 1;
+      end;
+
+  end
+  else
+    ShowMessage('Файл биографии повреждён');
+  finally
+    CloseFile(bioFile);
+  end;
+
+
+
+
+end;
+
+procedure TBio.FormMouseWheel(Sender: TObject; Shift: TShiftState;
+  WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
+begin
+  Handled := True;
+  if WheelDelta < 0 then
+    ScrollBoxBio.VertScrollBar.Position := ScrollBoxBio.VertScrollBar.Position + ScrollBoxBio.VertScrollBar.Increment
+  else
+    ScrollBoxBio.VertScrollBar.Position := ScrollBoxBio.VertScrollBar.Position - ScrollBoxBio.VertScrollBar.Increment;
+end;
+
+procedure TBio.FormResize(Sender: TObject);
+begin
+
+  ScrollBoxBio.Height := Bio.ClientHeight;
+end;
+
+procedure TBio.FormShortCut(var Msg: TWMKey; var Handled: Boolean);
+begin
+  if Msg.CharCode = VK_ESCAPE then
+  begin
+    Close;
+    TFMenu.Visible := True;
+    TFMenu.Show;
+  end;
+
+end;
+
+
+
+end.

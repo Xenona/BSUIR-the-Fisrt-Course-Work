@@ -660,9 +660,13 @@ begin
   newAlbum := SearchData(headsEnum[CmbBxAlbum.ItemIndex][1], '1', 14 );
   if SaveCurrPage.Execute() then
   begin
-
-    saveAlbumToFile(newAlbum, SaveCurrPage.FileName);
-    clearChanged(headsEnum[CmbBxAlbum.ItemIndex][1]);
+    if SaveCurrPage.FileName <> '' then
+    begin
+      saveAlbumToFile(newAlbum, SaveCurrPage.FileName);
+      clearChanged(headsEnum[CmbBxAlbum.ItemIndex][1]);
+    end
+    else
+      ShowMessage('fooool')
 
   end;
 
@@ -676,6 +680,7 @@ var
   ExePath: string;
 
 begin
+
 
   ExePath := ExtractFilePath(ParamStr(0));
   DeleteArrayElement(headsEnum, cmbBxAlbum.ItemIndex);
@@ -720,7 +725,7 @@ const
 
 begin
   ExePath := ExtractFilePath(ParamStr(0));
-  if openImportAlbum.Execute() then
+  if openImportAlbum.Execute() and (openImportAlbum.FileName <> '') then
   begin
 
     albPath := openImportAlbum.FileName;
@@ -733,10 +738,13 @@ begin
     enumPath := ExePath + 'albums\';
 
     AssignFile(enumFile, enumPath + enumerated);
-    Append(enumFile);
-
+    if not fileExists(enumPath+ enumerated) then
+      Rewrite(enumFile)
+    else
+      Append(enumFile);
     Writeln(enumFile, alb);
     Closefile(enumFIle);
+
 
     // Нарастить динамический массив, заполнить его двумя списками
 
@@ -1060,28 +1068,38 @@ begin
   FillChar(newUploadNode.data, SizeOf(newUploadNode.data), 0);
   if OpenPic.Execute() then
   begin
-    newUploadNode.data.imgBuffer := TPicture.Create;
-    newUploadNode.data.imgBuffer.LoadFromFile(OpenPic.FileName);
-    newUploadNode.data.imgBuffer.SaveToFile(AppPath + '.\src\' + ExtractFileName(OpenPic.FileName));
-    newUploadNode.data.filename := ExtractFileName(OpenPic.FileName);
+    if OpenPic.FileName <> '' then
+    begin
+      if ExtractFileExt(OpenPic.FileName) = '.bmp' then
+      begin
+        newUploadNode.data.imgBuffer := TPicture.Create;
+        newUploadNode.data.imgBuffer.LoadFromFile(OpenPic.FileName);
+        newUploadNode.data.imgBuffer.SaveToFile(AppPath + '.\src\' + ExtractFileName(OpenPic.FileName));
+        newUploadNode.data.filename := ExtractFileName(OpenPic.FileName);
+        try
+
+          UploadWindow := TFBigPic.Create(nil);
+          UploadWindow.showHideMenu(False, False, True);
+          UploadWindow.showHideMemo(True);
+
+          uniPostfix := GenerateShortHash();
+          defaultTitle := UploadWindow.MemoTitle.Text;
+          UploadWindow.MemoTitle.Text := Copy(defaultTitle, 1, length(defaultTitle)-1)  + Copy(uniPostfix, length(uniPostfix)-6, length(uniPostfix));
+
+          UploadWindow.PicInfo := newUploadNode;
+
+          UploadWindow.ShowModal;
+        finally
+          UploadWindow.Free;
+        end;
+      end
+      else
+        ShowMessage('fffooolll');
+    end
+    else
+      ShowMessage('Fool');
   end;
 
-  try
-
-    UploadWindow := TFBigPic.Create(nil);
-    UploadWindow.showHideMenu(False, False, True);
-    UploadWindow.showHideMemo(True);
-
-    uniPostfix := GenerateShortHash();
-    defaultTitle := UploadWindow.MemoTitle.Text;
-    UploadWindow.MemoTitle.Text := Copy(defaultTitle, 1, length(defaultTitle)-1)  + Copy(uniPostfix, length(uniPostfix)-6, length(uniPostfix));
-
-    UploadWindow.PicInfo := newUploadNode;
-
-    UploadWindow.ShowModal;
-  finally
-    UploadWindow.Free;
-  end;
 end;
 
 procedure TFGallery.PanelSortClick(Sender: TObject);
@@ -1321,6 +1339,7 @@ begin
   CmbBxFiltVal.ItemIndex := -1;
   CmbBxSort.ItemIndex := -1;
   CmbBxSortDir.ItemIndex := -1;
+
 end;
 
 procedure TFGallery.Filter();
@@ -1429,7 +1448,7 @@ begin
 //
    if FGallery.Modified then
   begin
-    MsgResult := Application.MessageBox('Вы хотите сохранить изменения?', 'Внимание!', MB_ICONWARNING or MB_YESNOCANCEL);
+    MsgResult := Application.MessageBox('Вы произвели изменения в описании картин. Хотите сохранить изменения?', 'Внимание!', MB_ICONWARNING or MB_YESNOCANCEL);
     case MsgResult of
       IDYES:
       begin
@@ -1445,8 +1464,8 @@ begin
   end
   else
   begin
-     TFMenu.Visible := True;
-        TFMenu.Show;
+    TFMenu.Visible := True;
+    TFMenu.Show;
   end;
 
 
