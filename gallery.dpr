@@ -21,12 +21,12 @@ begin
   TStyleManager.TrySetStyle('Smokey Quartz Kamri');
 
 
-  Application.CreateForm(TFDeveloper, FDeveloper);
+
   Application.CreateForm(TTFMenu, TFMenu);
   Application.CreateForm(TBio, Bio);
   Application.CreateForm(TFGallery, FGallery);
   Application.CreateForm(TFBigPic, FBigPic);
-
+   Application.CreateForm(TFDeveloper, FDeveloper);
 
   Application.CreateForm(TFSlide, FSlide);
   Application.Run;
