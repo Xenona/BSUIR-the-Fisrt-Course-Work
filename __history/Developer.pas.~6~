@@ -1,0 +1,51 @@
+unit Developer;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Imaging.jpeg,
+  Vcl.ExtCtrls;
+
+type
+  TFDeveloper = class(TForm)
+    PanelBG: TPanel;
+    ImageBG: TImage;
+    Label1: TLabel;
+    Label2: TLabel;
+    Label3: TLabel;
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormShortCut(var Msg: TWMKey; var Handled: Boolean);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  FDeveloper: TFDeveloper;
+
+implementation
+
+uses MainMenu;
+
+{$R *.dfm}
+
+procedure TFDeveloper.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  TFMenu.Visible := True;
+  TFMenu.Show;
+end;
+
+procedure TFDeveloper.FormShortCut(var Msg: TWMKey; var Handled: Boolean);
+begin
+  if Msg.CharCode = VK_ESCAPE then
+  begin
+    Close;
+    TFMenu.Visible := True;
+    TFMenu.Show;
+  end;
+
+end;
+
+end.

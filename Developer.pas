@@ -4,10 +4,20 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Imaging.jpeg,
+  Vcl.ExtCtrls;
 
 type
   TFDeveloper = class(TForm)
+    PanelBG: TPanel;
+    ImageBG: TImage;
+    Label1: TLabel;
+    Label2: TLabel;
+    Label3: TLabel;
+    Label4: TLabel;
+    Label5: TLabel;
+    Bevel1: TBevel;
+    Bevel2: TBevel;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormShortCut(var Msg: TWMKey; var Handled: Boolean);
   private
