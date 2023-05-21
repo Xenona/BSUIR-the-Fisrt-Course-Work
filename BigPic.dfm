@@ -958,7 +958,7 @@ object FBigPic: TFBigPic
       Font.Style = []
       ParentFont = False
       TabOrder = 8
-      Text = '0000 - 0000'
+      Text = '1880 - 1880'
       TextHint = 'YYYY - YYYY'
       Visible = False
     end

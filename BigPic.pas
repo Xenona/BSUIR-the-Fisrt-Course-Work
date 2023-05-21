@@ -299,19 +299,19 @@ var
   isUnique: boolean;
 begin
 
-  isUnique := true;
-  tempHead := FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][0];
+//  isUnique := true;
+//  tempHead := FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][0];
+//
+//  if tempHead <> nil then
+//  begin
+//
+//    if Trim(tempHead.data.title) = Trim(MemoTitle.Text) then
+//      isUnique := false;
+//
+//    tempHead := tempHead^.Next;
+//  end;
 
-  if tempHead <> nil then
-  begin
-
-    if Trim(tempHead.data.title) = Trim(MemoTitle.Text) then
-      isUnique := false;
-
-    tempHead := tempHead^.Next;
-  end;
-
-  if isUnique then
+//  if isUnique then
   begin
     FGallery.Modified := true;
     updatePicInfo(PicInfo);
@@ -325,8 +325,8 @@ begin
     FGallery.ReCreateAllPanels(FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][1]);
     FGallery.Modified := true;
   end
-  else
-    Application.MessageBox('Названия картин должны быть уникальны!', 'Внимание!', MB_ICONWARNING);
+//  else
+//    Application.MessageBox('Названия картин должны быть уникальны!', 'Внимание!', MB_ICONWARNING);
 
 end;
 
@@ -401,7 +401,7 @@ begin
     FGallery.ReCreateAllPanels(FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][1]);
     FGallery.Modified := True;
   except
-    ShowMessage('fooooooooooooooooooooooooooooooooooool');
+    ShowMessage('Возникла ошибка. Перезапустите программу');
   end;
 //  FGallery.DeleteNode(PicInfo, FGallery.head);
    Close;

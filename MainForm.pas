@@ -101,6 +101,7 @@ type
     procedure MenuCreateAlbumClick(Sender: TObject);
     function isRecordMatch(const data: Tdata; const searchStr: string; field: integer): boolean;
     procedure clearChanged(tempHead: PPicElem);
+    procedure SaveEnumeration();
 
 
   private
@@ -257,14 +258,9 @@ begin
         DrawPanelBorder(Sender);
         MenuCreateAlbum.Enabled := IsInSelectMode;
         LabelToSearch := TLabel(TPanel(TImage(Sender).Parent).Controls[1]).Caption;
-//        PicToChange := searchData(, LabelToSearch, 1);
-
         PicToChange := headsEnum[CmbBxAlbum.ItemIndex][1];
         while  not((isRecordMatch(PicToChange.data, LabelToSearch, 1))) do
         begin
-
-
-
 
           PicToChange := PicToChange^.Next;
         end;
@@ -280,7 +276,16 @@ begin
     else
     begin
       if (GetKeyState(VK_SHIFT) and $80) <> 0 then
+      begin
         DrawPanelBorder(Sender);
+        LabelToSearch := TLabel(TPanel(TImage(Sender).Parent).Controls[1]).Caption;
+        PicToChange := headsEnum[CmbBxAlbum.ItemIndex][1];
+        while  not((isRecordMatch(PicToChange.data, LabelToSearch, 1))) do
+        begin
+          PicToChange := PicToChange^.Next;
+        end;
+        PicToChange.data.isToBeChanged := true;
+      end;
     end;
   end
   else
@@ -666,7 +671,7 @@ begin
       clearChanged(headsEnum[CmbBxAlbum.ItemIndex][1]);
     end
     else
-      ShowMessage('fooool')
+      ShowMessage('Введите подходящее название файлу!')
 
   end;
 
@@ -697,6 +702,8 @@ begin
     ReCreateAllPanels(nil);
   end;
 
+  FGallery.Modified := True;
+
 
 end;
 
@@ -707,11 +714,39 @@ var
 begin
   ExePath := ExtractFilePath(ParamStr(0));
 
+  if headsEnum[CmbBxAlbum.ItemIndex][0] <> nil then
+  begin
   if FileOpenFolder.Execute then
     folderPath := FileOpenFolder.FileName;
     CopyAlbumFile(ExePath + 'albums\' + CmbBxAlbum.Text  + '.pics', folderPath);
+  end
+  else
+    ShowMessage('Нельзя экспортировать пустой альбом!');
 
 end;
+
+
+procedure TFGallery.SaveEnumeration();
+const
+  enumerated: string = 'enumerate.albums';
+var
+  ExePath: string;
+  enumPath: string;
+  enumFile: textFile;
+  I: Integer;
+begin
+  ExePath := ExtractFilePath(ParamStr(0));
+  enumPath := ExePath + 'albums\';
+  AssignFile(enumFile, enumPath + enumerated);
+  Rewrite(enumFile);
+  for I := 0 to CmbBxAlbum.Items.Count do
+  begin
+    if CmbBxAlbum.Items[i] <> '' then
+      Writeln(enumFile, CmbBxAlbum.Items[i]+'.pics');
+  end;
+  Closefile(enumFIle);
+end;
+
 
 procedure TFGallery.MenuImportAlbumClick(Sender: TObject);
 var
@@ -724,6 +759,8 @@ const
   enumerated: string = 'enumerate.albums';
 
 begin
+
+
   ExePath := ExtractFilePath(ParamStr(0));
   if openImportAlbum.Execute() and (openImportAlbum.FileName <> '') then
   begin
@@ -833,18 +870,25 @@ begin
     saveAlbumToFile(headsEnum[i][0], AppPath + 'albums\' + CmbBxAlbum.Items[i])
   end;
 
+  SaveEnumeration();
+
 end;
 
 procedure TFGallery.MenuSavePageClick(Sender: TObject);
 begin
 
-  if SaveCurrPage.Execute() then
+  if headsEnum[CmbBxAlbum.ItemIndex][1] <> nil then
   begin
+    if SaveCurrPage.Execute() then
+    begin
 
-    saveAlbumToFile(headsEnum[CmbBxAlbum.ItemIndex][1], SaveCurrPage.FileName);
+      saveAlbumToFile(headsEnum[CmbBxAlbum.ItemIndex][1], SaveCurrPage.FileName);
 
 
-  end;
+    end;
+  end
+  else
+    ShowMessage('Нельзя сохранить пустой альбом!');
 
 
 end;
@@ -991,7 +1035,7 @@ begin
         if tail <> nil then
           tail^.Next := right;
         tail := right;
-        right := right^.Next;
+          ;
       end;
     end;
     if tail <> nil then
@@ -1039,7 +1083,7 @@ end;
 
 procedure TFGallery.FormShow(Sender: TObject);
 begin
-  ActiveControl := PanelSideBar ; // Set focus to form
+  ActiveControl := PanelSideBar ;
 end;
 
 function GenerateShortHash: string;
@@ -1048,8 +1092,8 @@ var
   nowDateTime: TDateTime;
 begin
   Randomize;
-  randNum := Random(1000); // generate a random number between 0 and 999
-  nowDateTime := Now; // get the current date and time
+  randNum := Random(1000);
+  nowDateTime := Now;
   Result := FormatDateTime('yymmddhhnnss', nowDateTime) + IntToStr(randNum);
 end;
 
@@ -1094,10 +1138,10 @@ begin
         end;
       end
       else
-        ShowMessage('fffooolll');
+        ShowMessage('Выберите файл с необходимым расширением .bmp');
     end
     else
-      ShowMessage('Fool');
+      ShowMessage('Файл имеет неверное название');
   end;
 
 end;
@@ -1320,7 +1364,7 @@ begin
   else
     FlowPanelPics.ShowCaption := False;
   ReCreateAllPanels(headsEnum[CmbBxAlbum.ItemIndex][1]);
-  
+
       
       
 end;
@@ -1375,7 +1419,7 @@ begin
     begin
       CmbBxFiltVal.Items.Clear;
       CmbBxFiltVal.Text := '';
-      CmbBxFiltVal.Items.Add('');
+//      CmbBxFiltVal.Items.Add('');
       CmbBxFiltVal.Items.Add('Нет оценки');
       CmbBxFiltVal.Items.Add('1');
       CmbBxFiltVal.Items.Add('2');
@@ -1522,6 +1566,7 @@ begin
   CmbBxSortDir.Items.Add('По убыванию');
 
 
+  MenuCreateAlbum.Enabled := False;
 //  ChangedHead := CopyList(head);
 
 

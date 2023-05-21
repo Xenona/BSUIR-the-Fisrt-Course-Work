@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Imaging.jpeg,
-  Vcl.ExtCtrls;
+  Vcl.ExtCtrls, Vcl.Imaging.pngimage;
 
 type
   TFDeveloper = class(TForm)
@@ -18,6 +18,8 @@ type
     Label5: TLabel;
     Bevel1: TBevel;
     Bevel2: TBevel;
+    Label6: TLabel;
+    Label7: TLabel;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormShortCut(var Msg: TWMKey; var Handled: Boolean);
   private
