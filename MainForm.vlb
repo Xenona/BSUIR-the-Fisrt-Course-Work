@@ -7,9 +7,6 @@ Coordinates=10,10,135,124
 [ButtonSlideshow]
 Coordinates=90,346,110,58
 
-[MenuUpload]
-Coordinates=552,287,87,36
-
 [CmbBxFiltVal]
 Coordinates=377,10,101,124
 
@@ -115,4 +112,7 @@ Coordinates=124,153,58,36
 
 [ActionList1]
 Coordinates=325,221,78,36
+
+[MenuUploadPic]
+Coordinates=552,287,87,36
 

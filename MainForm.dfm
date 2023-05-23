@@ -398,9 +398,13 @@ object FGallery: TFGallery
         OnClick = MenuDeleteAlbumClick
       end
     end
-    object MenuUpload: TMenuItem
+    object MenuUploadPic: TMenuItem
       Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1082#1072#1088#1090#1080#1085#1091
-      OnClick = MenuUploadClick
+      OnClick = MenuUploadPicClick
+    end
+    object MenuExcel: TMenuItem
+      Caption = #1057#1086#1079#1076#1072#1090#1100' '#1078#1091#1088#1085#1072#1083' '#1082#1072#1088#1090#1080#1085
+      OnClick = MenuExcelClick
     end
     object MenuReset: TMenuItem
       Caption = #1057#1073#1088#1086#1089#1080#1090#1100' '#1085#1072#1089#1090#1088#1086#1081#1082#1080
@@ -433,5 +437,9 @@ object FGallery: TFGallery
     object Action1: TAction
       Caption = 'Action1'
     end
+  end
+  object SaveExcel: TSaveDialog
+    Left = 584
+    Top = 456
   end
 end

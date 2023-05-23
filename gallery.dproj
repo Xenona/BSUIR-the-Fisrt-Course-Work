@@ -130,6 +130,7 @@
         <DCCReference Include="SlideShow.pas">
             <Form>FSlide</Form>
         </DCCReference>
+        <DCCReference Include="excel.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

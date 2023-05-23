@@ -6,12 +6,14 @@ uses
   Vcl.Themes,
   Vcl.Styles,
   BigPic in 'BigPic.pas' {FBigPic},
+
   SharedTypes in 'SharedTypes.pas' {$R *.res},
   MainMenu in 'MainMenu.pas' {TFMenu},
   Biography in 'Biography.pas' {Bio},
   Developer in 'Developer.pas' {FDeveloper},
   Stack in 'Stack.pas',
-  SlideShow in 'SlideShow.pas' {FSlide};
+  SlideShow in 'SlideShow.pas' {FSlide},
+  excel in 'excel.pas';
 
 {$R *.res}
 
@@ -26,8 +28,7 @@ begin
   Application.CreateForm(TBio, Bio);
   Application.CreateForm(TFGallery, FGallery);
   Application.CreateForm(TFBigPic, FBigPic);
-   Application.CreateForm(TFDeveloper, FDeveloper);
-
+  Application.CreateForm(TFDeveloper, FDeveloper);
   Application.CreateForm(TFSlide, FSlide);
   Application.Run;
 end.

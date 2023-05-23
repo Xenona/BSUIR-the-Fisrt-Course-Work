@@ -3,9 +3,9 @@ unit BigPic;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, SharedTypes, Math, MainForm,
-  Vcl.Menus, Vcl.Imaging.pngimage;
+  Vcl.Menus, Vcl.Imaging.pngimage, Variants, ComObj;
 
 type
 

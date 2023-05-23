@@ -3,10 +3,10 @@ unit MainForm;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Winapi.Windows, Winapi.Messages, System.SysUtils, Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.Menus, Math,
   Vcl.Grids,  SharedTypes, System.IOUtils, Vcl.ActnMan, Vcl.ActnColorMaps,
-  Vcl.ComCtrls, System.Actions, Vcl.ActnList, Vcl.Imaging.pngimage, Stack, SlideShow;
+  Vcl.ComCtrls, System.Actions, Vcl.ActnList, Vcl.Imaging.pngimage, Stack, SlideShow, ComObj;
 
 
 type
@@ -22,7 +22,7 @@ type
     MenuAlbum: TMenuItem;
     MenuSavePage: TMenuItem;
     MenuDeleteAlbum: TMenuItem;
-    MenuUpload: TMenuItem;
+    MenuUploadPic: TMenuItem;
     MenuReset: TMenuItem;
     OpenPic: TOpenDialog;
     CmbBxAlbum: TComboBox;
@@ -53,6 +53,8 @@ type
     FileOpenFolder: TFileOpenDialog;
     ActionList1: TActionList;
     Action1: TAction;
+    MenuExcel: TMenuItem;
+    SaveExcel: TSaveDialog;
 
     procedure FormCreate(Sender: TObject);
     procedure FormResize(Sender: TObject);
@@ -67,7 +69,7 @@ type
     procedure DeleteNode(NodeToDelete: PPicElem; var NewHead: PPicElem);
     procedure MenuResetClick(Sender: TObject);
     procedure OnCloseQuery(var Msg: TWMKey; var Handled: Boolean);
-    procedure MenuUploadClick(Sender: TObject);
+    procedure MenuUploadPicClick(Sender: TObject);
     procedure ReCreateAllPanels(headToUse: PPicElem);
     procedure CreatePicture(var ImgToCreate: TImage; const PanelParent: TPanel; const APicLink: TPicture; const AMargin: Integer);
     procedure AddNewNode(elem: PPicElem; var head: PPicElem);
@@ -102,6 +104,7 @@ type
     function isRecordMatch(const data: Tdata; const searchStr: string; field: integer): boolean;
     procedure clearChanged(tempHead: PPicElem);
     procedure SaveEnumeration();
+    procedure MenuExcelClick(Sender: TObject);
 
 
   private
@@ -706,6 +709,49 @@ begin
 
 
 end;
+procedure TFGallery.MenuExcelClick(Sender: TObject);
+var
+  CSVFile: TextFile;
+  peopleRow: integer;
+  tempHead: PPicElem;
+begin
+  if (SaveExcel.Execute) and (SaveExcel.FileName <> '') then
+  begin
+    AssignFile(CSVFile, SaveExcel.FileName + '.csv');
+    Rewrite(CSVFile);
+
+    // Заголовки столбцов
+    WriteLn(CSVFile, 'Название,Год начала,Год конца,Общее число лет,Жанр,Тематика,Место написания,Материалы,Короткое описание,Польз. оценка,Польз. комментарий,В Избранном');
+
+    peopleRow := 1;
+    tempHead := headsEnum[CmbBxAlbum.ItemIndex][0];
+
+    while tempHead <> nil do
+    begin
+      // Запись данных строки
+      Write(CSVFile, '"' + tempHead.data.title + '",');
+      Write(CSVFile, IntToStr(tempHead.data.yearOfStart) + ',');
+      Write(CSVFile, IntToStr(tempHead.data.yearOfEnd) + ',');
+      Write(CSVFile, IntToStr(tempHead.data.yearsOfWork) + ',');
+      Write(CSVFile, '"' + tempHead.data.genre + '",');
+      Write(CSVFile, '"' + tempHead.data.theme + '",');
+      Write(CSVFile, '"' + tempHead.data.place + '",');
+      Write(CSVFile, '"' + tempHead.data.materials + '",');
+      Write(CSVFile, '"' + tempHead.data.shortDescr + '",');
+      Write(CSVFile, IntToStr(tempHead.data.userRate) + ',');
+      Write(CSVFile, '"' + tempHead.data.userComment + '",');
+      WriteLn(CSVFile, BoolToStr(tempHead.data.isFavourite));
+
+      tempHead := tempHead^.Next;
+      Inc(peopleRow);
+    end;
+
+    CloseFile(CSVFile);
+  end
+  else
+    ShowMessage('Название файла не может быть пустым!');
+end;
+
 
 procedure TFGallery.MenuExportAlbumClick(Sender: TObject);
 var
@@ -1035,7 +1081,7 @@ begin
         if tail <> nil then
           tail^.Next := right;
         tail := right;
-          ;
+         right := right^.Next;
       end;
     end;
     if tail <> nil then
@@ -1097,7 +1143,7 @@ begin
   Result := FormatDateTime('yymmddhhnnss', nowDateTime) + IntToStr(randNum);
 end;
 
-procedure TFGallery.MenuUploadClick(Sender: TObject);
+procedure TFGallery.MenuUploadPicClick(Sender: TObject);
 var
   pic: TPicture;
   UploadWindow: TFBigPic;
@@ -1170,45 +1216,21 @@ begin
 
     case CmbBxSort.ItemIndex of
       1: // title
-      begin
         headsEnum[CmbBxAlbum.ItemIndex][1] := MergeSort(headsEnum[CmbBxAlbum.ItemIndex][1], sortDirection, cmpTitle);
-//        ReCreateAllPanels(headsEnum[CmbBxAlbum.ItemIndex][1]);
-      end;
       2: // year of start
-      begin
         headsEnum[CmbBxAlbum.ItemIndex][1] := MergeSort(headsEnum[CmbBxAlbum.ItemIndex][1], sortDirection, cmpYearStart);
-//        ReCreateAllPanels(headsEnum[CmbBxAlbum.ItemIndex][1]);
-      end;
       3: // year of end
-      begin
         headsEnum[CmbBxAlbum.ItemIndex][1] := MergeSort(headsEnum[CmbBxAlbum.ItemIndex][1], sortDirection, cmpYearEnd);
-//        ReCreateAllPanels(headsEnum[CmbBxAlbum.ItemIndex][1]);
-      end;
       4: // years of work
-      begin
         headsEnum[CmbBxAlbum.ItemIndex][1] := MergeSort(headsEnum[CmbBxAlbum.ItemIndex][1], sortDirection, cmpYearsWork);
-//        ReCreateAllPanels(headsEnum[CmbBxAlbum.ItemIndex][1]);
-      end;
-      5: // genre
-      begin
+      5: // genre      begin
         headsEnum[CmbBxAlbum.ItemIndex][1] := MergeSort(headsEnum[CmbBxAlbum.ItemIndex][1], sortDirection, cmpGenre);
-//        ReCreateAllPanels(headsEnum[CmbBxAlbum.ItemIndex][1]);
-      end;
       6: // theme
-      begin
         headsEnum[CmbBxAlbum.ItemIndex][1] := MergeSort(headsEnum[CmbBxAlbum.ItemIndex][1], sortDirection, cmpTheme);
-//        ReCreateAllPanels(headsEnum[CmbBxAlbum.ItemIndex][1]);
-      end;
       7: // place
-      begin
         headsEnum[CmbBxAlbum.ItemIndex][1] := MergeSort(headsEnum[CmbBxAlbum.ItemIndex][1], sortDirection, cmpPlace);
-//        ReCreateAllPanels(headsEnum[CmbBxAlbum.ItemIndex][1]);
-      end;
-      8: // user rate
-      begin
+      8:
         headsEnum[CmbBxAlbum.ItemIndex][1] := MergeSort(headsEnum[CmbBxAlbum.ItemIndex][1], sortDirection, cmpUserRate);
-//        ReCreateAllPanels(headsEnum[CmbBxAlbum.ItemIndex][1]);
-      end;
     end;
   end;
 end;
