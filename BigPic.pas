@@ -209,7 +209,7 @@ begin
 
   showHideMemo(False);
   showHideMenu(True, False, False);
-//  FBigPic.Free;
+
 
 end;
 
@@ -287,7 +287,7 @@ begin
   LabelFieldMats.Caption := picToUpdate.data.materials;
   LabelFieldPlace.Caption := picToUpdate.data.place;
   LabelFieldDescr.Caption := picToUpdate.data.shortDescr;
-//  ChkBxFavourite.Checked := picToUpdate.data.isFavourite;
+
   LabelFieldUsrCmm.Caption := picToUpdate.data.userComment;
   CmbBxUserRate.Text := IntToStr(picToUpdate.data.userRate);
    FGallery.Modified := true;
@@ -299,19 +299,6 @@ var
   isUnique: boolean;
 begin
 
-//  isUnique := true;
-//  tempHead := FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][0];
-//
-//  if tempHead <> nil then
-//  begin
-//
-//    if Trim(tempHead.data.title) = Trim(MemoTitle.Text) then
-//      isUnique := false;
-//
-//    tempHead := tempHead^.Next;
-//  end;
-
-//  if isUnique then
   begin
     FGallery.Modified := true;
     updatePicInfo(PicInfo);
@@ -325,8 +312,6 @@ begin
     FGallery.ReCreateAllPanels(FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][1]);
     FGallery.Modified := true;
   end
-//  else
-//    Application.MessageBox('Названия картин должны быть уникальны!', 'Внимание!', MB_ICONWARNING);
 
 end;
 
@@ -363,7 +348,6 @@ begin
     FGallery.ReCreateAllPanels(FGallery.headsEnum[FGallery.CmbBxAlbum.ItemIndex][1]);
     Close;
 
-  //  FGallery.AddNewNode(PicInfo, FGallery.head);
     FGallery.Modified := true;
   end
   else
@@ -403,7 +387,7 @@ begin
   except
     ShowMessage('Возникла ошибка. Перезапустите программу');
   end;
-//  FGallery.DeleteNode(PicInfo, FGallery.head);
+
    Close;
 end;
 

@@ -12,8 +12,7 @@ uses
   Biography in 'Biography.pas' {Bio},
   Developer in 'Developer.pas' {FDeveloper},
   Stack in 'Stack.pas',
-  SlideShow in 'SlideShow.pas' {FSlide},
-  excel in 'excel.pas';
+  SlideShow in 'SlideShow.pas' {FSlide};
 
 {$R *.res}
 

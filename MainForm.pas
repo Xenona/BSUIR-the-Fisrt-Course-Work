@@ -144,10 +144,6 @@ begin
   isModified := Value;
 end;
 
-// --------------------------------------------------------------------------------
-// VISUAL section BEGIN
-
-
 
 
 procedure TFGallery.SetImageBorder(Image: TImage);
@@ -211,7 +207,7 @@ begin
 
     end;
     slidePage.Free;
-//    slidePage.Close;
+
   finally
 
   end;
@@ -607,11 +603,6 @@ begin
   for i := PrevNumOfCtrls downto 0 do
     FGallery.FlowPanelPics.Controls[i].Free;
 
-//  // making visible new panels;
-//  for i := 0 to FGallery.FlowPanelPics.ControlCount - 1 do
-//    FGallery.FlowPanelPics.Controls[i].Visible := True;
-
-
 
    FlowPanelPics.Visible := True;
 end;
@@ -939,11 +930,6 @@ begin
 
 end;
 
-// VISUAL section END
-//---------------------------------------------------------------------------------
-
-//---------------------------------------------------------------------------------
-// SORT section BEGIN
 
 function cmpYearStart(elem1, elem2: TData; direction: integer): integer;
 begin
@@ -1242,12 +1228,6 @@ begin
   SearchFilterSort();
 end;
 
-// SORT section END
-//---------------------------------------------------------------------------------
-
-//---------------------------------------------------------------------------------
-// SEARCH section BEGIN
-
 function TFGallery.isRecordMatch(const data: Tdata; const searchStr: string; field: integer): boolean;
 begin
 
@@ -1331,16 +1311,6 @@ begin
     begin
       headsEnum[CmbBxAlbum.ItemIndex][1] := SearchData(headsEnum[CmbBxAlbum.ItemIndex][1], EditSearch.Text, CmbBxSearchParam.ItemIndex);
 
-//      if headsEnum[CmbBxAlbum.ItemIndex][1] = nil then
-//      begin
-//        FlowPanelPics.Margins.Top := 500;
-//        FlowPanelPics.Height := PanelSideBar.Height;
-//        FlowPanelPics.ShowCaption := True;
-//      end
-//      else
-//        FlowPanelPics.ShowCaption := False;
-
-//      ReCreateAllPanels(headsEnum[CmbBxAlbum.ItemIndex][1]);
     end;
 end;
 
@@ -1356,8 +1326,6 @@ begin
 
 end;
 
-// SEARCH section END
-//---------------------------------------------------------------------------------
 
 procedure TFGallery.SearchFilterSort();
 begin
@@ -1392,10 +1360,6 @@ begin
 end;
 
 
-// FILTER section BEGIN
-//---------------------------------------------------------------------------------
-//
-
 procedure TFGallery.CmbBxAlbumChange(Sender: TObject);
 begin
   RecreateAllPanels(headsEnum[CmbBxAlbum.ItemIndex][1]);
@@ -1414,7 +1378,6 @@ begin
   begin
     headsEnum[CmbBxAlbum.ItemIndex][1] := SearchData(headsEnum[CmbBxAlbum.ItemIndex][1], IntToStr(CmbBxFiltVal.ItemIndex), CmbBxFilter.ItemIndex+11);
 
-//    ReCreateAllPanels(headsEnum[CmbBxAlbum.ItemIndex][1]);
   end;
 end;
 
@@ -1441,7 +1404,7 @@ begin
     begin
       CmbBxFiltVal.Items.Clear;
       CmbBxFiltVal.Text := '';
-//      CmbBxFiltVal.Items.Add('');
+
       CmbBxFiltVal.Items.Add('Нет оценки');
       CmbBxFiltVal.Items.Add('1');
       CmbBxFiltVal.Items.Add('2');
@@ -1457,11 +1420,6 @@ begin
 
 end;
 
-//---------------------------------------------------------------------------------
-// FILTER section END
-
-// BIG PIC section BEGIN
-//---------------------------------------------------------------------------------
 
 procedure TFGallery.ShowBigPic(Sender: TObject);
 var
@@ -1494,8 +1452,7 @@ begin
 
 end;
 
-//---------------------------------------------------------------------------------
-// BIG PIC section END
+
 
 procedure TFGallery.FormClose(Sender: TObject; var Action: TCloseAction);
 var
@@ -1540,9 +1497,7 @@ end;
 procedure TFGallery.FormCreate(Sender: TObject);
 begin
 
-//  FetchAllPics(head, './albums/dataset.pics');
 
-//  LoadImages(head);
     uploadAlbums();
     if Length(headsEnum) > 0 then
       ReCreateAllPanels(headsEnum[0][0]);
@@ -1589,7 +1544,6 @@ begin
 
 
   MenuCreateAlbum.Enabled := False;
-//  ChangedHead := CopyList(head);
 
 
 end;
